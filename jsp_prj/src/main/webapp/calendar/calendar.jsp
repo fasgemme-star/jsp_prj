@@ -18,7 +18,7 @@
 #wrap { width: 1000px; height: 900px; margin: 0 auto; }
 #header { height: 200px; }
 #container { height: 600px; }
-#footer { height: 100px; }
+#footer { height: 100px; } 
 
 a { text-decoration: none; color: #333; }
 a:hover { text-decoration: underline; color: #1E4183 }
