@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryService {
-	private CategoryDAO cDAO;
+	private CategoryDAO cDAO = CategoryDAO.getInstance();
 	
 	public List<String> showCategroy(){
-		List<String> list = new ArrayList<String>();
-		return list;
+		List<String> cList = new ArrayList<String>();
+		return cList;
 	}// showCategroy
 	
 	public int addCategory(CategoryDTO cDTO) {

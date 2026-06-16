@@ -22,9 +22,13 @@ public class SearchProductDAO {
 		return 0;
 	}// selectTotalCount
 	
+	public int selectOnSaleCount() {
+		return 0;
+	}// selectOnSaleCount
+	
 	public List<ProductDTO> selectSearchProduct(RangeDTO rDTO){
-		List<ProductDTO> plist = new ArrayList<ProductDTO>();
-		return plist;
+		List<ProductDTO> pList = new ArrayList<ProductDTO>();
+		return pList;
 	}// selectSearchProduct
 	
 	public int updateProduct(ProductDTO pDTO) {

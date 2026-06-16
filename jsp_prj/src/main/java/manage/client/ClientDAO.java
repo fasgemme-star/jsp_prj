@@ -23,8 +23,8 @@ public class ClientDAO {
 	}// selectNewClient
 	
 	public List<ClientDTO> selectClientList(){
-		List<ClientDTO> clist = new ArrayList<ClientDTO>();
-		return clist;
+		List<ClientDTO> cList = new ArrayList<ClientDTO>();
+		return cList;
 	}// selectClientList
 	
 	public ClientDTO selectClientDetail(String clientID) {

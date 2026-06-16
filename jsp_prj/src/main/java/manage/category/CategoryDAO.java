@@ -27,8 +27,8 @@ public class CategoryDAO {
 	}//deleteCategory
 	
 	public List<CategoryDTO> selectCategoryList(){
-		List<CategoryDTO> clist = new ArrayList<CategoryDTO>();
-		return clist;
+		List<CategoryDTO> cList = new ArrayList<CategoryDTO>();
+		return cList;
 	}
 
 }
