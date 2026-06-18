@@ -1,48 +1,65 @@
 package manage.admin;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import dbcon.DbConnection;
-import dbcon.Path;
 
 public class AdminService {
 	private AdminDAO aDAO = AdminDAO.getInstance();
 	
-	public void login(String id, String pw) throws SQLException {
-		DbConnection dbcon = DbConnection.getInstance();
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
+	public int login(String id, String pw) {
+		int result = 0;
 		try {
-			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
-			String select = "select manager_name from manager where manager_id = 'admin01'";
-			pstmt = con.prepareStatement(select);
-			rs = pstmt.executeQuery();
-			String name = "";
-			if(rs.next()) {
-				name = rs.getString("manager_name");
-			}
-			System.out.println(name);
-		} finally {
-			// 6.연결 끊기
-			dbcon.dbClose(rs, pstmt, con);
-		} // end finally
-		
+			result = aDAO.selectAdmin(id, pw);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}// login
 	
-	public boolean changePW(String id, String pw, String newPW) {
-		boolean result=false;
+	public int changePW(String id, String pw, String newPW) {
+		int result = 0;
+		
+		//로그인 성공 여부 저장
+		int checkAdmin = 0;
+		try {
+			checkAdmin = aDAO.selectAdmin(id, pw);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if (checkAdmin == 1) {//로그인성공
+			try {
+				if(aDAO.updatePW(id, newPW) == 1) {
+					System.out.println("변경 성공");//변경성공
+				}else {
+					System.out.println("변경 실패");//변경실패
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {//로그인 실패
+			System.out.println("로그인실패");
+		}
+		
 		return result;
 	}// changePW
 	
 	public AdminDTO getAdminInfo(String id) {
-		AdminDTO aDTO = new AdminDTO();
+		AdminDTO aDTO = null;
+		
+		try {
+			aDTO = aDAO.selectAdminInfo(id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return aDTO;
 	}// AdminDTO
 	
+//	public static void main(String[] args) {
+//		AdminService a = new AdminService();
+//		System.out.println(a.login("admin01", "1234"));
+//		a.changePW("admin01", "23245", "123245");
+//		a.getAdminInfo("admin01");
+//	} 
 }
