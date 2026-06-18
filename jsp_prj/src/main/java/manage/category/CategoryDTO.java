@@ -14,4 +14,5 @@ import lombok.ToString;
 public class CategoryDTO {
 	private String categoryID;
 	private String categoryName;
+	private String isDeleted;
 }
