@@ -276,8 +276,13 @@
 				<h3>name 속성의 값이 유일한 HTML Form Control 값 받기</h3>
 				<div>
 					<%
+					//request가 사용되기 전에 읽어들이는 charset을 한번에 변경. 모든 request의 맨 위에서 적용
+					request.setCharacterEncoding("UTF-8");
+					
 					String text = request.getParameter("text");
+					//text =new String(text.getBytes("8859_1"),"UTF-8");
 					String pass = request.getParameter("pass");
+					//pass =new String(text.getBytes("8859_1"),"UTF-8");
 					String gender = request.getParameter("gender");
 					String agree = request.getParameter("agree");
 					String tel = request.getParameter("tel");
@@ -290,6 +295,7 @@
 					<strong>tel</strong> <%=tel%><br>
 					<strong>ta</strong> <%=ta%><br>
 			
+				</div>
 				</div>
 				</div>
 				<div class="col-md-5">

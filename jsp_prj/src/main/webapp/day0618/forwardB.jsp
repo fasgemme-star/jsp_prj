@@ -1,5 +1,12 @@
+<%@page import="day0612.TestDTO"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%
+//업무처리한 페이지(forwardA.jsp)에서 결과받기
+String name = (String)request.getAttribute("name");
+List<TestDTO> tList = (List<TestDTO>)request.getAttribute("memberList");
+%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -9,7 +16,7 @@
 <meta name="author"
 	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 <meta name="generator" content="Astro v5.13.2">
-<title>Carousel Template · Bootstrap v5.3</title>
+<title><%=name%></title>
 <link rel="canonical"
 	href="https://getbootstrap.com/docs/5.3/examples/carousel/">
 <script src="http://localhost/jsp_prj/common/JS/color-modes.js"></script>
@@ -266,30 +273,90 @@
 		<!-- Marketing messaging and featurettes
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
+		<div class="container marketing">
 			<!-- Three columns of text below the carousel -->
+			<div class="row">
+				<div class="col-lg-4">
+					<svg aria-label="Placeholder"
+						class="bd-placeholder-img rounded-circle" height="140"
+						preserveAspectRatio="xMidYMid slice" role="img" width="140"
+						xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-color)"></rect></svg>
+					<h2 class="fw-normal">Heading</h2>
+					<p>Some representative placeholder content for the three
+						columns of text below the carousel. This is the first column.</p>
+					<p>
+						<a class="btn btn-secondary" href="#">View details &raquo;</a>
+					</p>
+				</div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<svg aria-label="Placeholder"
+						class="bd-placeholder-img rounded-circle" height="140"
+						preserveAspectRatio="xMidYMid slice" role="img" width="140"
+						xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-color)"></rect></svg>
+					<h2 class="fw-normal">Heading</h2>
+					<p>Another exciting bit of representative placeholder content.
+						This time, we've moved on to the second column.</p>
+					<p>
+						<a class="btn btn-secondary" href="#">View details &raquo;</a>
+					</p>
+				</div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<svg aria-label="Placeholder"
+						class="bd-placeholder-img rounded-circle" height="140"
+						preserveAspectRatio="xMidYMid slice" role="img" width="140"
+						xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-color)"></rect></svg>
+					<h2 class="fw-normal">Heading</h2>
+					<p>And lastly this, the third column of representative
+						placeholder content.</p>
+					<p>
+						<a class="btn btn-secondary" href="#">View details &raquo;</a>
+					</p>
+				</div>
+				<!-- /.col-lg-4 -->
+			</div>
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->
 			<hr class="featurette-divider">
 			<div class="row featurette">
 				<div class="col-md-7">
-				<div style="padding-left: 20px">
-				<h3>name 속성의 값이 유일한 HTML Form Control 값 받기</h3>
+				forwardA.jsp에서 업무처리한 결과를 받아와서 보여지는 일에 집중.
+				<br>
+				<div><span><%=name%></span>님 조회한 결과 입니다.</div>
 				<div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>이름</th>
+							<th>나이</th>
+						</tr>
+					</thead>
+					<tbody>
 					<%
-					String text = request.getParameter("text");
-					String pass = request.getParameter("pass");
-					String gender = request.getParameter("gender");
-					String agree = request.getParameter("agree");
-					String tel = request.getParameter("tel");
-					String ta = request.getParameter("ta").replaceAll("\n", "<br>");
+					if (tList.isEmpty()){%>
+						<tr><td colspan="3">데이터가 없습니다</td></tr>
+					<%}%>
+					<%
+					TestDTO tDTO = null;
+					for (int i = 0; i < tList.size(); i++){
+						tDTO = tList.get(i);
 					%>
-					<strong>text</strong> <%=text%><br>
-					<strong>pass</strong> <%=pass%><br>
-					<strong>gender</strong> <%=gender%><br>
-					<strong>agree</strong> <%=agree%><br>
-					<strong>tel</strong> <%=tel%><br>
-					<strong>ta</strong> <%=ta%><br>
-			
+						<tr>
+							<td><%=i+1%></td>
+							<td><%=tDTO.getName()%></td>
+							<td><%=tDTO.getAge()%></td>
+						</tr>
+					<%}%>
+					</tbody>
+				</table>
 				</div>
 				</div>
 				<div class="col-md-5">

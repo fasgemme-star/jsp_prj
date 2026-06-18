@@ -37,6 +37,7 @@ $(function(){
 		<ul>
 			<li>요청방식: <%=request.getMethod()%></li>
 			<li>요청 URL: <%=request.getRequestURL()%></li>
+			<!-- QueryString은 GET방식에 존재하고, POST방식에 존재하지 않는다. -->
 			<li>요청 QueryString: <%=request.getQueryString()%></li>
 			<li>요청 protocol: <%=request.getProtocol()%></li>
 			<li>요청 서버명: <%=request.getServerName()%></li>
@@ -57,6 +58,12 @@ $(function(){
 		</ul>
 		<div>
 			<a href="http://localhost/jsp_prj/day0616/useRequest.jsp?name=Kim&age=20&age=21">요청</a>
+			<form action="http://localhost/jsp_prj/day0616/useRequest.jsp" method="post">
+			<input type="hidden" name="name" value="park">
+			<input type="hidden" name="age" value="24">
+			<input type="hidden" name="age" value="25">
+			<button class="btn btn-success btn-sm">post요청</button>
+			</form>
 		</div>
 		<div>
 			<h2>요청 Header의 값들</h2>

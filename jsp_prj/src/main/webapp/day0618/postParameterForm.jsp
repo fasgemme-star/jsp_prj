@@ -15,7 +15,8 @@
 <script src="http://localhost/jsp_prj/common/JS/color-modes.js"></script>
 <link href="http://localhost/jsp_prj/common/JS/bootstrap.min.css" rel="stylesheet"
 	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB">
-
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <meta name="theme-color" content="#712cf9">
 <link href="http://localhost/jsp_prj/common/JS/carousel.css" rel="stylesheet">
 <style>
@@ -104,6 +105,16 @@
 .red { color: #FF0000; }
 
 </style>
+<script type="text/javascript">
+$(function(){
+	$("#btn").click(function(){
+		//유효성 검증 이후
+		document.frm.submit();
+		//$("#frm")[0].submit();
+	});
+});//ready
+
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -266,30 +277,59 @@
 		<!-- Marketing messaging and featurettes
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
-			<!-- Three columns of text below the carousel -->
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->
 			<hr class="featurette-divider">
 			<div class="row featurette">
 				<div class="col-md-7">
 				<div style="padding-left: 20px">
-				<h3>name 속성의 값이 유일한 HTML Form Control 값 받기</h3>
-				<div>
-					<%
-					String text = request.getParameter("text");
-					String pass = request.getParameter("pass");
-					String gender = request.getParameter("gender");
-					String agree = request.getParameter("agree");
-					String tel = request.getParameter("tel");
-					String ta = request.getParameter("ta").replaceAll("\n", "<br>");
-					%>
-					<strong>text</strong> <%=text%><br>
-					<strong>pass</strong> <%=pass%><br>
-					<strong>gender</strong> <%=gender%><br>
-					<strong>agree</strong> <%=agree%><br>
-					<strong>tel</strong> <%=tel%><br>
-					<strong>ta</strong> <%=ta%><br>
-			
+					<form action="postParameterFormProcess.jsp" name="frm" method="post" id="frm" onsubmit="return false">
+						<table>
+							<tr>
+								<th colspan="2"><h3>name속성의 값이 유일한 HTML Form Control(POST방식의 요청)</h3></th>
+							</tr>
+							<tr>
+								<td>text</td>
+								<td><input type="text" name="text" value="테스트"></td>
+							</tr>
+							<tr>
+								<td>password</td>
+								<td><input type="password" name="pass"  value="비밀번호"></td>
+							</tr>
+							<tr>
+								<td>radio</td>
+								<td><input type="radio" name="gender" value="M" checked>남자
+									<input type="radio" name="gender" value="F">여자</td>
+							</tr>
+							<tr>
+								<td>checkbox</td>
+								<td><input type="checkbox" name="agree" value="Y" checked>동의</td>
+							</tr>
+							<tr>
+								<td>select</td>
+								<td>
+									<select name = "tel">
+										<option value="010">010</option>
+										<option value="011">011</option>
+										<option value="016">016</option>
+										<option value="017">017</option>
+										<option value="018">018</option>
+										<option value="019">019</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>textarea</td>
+								<td><textarea name="ta" rows="5" cols="50" >ta</textarea></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button class="btn btn-sm btn-primary" id="btn">입력</button>
+									<!-- <input type="button" class="btn btn-sm btn-primary" id="btn" value="입력2"> -->
+								</td>
+							</tr>
+						</table>
+					</form>
 				</div>
 				</div>
 				<div class="col-md-5">
