@@ -63,7 +63,6 @@ public class CategoryService {
 	public static void main(String[] args) {
 		CategoryService c = new CategoryService();
 		List<String> a = c.showCategroy();
-		for(int i=0; i < a.size();i++) {
-		}
+		System.out.println(a.get(0));
 	}
 }
