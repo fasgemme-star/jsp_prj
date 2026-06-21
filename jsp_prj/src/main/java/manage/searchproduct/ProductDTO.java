@@ -18,6 +18,7 @@ public class ProductDTO {
 	private String category;
 	private String prdName;
 	private String prdType;
+	private String status;
 	private String prdDescription;
 	private int price;
 	private int minPurchae;

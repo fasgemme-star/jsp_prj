@@ -12,8 +12,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class RangeDTO {
-	public int startNum;
-	public int endNum;
-	public String searchType;
 	public String keyword;
+	public String status;
+	public String category;
+	public String startDate;
+	public String endDate;
+	
+	private int totalCnt;
+    private int activeCnt;
+	
 }

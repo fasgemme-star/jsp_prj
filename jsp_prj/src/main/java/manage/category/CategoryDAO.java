@@ -26,16 +26,13 @@ public class CategoryDAO {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		StringBuilder query = new StringBuilder();
+		String query = "INSERT INTO CATEGORY (category_id, category_name) VALUES ('C004', ?)";
 		int cnt = 0;
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			
-			query.append("insert into CATEGORY(category_id, category_name) values('C004','");
-			query.append(name);
-			query.append("'");
-			
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1,name);
 			cnt = pstmt.executeUpdate();
 			
 		} finally { 
@@ -49,18 +46,15 @@ public class CategoryDAO {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		StringBuilder query = new StringBuilder();
+		String query = "UPDATE category SET category_name = ? WHERE category_id = ?";
 		int cnt = 0;
 		
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
-			query.append("update category set category_name = '");
-			query.append(newName);
-			query.append("' where category_id = '");
-			query.append(categoryID);
-			query.append("'");
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, newName);
+	        pstmt.setString(2, categoryID);
 			cnt = pstmt.executeUpdate();
 			
 		} finally { 
@@ -75,16 +69,15 @@ public class CategoryDAO {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		StringBuilder query = new StringBuilder();
+		String query = "UPDATE category SET isdeleted = 'Y' WHERE category_id = ?";
 		int cnt = 0;
 		
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
-			query.append("update category set isdeleted = 'Y' where category_id = '");
-			query.append(categoryID);
-			query.append("'");
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
+	        
+	        pstmt.setString(1, categoryID);
 			cnt = pstmt.executeUpdate();
 			
 		} finally { 
@@ -97,19 +90,17 @@ public class CategoryDAO {
 	
 	public List<String> selectCategoryList() throws SQLException{
 		List<String> cList = new ArrayList<String>();
-		
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		StringBuilder query = new StringBuilder();
+		String query = "SELECT category_name FROM category WHERE isdeleted = 'N'";
 		
 		try {
 			// 3.쿼리문 생성 객체 얻기
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
-			query.append("select category_name from category where isdeleted = 'N'");
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
 
 			rs = pstmt.executeQuery();
 			while (rs.next()) {

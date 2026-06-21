@@ -1,9 +1,9 @@
 package manage.searchproduct;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import manage.client.RangeDTO;
 
 public class SearchProductService {
 	private SearchProductDAO spDAO = SearchProductDAO.getInstance();
@@ -28,27 +28,33 @@ public class SearchProductService {
 		return 0;
 	}// endNum
 	
-	public int countTotal() {
+	public int getInitialCount() {
+		RangeDTO rDTO = new RangeDTO();
+		try {
+			rDTO = spDAO.selectCount();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int total = rDTO.getTotalCnt();
+		int onSaleCnt = rDTO.getActiveCnt();
+		int soldoutCnt = total - onSaleCnt;
+		
 		return 0;
 	}
 	
-	public int countOnSale() {
-		return 0;
+	public List<ProductDTO> searchItem(RangeDTO rDTO){
+		List<ProductDTO> pList = new ArrayList<ProductDTO>();
+		try {
+			pList = spDAO.selectSearchProduct(rDTO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return pList;
 	}
 	
-	public int countSoldOut() {
-		return 0;
-	}
-	
-	public List<ProductDTO> searchItem(String name){
-		List<ProductDTO> plist = new ArrayList<ProductDTO>();
-		return plist;
-	}
-	
-	public List<ProductDTO> searchItem(String startdate, String endDate){
-		List<ProductDTO> plist = new ArrayList<ProductDTO>();
-		return plist;
-	}
 
 	public int changeProduct(ProductDTO pDTO) {
 		return 0;

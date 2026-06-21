@@ -1,12 +1,10 @@
 package manage.dashboard;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.management.openmbean.CompositeDataInvocationHandler;
 
 public class DashBoardService {
 	private DashBoardDAO dDAO = DashBoardDAO.getInstance();
@@ -68,6 +66,7 @@ public class DashBoardService {
 		List<Map<String, Integer>> bList = new ArrayList<Map<String,Integer>>();
 		return bList;
 	}// getBestProductList
+	
 	public static void main(String[] args) {
 		DashBoardService a = new DashBoardService();
 		for (int i: a.getNewClientStatistics()) {
