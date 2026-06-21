@@ -10,7 +10,7 @@ public class SearchProductService {
 	
 	public int totalCount(RangeDTO rDTO) {
 		return 0;
-	}// totalCount
+	}// totalCountㅇ
 	
 	public int pageScale(int num) {
 		return 0;
