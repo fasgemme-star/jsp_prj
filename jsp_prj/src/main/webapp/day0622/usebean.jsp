@@ -218,7 +218,7 @@
 			<%=tName %><br>
 			<%=tD.getAge() %>
 			</div>
-			<!-- /END THE FEATURETTES -->
+			<!-- /END THE FEATURETTES --> 
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->
