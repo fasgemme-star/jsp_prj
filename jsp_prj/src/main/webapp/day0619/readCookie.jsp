@@ -371,7 +371,9 @@ function chkNull() {
 				}// end if
 				
 				//if (cookieFlag){
+				
 				%>
+					
 					<%-- 쿠키 값: 이름<span><%=cookieName %></span>,
 						   나이<span><%=cookieAge %></span><br>
 					<a href="removeCookie.jsp">쿠키삭제</a> --%>
@@ -380,19 +382,20 @@ function chkNull() {
 				%>
 				<form action="addCookie.jsp" method="get" id="frm">
 				<label>이름</label>
-				<input type="text" name="name" id="name" value="<%=cookieName%>">
+				<input type="text" name="name" id="name" value="<%=cookieName%>"/>
 				<br>
 				<label>나이</label>
-				<input type="text" name="age" id="age" value="<%=cookieAge%>">
+				<input type="text" name="age" id="age" value="<%=cookieAge%>"/>
 				<br>
 				<!-- 이름과 나이 저장을 쿠키상태에 따라 checked설정 -->
-				<input type="checkbox" name="useCookie" <%=cookieFlag?"checked":"" %>>이름과 나이 저장
+				<input type="checkbox" name="useCookie" <%=cookieFlag?"checked":"" %>/>이름과 나이 저장
 				<br>
-				<input type="button" value="입력" class="btn btn-sm btn-success" id="btn">
+				<input type="button" value="입력" class="btn btn-sm btn-success" id="btn"/>
 				<!-- <button class="btn btn-sm btn-success">입력</button> -->
 				</form>	
-				<%-- <%}// end elsd %> --%>
+				<%-- <%}// end else %> --%>
 				</div>
+				
 				<div class="col-md-5">
 					<svg aria-label="Placeholder: 500x500"
 						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
