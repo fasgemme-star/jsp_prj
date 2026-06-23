@@ -2,7 +2,9 @@ package kr.co.sist.user.member;
 
 import java.sql.Date;
 
-public class memberDTO {
+import lombok.Getter;
+@Getter
+public class MemberDTO {
 	
 	
 	private int  intsmsReceiveYN;

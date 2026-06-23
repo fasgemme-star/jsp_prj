@@ -1,4 +1,10 @@
+<%@page import="kr.co.sist.user.member.MemberService"%>
+<%@page import="kr.co.sist.user.member.MemberDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+//POST방식일 때 한글처리
+request.setCharacterEncoding("UTF-8");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -20,9 +26,29 @@
 
         <div class="member-result">
             <div class="member-result-icon">✓</div>
-            <h2>${joinedName}님, 환영합니다.</h2>
-            <p>회원가입 화면 입력이 완료되었습니다.<br>DB 연결 후 실제 회원정보 저장이 적용됩니다.</p>
-            <div class="member-result-summary">회원코드: ${joinedMemberCode}</div>
+            <jsp:useBean id="mDTO" class="kr.co.sist.user.member.MemberDTO" scope="page"/>
+            <jsp:setProperty property="*" name="mDTO"/>
+            <jsp:setProperty property="ip" name="mDTO" value="<%=request.getRemoteAddr() %>"/>
+            <%
+            //web parameter 값 받기
+			MemberService ms=new MemberService();
+			boolean flag=ms.addMember(mDTO);
+			
+			if(flag){//회원가입 성공
+			%>
+			<h2><%= mDTO.getName() %>님의 회원가입을 축하드립니다.</h2>
+			입력하신 정보는 아래와 같습니다. <br>
+			<label>이메일 </label> : <%= mDTO.getEmail() %><br>
+			<label>전화번호 </label> : <%= mDTO.getPhone1() %>-<%= mDTO.getPhone2() %>-<%= mDTO.getPhone3() %><br>
+			<a href="#void">로그인</a>
+			<%	
+			}else{//회원가입 실패
+			%>
+			<h2>회원가입 실패</h2>
+			<%= mDTO.getName() %>님 회원가입 실패 하였습니다.<br>
+			<%					
+			}//end else
+            %>
         </div>
 
         <div class="member-actions">

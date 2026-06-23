@@ -23,8 +23,8 @@
         <div class="member-error"><%=request.getAttribute("errorMessage")%></div>
         <% } %>
 
-        <form id="joinForm" method="get"
-              action="<%=request.getContextPath()%>/member/join-complete.do" novalidate>
+        <form id="joinForm" method="post"
+              action="<%=request.getContextPath()%>/memberJoin/joinComplete.jsp" novalidate>
             <input type="hidden" name="smsReceiveYN" value="1">
             <input type="hidden" name="emailReceiveYN" value="0">
             <input type="hidden" id="codeChecked" value="N">
@@ -96,7 +96,7 @@
                             <div class="member-address">
                                 <div class="member-address-top">
                                     <input class="member-input" type="text" id="zipcode" name="zipcode"
-                                            placeholder="우편번호">
+                                           placeholder="우편번호">
                                     <button class="member-button member-button-light member-button-small"
                                             type="button" id="postcodeButton">주소검색</button>
                                 </div>
@@ -114,8 +114,8 @@
             <div class="member-actions">
                 <a class="member-button member-button-light"
                    href="<%=request.getContextPath()%>/member/join-agree.do">이전</a>
-                <button class="member-button" type="submit">가입하기</button>
-            </div>
+                <!-- <button class="member-button" type="submit">가입하기</button> -->
+                <input type="submit" value="가입"/>            </div>
         </form>
     </section>
 </main>
