@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" isELIgnored="false" info="EL의 사용"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../include/loginChk2.jsp" %>	
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -177,75 +179,25 @@
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-				<%--<jsp:include page="../fragments/row.jsp"/>--%>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-				<%--<jsp:include page="../fragments/detail.jsp"/>--%>
-			<!-- /END THE FEATURETTES -->
-			<%
-			String name = "테스트";
-			int age = 20;
-			String email = "test@test.com";
-			String tel = "010-3482-4632";
-			
-			pageContext.setAttribute("name", name);
-			request.setAttribute("age", age);
-			session.setAttribute("email", email);
-			application.setAttribute("tel", tel);
-			
-			%>
-			<div>
-			<strong>EL에서는 변수에 직접 접근 할 수 없다.</strong><br>
-			이름(pageScope.name): <span>${ pageScope.name }</span><br>
-			이름(name): <span>${ name }</span><br>
-			나이: <span>${ age }</span><br>
-			email: <span>${ email }</span><br>
-			전화번호: <span>${ tel }</span>
-			</div>
-			<%
-			// 1.변수 선언
-			int year = 2026;
-			int month = 6;
-			int day = 23;
-			int hour = 9;
-			
-			// 2.변수의 값을 EL에서 사용하기 위해 scope 객체에 저장
-			pageContext.setAttribute("year", year);
-			request.setAttribute("month", month);
-			session.setAttribute("day", day);
-			application.setAttribute("hour", hour);
-			//pageContext.setAttribute("day", 51);
-			
-			boolean flag = false;
-			pageContext.setAttribute("flag", flag);
-			%>
-			<div>
-			<!-- Scope객체는 생략 가능 -->
-			pageScope: <span>${ pageScope.year } / ${ year }</span><br>
-			requestScope: <span>${ requestScope.month } / ${ month }</span><br>
-			<!-- 변수명이 동일한 경우 Scope객체를 생략하면 범위가 작은 scope 객체가 우선으로 사용 -->
-			sessionScope: <span>${ sessionScope.day } / ${ day }</span><br>
-			applicationScope: <span>${ applicationScope.hour } / ${ hour }</span><br>
-			</div>
-			<div>
-			<strong>연산자</strong><br>
-			단항: ${ flag } / ${ !flag }(${ not flag })<br>
-			산술: ${ year } / ${ year + 1 } / ${ year % 12 }(${ year mod 12 })<br>
-			<%-- ${ year << 2 }<br> EL에서 제공하지 않는 연산자, error 발생 --%>
-			관계: year ? month<br>
-			&gt;: ${ year > month }(${ year gt 1 })<br>
-			&lt;: ${ year < month }(${ year lt month })<br>
-			&gt;=: ${ year >= month }(${ year ge month })<br>
-			&lt;=: ${ year <= month }(${ year le month })<br>
-			==: ${ year == month }(${ year eq month })<br>
-			<!-- EL에는 문자열만 존재하고 문자가 존재하지 않는다. -->
-			==: ${ "자바" == '자바' }(${ "자바" eq '자바' })<br>
-			!=: ${ year != month }(${ year ne month })<br>
-			논리: ${ year > month && day > month}(${ year gt month and day gt month})<br>
-			${ year > month || day > month}(${ year gt month or day gt month})<br>
-			삼항: ${ year % 2 == 0?"짝수":'홀수' }(${ year mod 2 eq 0?"짝수":'홀수' })
-			</div>
+		<c:choose>
+		<c:when test="${not empty sessionScope.sesName }">
+			<a href="#void">로그아웃</a>
+			<a href="#void">마이페이지</a>
+		</c:when>
+		<c:otherwise>
+			<a href="#void">로그인</a>
+		</c:otherwise>
+		</c:choose>
+		<div>
+		<c:choose>
+			<c:when test="${ param.role == 'user' }">읽기 | 쓰기</c:when>
+			<c:when test="${ param.role == 'admin' }">읽기 | 쓰기 | 삭제 | 변경</c:when>
+			<c:otherwise>읽기</c:otherwise>
+		</c:choose>
+		</div>
+		[<a href="jstl_choose.jsp?role=guest">손님</a> |
+		<a href="jstl_choose.jsp?role=user">사용자</a> |
+		<a href="jstl_choose.jsp?role=admin">관리자</a>]
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->

@@ -1,5 +1,8 @@
+<%@page import="java.time.LocalDate"%>
+<%@page import="day0623.ForEachService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" isELIgnored="false" info="EL의 사용"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -177,75 +180,78 @@
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-				<%--<jsp:include page="../fragments/row.jsp"/>--%>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-				<%--<jsp:include page="../fragments/detail.jsp"/>--%>
-			<!-- /END THE FEATURETTES -->
-			<%
-			String name = "테스트";
-			int age = 20;
-			String email = "test@test.com";
-			String tel = "010-3482-4632";
-			
-			pageContext.setAttribute("name", name);
-			request.setAttribute("age", age);
-			session.setAttribute("email", email);
-			application.setAttribute("tel", tel);
-			
+			<!-- form태그에 action속성을 정의하지 않으면 submit이 되었을때 자신 페이지를 재요청한다. -->
+			<form method="post">
+				<label>이름</label><input type="text" name="name" value="테스트"/>
+				<br>
+				<label>관심언어</label>
+				<%
+				ForEachService fes = new ForEachService();
+				//pageContext.setAttribute("subjectData", fes.subjectArr());
+				pageContext.setAttribute("subjectData", fes.subjectList());
+				pageContext.setAttribute("userData", fes.searchUser());
+				
+				%>
+				<c:forEach var="subject" items="${ subjectData }" varStatus="i">
+				<input type="checkbox" name="lang" value="${ subject }"/>
+				<%-- <c:out value="${ i.first }"/> --%>
+				<c:if test="${ i.first or i.last}"><strong></c:if>
+				<c:out value="${ subject }"/>
+				<c:if test="${ i.first or i.last }"></strong></c:if>
+				</c:forEach>
+				<br>
+				<button class="btn btn-sm btn-success">전송</button>
+			</form>
+		 	<div>
+			<% request.setCharacterEncoding("UTF-8");
+			LocalDate ld = LocalDate.now();
+			pageContext.setAttribute("year", ld.getYear());
 			%>
-			<div>
-			<strong>EL에서는 변수에 직접 접근 할 수 없다.</strong><br>
-			이름(pageScope.name): <span>${ pageScope.name }</span><br>
-			이름(name): <span>${ name }</span><br>
-			나이: <span>${ age }</span><br>
-			email: <span>${ email }</span><br>
-			전화번호: <span>${ tel }</span>
-			</div>
-			<%
-			// 1.변수 선언
-			int year = 2026;
-			int month = 6;
-			int day = 23;
-			int hour = 9;
-			
-			// 2.변수의 값을 EL에서 사용하기 위해 scope 객체에 저장
-			pageContext.setAttribute("year", year);
-			request.setAttribute("month", month);
-			session.setAttribute("day", day);
-			application.setAttribute("hour", hour);
-			//pageContext.setAttribute("day", 51);
-			
-			boolean flag = false;
-			pageContext.setAttribute("flag", flag);
-			%>
-			<div>
-			<!-- Scope객체는 생략 가능 -->
-			pageScope: <span>${ pageScope.year } / ${ year }</span><br>
-			requestScope: <span>${ requestScope.month } / ${ month }</span><br>
-			<!-- 변수명이 동일한 경우 Scope객체를 생략하면 범위가 작은 scope 객체가 우선으로 사용 -->
-			sessionScope: <span>${ sessionScope.day } / ${ day }</span><br>
-			applicationScope: <span>${ applicationScope.hour } / ${ hour }</span><br>
+			<c:if test="${ not empty param.name }">
+			<!-- 웹 파라메터의 name 값이 존재하면 선택된 체크박스의 값을 출력 -->
+				<span><c:out value="${ param.name }"/></span>님이 선택하신 언어는<br>
+				<c:if test="${ empty paramValues.lang }">없습니다.</c:if>
+			<ul>
+				<c:forEach var="lang" items="${ paramValues.lang }" varStatus="i">
+				<li><c:out value="${ i.count } ${ lang }"/></li>
+				</c:forEach>
+				</ul>
+			</c:if>
 			</div>
 			<div>
-			<strong>연산자</strong><br>
-			단항: ${ flag } / ${ !flag }(${ not flag })<br>
-			산술: ${ year } / ${ year + 1 } / ${ year % 12 }(${ year mod 12 })<br>
-			<%-- ${ year << 2 }<br> EL에서 제공하지 않는 연산자, error 발생 --%>
-			관계: year ? month<br>
-			&gt;: ${ year > month }(${ year gt 1 })<br>
-			&lt;: ${ year < month }(${ year lt month })<br>
-			&gt;=: ${ year >= month }(${ year ge month })<br>
-			&lt;=: ${ year <= month }(${ year le month })<br>
-			==: ${ year == month }(${ year eq month })<br>
-			<!-- EL에는 문자열만 존재하고 문자가 존재하지 않는다. -->
-			==: ${ "자바" == '자바' }(${ "자바" eq '자바' })<br>
-			!=: ${ year != month }(${ year ne month })<br>
-			논리: ${ year > month && day > month}(${ year gt month and day gt month})<br>
-			${ year > month || day > month}(${ year gt month or day gt month})<br>
-			삼항: ${ year % 2 == 0?"짝수":'홀수' }(${ year mod 2 eq 0?"짝수":'홀수' })
-			</div>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>이름</th>
+						<th>이메일</th>
+						<th>나이</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${ empty userData }">
+						<tr>
+							<td colspan="4" style="text-align: center;">회원 정보가 존재하지 않습니다.</td>
+						</tr>
+					</c:if>
+					<c:forEach var="uDTO2" items="${ userData }" varStatus="i">
+					<c:set var="totalAge" value="${ uDTO2.age + totalAge }"/>
+						<tr>
+							<td><c:out value="${ i.count }"/></td>
+							<td><c:out value="${ uDTO2.myName }"/></td>
+							<td><c:out value="${ uDTO2.email }"/></td>
+							<td><c:out value="${ uDTO2.age } / ${ year - uDTO2.age + 1}"/></td>
+						</tr>
+						<c:if test="${ i.last }">
+						<tr>
+							<td colspan="3">나이의 합</td>
+							<td><c:out value="${ totalAge / i.count }"/></td>
+						</tr>
+						</c:if>
+					</c:forEach>
+				</tbody>
+			</table>
+			</div> 
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->
