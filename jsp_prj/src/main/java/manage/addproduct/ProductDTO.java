@@ -20,6 +20,7 @@ public class ProductDTO {
 	private String prdType;
 	private String prdDescription;
 	private int price;
+	private String notice;
 	private int minPurchae;
 	private int maxPurchase;
 	private int discount; 

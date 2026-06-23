@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ClientDTO {
-	private String clientID;
+	private String clientNo;
 	private String clientName;
 	private String email;
 	private String phone;

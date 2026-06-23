@@ -21,6 +21,7 @@ public class ProductDTO {
 	private String status;
 	private String prdDescription;
 	private int price;
+	private String notice;
 	private int minPurchae;
 	private int maxPurchase;
 	private int discount; 

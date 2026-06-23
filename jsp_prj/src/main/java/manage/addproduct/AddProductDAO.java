@@ -12,6 +12,7 @@ public class AddProductDAO {
 	} // getInstance()
 	
 	public int insertProduct(ProductDTO pDTO) {
+		
 		return 0;
 	}// insertProduct
 	
