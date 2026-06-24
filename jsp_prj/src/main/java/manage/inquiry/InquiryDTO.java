@@ -13,14 +13,14 @@ import lombok.ToString;
 @ToString
 public class InquiryDTO {
 	private String inquiryID;
-	private String clientID;
+	private String clientNo;
 	private String clientName;
 	private String title;
 	private String content;
-	private String answer;
 	private String inquiryDate;
-	private String answerDate;
 	private String status;
+	private String answer;
+	private String answerDate;
 	private String inquiryType;
 	private String orderID;
 

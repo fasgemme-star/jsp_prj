@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%-- <%@ errorPage="../error/err_500.jsp"%> --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -174,20 +173,13 @@
 	<main>
 		<div id="myCarousel" class="carousel slide mb-6"
 			data-bs-ride="carousel">
-			<%-- <c:import url="http://192.168.10.70/jsp_prj/fragments/carousel.jsp"/> --%>
+			<c:import url="http://192.168.10.70/jsp_prj/fragments/carousel.jsp"/>
 		</div>
 		<!-- Marketing messaging and featurettes
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
-		<c:catch var="e">
-		<%
-		//_jspService method 안의 try~catch(Throwable t)로 감싸져 있어서 error가 발생하지 않는다		
-		Class.forName("oracle.jdbc.OracleDriver2");		
-		%>
-		</c:catch>
-		객체: ${ e }<br>
-		<c:if test="${ not empty e }">error</c:if>
+			<c:redirect url="http://192.168.10.70/jsp_prj/day0624/jstl_forTokens.jsp"></c:redirect>
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->
