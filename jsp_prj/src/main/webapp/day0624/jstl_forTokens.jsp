@@ -15,7 +15,7 @@
 	href="https://getbootstrap.com/docs/5.3/examples/carousel/">
 
 <meta name="theme-color" content="#712cf9">
-<!-- 변수와 메소드 공유 불가능 -->
+<!-- 변수와 메소드 공유 불가능 -->   
 <jsp:include page="../fragments/external_file.jsp"/>
 <!-- 변수와 메소드 공유 가능 -->
 <%-- <%@include file="../include/external_file.jsp" %> --%>
