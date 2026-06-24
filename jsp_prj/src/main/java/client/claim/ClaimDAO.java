@@ -12,10 +12,11 @@ public class ClaimDAO {
 	} // getInstance()
 	
 	public int insertClaim(ClaimDTO claimDTO) {
+		
 		return 0;
 	}// insertClaim
 
-	public ClaimDTO findClaimById(String claimID) {
+	public ClaimDTO selectClaimById(String claimID) {
 	    ClaimDTO cDTO = new ClaimDTO();
 	    return cDTO;
 	}// findClaimById

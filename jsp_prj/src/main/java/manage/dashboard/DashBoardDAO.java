@@ -74,8 +74,28 @@ public class DashBoardDAO {
 		
 	}// selectNewClientWeekly
 	
-	public int selectProductOnNow() {
-		return 0;
+	public int selectProductOnNow() throws SQLException {
+		DbConnection dbcon = DbConnection.getInstance();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String query = "select count(1) cnt from product where is_deleted = 'N'";
+		int cnt = 0;
+		try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+			
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+		} finally { 
+			// 6.연결 끊기
+			dbcon.dbClose(rs, pstmt, con);
+		} // end finally
+		
+		return cnt;
 	}// selectProductOnNow
 	
 	public int selectNonInquiryCount() throws SQLException {
@@ -132,9 +152,33 @@ public class DashBoardDAO {
 		return newClientArr;
 	}// selectNewClientCount
 	
-	public int[] selectclientDropOut() {
-		int[] a = null;
-		return a;
+	public int[] selectclientDropOut() throws SQLException {
+		DbConnection dbcon = DbConnection.getInstance();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder query = new StringBuilder();
+		int[] newClientArr = null;
+		int i=0;
+		try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+			query.append("	select cnt, year from(	");
+			query.append("	select count(1) cnt, to_char(CLIENT_START_DATE,'YYYY-MM') as year from client	");
+			query.append("	group by to_char(CLIENT_START_DATE,'YYYY-MM') order by year)	");
+			query.append("	where is_deleted = 'Y' year between TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-01' and TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-12'	");
+			
+			pstmt = con.prepareStatement(query.toString());
+			rs = pstmt.executeQuery();
+			newClientArr = new int[12];
+			if(rs.next()) {
+				newClientArr[i++] = rs.getInt("cnt");
+			}
+		} finally { 
+			// 6.연결 끊기
+			dbcon.dbClose(rs, pstmt, con);
+		} // end finally
+		
+		return newClientArr;
 	}// selectclientDropOut
 	
 	public List<Map<String, Integer>> selectBestProduct(){
