@@ -69,8 +69,8 @@ public class DashBoardService {
 	
 	public static void main(String[] args) {
 		DashBoardService a = new DashBoardService();
-		for (int i: a.getNewClientStatistics()) {
+		int i = a.getNonResponseInquiryCount();
 			System.out.println(i);
-		}
+		
 	}
 }

@@ -17,10 +17,8 @@ public class ProductDTO {
 	private String prdID;
 	private String category;
 	private String prdName;
-	private String prdType;
 	private String prdDescription;
 	private int price;
-	private String notice;
 	private int minPurchae;
 	private int maxPurchase;
 	private int discount; 
@@ -33,5 +31,7 @@ public class ProductDTO {
 	private String storageType;
 	private String salesUnit;
 	private String additionalInfo;
+	private String notice;
+	private String prdType;
 
 }

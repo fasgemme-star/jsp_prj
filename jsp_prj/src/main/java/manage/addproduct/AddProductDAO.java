@@ -25,7 +25,8 @@ public class AddProductDAO {
 		PreparedStatement pstmt = null;
 		StringBuilder query = new StringBuilder();
 		int cnt = 0;
-		
+		//insert into product(CATEGORY_ID, PRODUCT_NAME, DESCRIPTION, PRICE, MIN_PURCHASE, MAX_PURCHASE, DISCOUNT, MANUFACTURER, ORIGIN, UNDERAGE_PURCHASE, WEIGHT, EXPIRATION_DATE, STORAGE_TYPE, UNIT, NOTICE) values()
+		//insert into PRODUCT_IMAGE(IMAGE_TYPE, URL, PRODUCT_ID) values()
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
