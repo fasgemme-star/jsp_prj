@@ -41,7 +41,7 @@ DROP SEQUENCE seq_additional_id;
 ------------------------------------------
 /*9 주문 */
 DROP TRIGGER trg_order_id;
-DROP TABLE "order"
+DROP TABLE orders
 	CASCADE CONSTRAINTS;
 DROP SEQUENCE seq_order_id;
 /*10 주문상세(물품1개) */
@@ -194,6 +194,7 @@ CREATE TABLE product (
 	product_type VARCHAR2(50), /* 상품타입 */
 	price NUMBER(10), /* 가격 */
 	notice CLOB, /* 안내사항 */
+	shortinfo VARCHAR2(60), 	/* 짧은 설명  */
 	description VARCHAR2(600), /* 설명 */
 	discount NUMBER(10), /* 할인 */
 	manufacturer VARCHAR2(90), /* 제조사 */
@@ -354,7 +355,7 @@ END;
 ------------------------------------------
 /*9 주문 */
 
-CREATE TABLE "order" (
+CREATE TABLE orders (
 	order_ID VARCHAR2(30) NOT NULL, /* 주문아이디 */
 	order_date DATE  default sysdate, /* 주문일자 */
 	total_amount NUMBER(12), /* 총금액 */
@@ -366,21 +367,21 @@ CREATE TABLE "order" (
 	client_No VARCHAR2(30) /* 회원아이디 */
 );
 
-CREATE UNIQUE INDEX PK_order
-	ON "order" (
+CREATE UNIQUE INDEX PK_orders
+	ON orders (
 		order_ID ASC
 	);
 
-ALTER TABLE "order"
+ALTER TABLE orders
 	ADD
-		CONSTRAINT PK_order
+		CONSTRAINT PK_orders
 		PRIMARY KEY (
 			order_ID
 		);
 CREATE SEQUENCE seq_order_id START WITH 1 INCREMENT BY 1 MAXVALUE 999999 NOCYCLE NOCACHE;
 
 CREATE OR REPLACE TRIGGER trg_order_id
-BEFORE INSERT ON "order" FOR EACH ROW
+BEFORE INSERT ON orders FOR EACH ROW
 BEGIN
   IF :NEW.order_ID IS NULL THEN
     :NEW.order_ID := 'O' || LPAD(seq_order_id.NEXTVAL, 6, '0');
@@ -660,7 +661,7 @@ ALTER TABLE additional_info
 			product_ID
 		);
 
-ALTER TABLE "order"
+ALTER TABLE orders
 	ADD
 		CONSTRAINT FK_client_TO_order
 		FOREIGN KEY (
@@ -716,7 +717,7 @@ ALTER TABLE order_details
 		FOREIGN KEY (
 			order_ID
 		)
-		REFERENCES "order" (
+		REFERENCES orders (
 			order_ID
 		);
 
@@ -786,7 +787,7 @@ ALTER TABLE select_delivery
 		FOREIGN KEY (
 			order_ID
 		)
-		REFERENCES "order" (
+		REFERENCES orders (
 			order_ID
 		);
 
@@ -796,7 +797,7 @@ ALTER TABLE PAYMENT
 		FOREIGN KEY (
 			order_ID
 		)
-		REFERENCES "order" (
+		REFERENCES orders (
 			order_ID
 		);
 --------------------------------------------------------------
@@ -832,23 +833,23 @@ INSERT INTO category (category_name) VALUES ('음료'); -- CAT000003
 /* ===========================
    4. 상품 (product_ID 자동생성: P000001 ~ P000006)
 =========================== */
-INSERT INTO product (product_name, product_type, price, description, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('사과', '식품', 3000, '맛있는 사과', 0, '농협', '국산', 'N', 1000, SYSDATE+30, '상온', 1, 10, 'CAT000001');
+INSERT INTO product (product_name, product_type, price, notice, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type,UNIT, min_purchase, max_purchase, category_ID)
+VALUES ('사과', '식품', 3000,'초당옥수수 특성상 ~~~~~ 지않을 수 있지만 정상범주내의 정상상품입니다.', '맛있는 사과', '간단한 설명' ,0, '농협', '국산', 'N', 1000, SYSDATE+30, '상온', '1망', 1, 10, 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, description, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('당근', '식품', 2000, '신선한 당근', 10, '농협', '국산', 'N', 500, SYSDATE+20, '냉장', 1, 20, 'CAT000002');
+INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
+VALUES ('당근', '식품', 2000, '신선한 당근', '간단한 설명', 10, '농협', '국산', 'N', 500, SYSDATE+20, '냉장', 1, 20, 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, description, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('콜라', '음료', 2500, '탄산음료', 0, '코카콜라', '한국', 'N', 1500, SYSDATE+365, '상온', 1, 30, 'CAT000003');
+INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
+VALUES ('콜라', '음료', 2500, '탄산음료', '간단한 설명', 0, '코카콜라', '한국', 'N', 1500, SYSDATE+365, '상온', 1, 30, 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, description, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('바나나', '식품', 4000, '달콤한 바나나', 0, '돌', '필리핀', 'N', 1200, SYSDATE+14, '상온', 1, 10, 'CAT000001');
+INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
+VALUES ('바나나', '식품', 4000, '달콤한 바나나', '간단한 설명', 0, '돌', '필리핀', 'N', 1200, SYSDATE+14, '상온', 1, 10, 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, description, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('양파', '식품', 3500, '국산 양파', 5, '농협', '국산', 'N', 1500, SYSDATE+30, '상온', 1, 20, 'CAT000002');
+INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
+VALUES ('양파', '식품', 3500, '국산 양파', '간단한 설명', 5, '농협', '국산', 'N', 1500, SYSDATE+30, '상온', 1, 20, 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, description, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('사이다', '음료', 1800, '청량한 탄산음료', 0, '칠성', '한국', 'N', 500, SYSDATE+365, '상온', 1, 30, 'CAT000003');
+INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
+VALUES ('사이다', '음료', 1800, '청량한 탄산음료', '간단한 설명', 0, '칠성', '한국', 'N', 500, SYSDATE+365, '상온', 1, 30, 'CAT000003');
 
 
 /* ===========================
@@ -892,13 +893,13 @@ INSERT INTO shopping_cart (quantity, client_No, option_ID) VALUES (3, 'C000003',
 /* ===========================
    9. 주문 (order_ID 자동생성: O000001, O000002...)
 =========================== */
-INSERT INTO "order" (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, delivery_completion_date, client_No)
+INSERT INTO orders (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, delivery_completion_date, client_No)
 VALUES (25000, '일반배송', '배송완료', '배송요청사항없음', DATE '2026-06-06', DATE '2026-06-08', 'C000001');
 
-INSERT INTO "order" (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, client_No)
+INSERT INTO orders (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, client_No)
 VALUES (47000, '일반배송', '배송중', '배송요청사항없음', DATE '2026-06-08', 'C000002');
 
-INSERT INTO "order" (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, client_No)
+INSERT INTO orders (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, client_No)
 VALUES (80000, '일반배송', '배송대기', '배송요청사항없음', DATE '2026-06-10', 'C000003');
 
 
@@ -909,7 +910,16 @@ INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 2500
 INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 12000, 'OPT000002', 'O000002'); -- OD000002
 INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 33000, 'OPT000003', 'O000002'); -- OD000003
 INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 2000,  'OPT000004', 'O000002'); -- OD000004
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 16000, 'OPT000005', 'O000003'); -- OD000005
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 16000, 'OPT000006', 'O000003'); -- OD000005
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000004', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000004', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000005', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000005', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000005', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
+INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
 INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
 
 
