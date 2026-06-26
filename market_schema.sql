@@ -298,8 +298,7 @@ CREATE TABLE product_option(
 	option_name VARCHAR2(300), /* 옵션명　*/
 	extra_charge NUMBER(10), /*　추가금　*/
 	stockQuantity NUMBER(10), /* 재고　*/
-	product_id VARCHAR2(500), /* 상품아이디　*/
-	order_details_id VARCHAR2(30) /* 주무상세아이디　*/
+	product_id VARCHAR2(500) /* 상품아이디　*/
 );
 
 CREATE UNIQUE INDEX PK_product_option
@@ -641,16 +640,6 @@ ALTER TABLE product_option
 			product_ID
 		);
 
-ALTER TABLE product_option
-	ADD
-		CONSTRAINT FK_order_details_TO_product_option
-		FOREIGN KEY (
-			order_details_ID
-		)
-		REFERENCES order_details (
-			order_details_ID
-		);
-
 ALTER TABLE additional_info
 	ADD
 		CONSTRAINT FK_product_TO_additional_info
@@ -821,6 +810,93 @@ INSERT INTO client (client_ID, client_hash, client_name, client_email, client_te
 VALUES ('user03', '1234', '이영희', 'lee@test.com', '01033333333', DATE '2001-03-03', '3.3.3.3', 'Y');
 
 
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user04', '1234', '박민수', 'park04@test.com', '010-1111-0004', DATE '2001-03-10', '1.1.1.4', 'Y', DATE '2026-01-12');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user05', '1234', '최유리', 'choi05@test.com', '010-1111-0005', DATE '1997-11-30', '1.1.1.5', 'Y', DATE '2026-01-28');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user06', '1234', '정다은', 'jung06@test.com', '010-1111-0006', DATE '1996-06-15', '1.1.1.6', 'Y', DATE '2026-02-02');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user07', '1234', '강지훈', 'kang07@test.com', '010-1111-0007', DATE '2002-02-18', '1.1.1.7', 'Y', DATE '2026-02-10');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user08', '1234', '윤수빈', 'yoon08@test.com', '010-1111-0008', DATE '1995-09-08', '1.1.1.8', 'Y', DATE '2026-02-17');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user09', '1234', '한지민', 'han09@test.com', '010-1111-0009', DATE '1994-04-01', '1.1.1.9', 'Y', DATE '2026-02-26');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user10', '1234', '오세훈', 'oh10@test.com', '010-1111-0010', DATE '1993-12-25', '1.1.1.10', 'Y', DATE '2026-03-01');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user11', '1234', '신예은', 'shin11@test.com', '010-1111-0011', DATE '2000-10-19', '1.1.1.11', 'Y', DATE '2026-03-07');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user12', '1234', '조현우', 'jo12@test.com', '010-1111-0012', DATE '1992-01-21', '1.1.1.12', 'Y', DATE '2026-03-14');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user13', '1234', '백지훈', 'baek13@test.com', '010-1111-0013', DATE '1999-07-03', '1.1.1.13', 'Y', DATE '2026-03-22');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user14', '1234', '서지은', 'seo14@test.com', '010-1111-0014', DATE '1998-02-13', '1.1.1.14', 'Y', DATE '2026-03-30');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user15', '1234', '문가영', 'moon15@test.com', '010-1111-0015', DATE '2001-11-07', '1.1.1.15', 'Y', DATE '2026-04-02');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user16', '1234', '임현수', 'lim16@test.com', '010-1111-0016', DATE '1995-05-28', '1.1.1.16', 'Y', DATE '2026-04-09');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user17', '1234', '유민재', 'yu17@test.com', '010-1111-0017', DATE '1996-03-16', '1.1.1.17', 'Y', DATE '2026-04-15');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user18', '1234', '송하늘', 'song18@test.com', '010-1111-0018', DATE '1997-12-11', '1.1.1.18', 'Y', DATE '2026-04-23');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user19', '1234', '남도윤', 'nam19@test.com', '010-1111-0019', DATE '1994-09-09', '1.1.1.19', 'Y', DATE '2026-04-29');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user20', '1234', '황예린', 'hwang20@test.com', '010-1111-0020', DATE '2002-07-27', '1.1.1.20', 'Y', DATE '2026-05-03');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user21', '1234', '장우진', 'jang21@test.com', '010-1111-0021', DATE '1998-10-15', '1.1.1.21', 'Y', DATE '2026-05-08');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user22', '1234', '권수아', 'kwon22@test.com', '010-1111-0022', DATE '1997-01-17', '1.1.1.22', 'Y', DATE '2026-05-14');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user23', '1234', '노태윤', 'noh23@test.com', '010-1111-0023', DATE '1996-08-29', '1.1.1.23', 'Y', DATE '2026-05-19');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user24', '1234', '안지수', 'ahn24@test.com', '010-1111-0024', DATE '1995-02-06', '1.1.1.24', 'Y', DATE '2026-05-24');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user25', '1234', '고민재', 'go25@test.com', '010-1111-0025', DATE '1999-06-11', '1.1.1.25', 'Y', DATE '2026-05-30');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user26', '1234', '배수현', 'bae26@test.com', '010-1111-0026', DATE '2000-04-05', '1.1.1.26', 'Y', DATE '2026-06-02');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user27', '1234', '양지훈', 'yang27@test.com', '010-1111-0027', DATE '1998-12-18', '1.1.1.27', 'Y', DATE '2026-06-09');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user28', '1234', '손다은', 'son28@test.com', '010-1111-0028', DATE '1997-09-21', '1.1.1.28', 'Y', DATE '2026-06-18');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES('user29', '1234', '전하린', 'jeon29@test.com', '010-1111-0029', DATE '1996-01-08', '1.1.1.29', 'Y', DATE '2026-06-26');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date, CLIENT_DELETE_ACCOUNT, client_last_date)
+VALUES ('user30', '1234', '홍길동', 'hong01@test.com', '010-1111-0001', DATE '2000-01-01', '1.1.1.1', 'Y', DATE '2025-12-03','Y', DATE '2026-01-03');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date, CLIENT_DELETE_ACCOUNT, client_last_date)
+VALUES('user31', '1234', '김철수', 'kim02@test.com', '010-1111-0002', DATE '1999-05-12', '1.1.1.2', 'Y', DATE '2025-12-15','Y', DATE '2026-04-04');
+
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date, CLIENT_DELETE_ACCOUNT, client_last_date)
+VALUES('user32', '1234', '이영희', 'lee03@test.com', '010-1111-0003', DATE '1998-08-20', '1.1.1.3', 'Y', DATE '2026-01-05','Y', DATE '2026-05-21');
+
 /* ===========================
    6. 카테고리 (category_ID 자동생성: CAT000001, CAT000002...)
 =========================== */
@@ -852,22 +928,394 @@ INSERT INTO product (product_name, product_type, price, description,shortinfo, d
 VALUES ('사이다', '음료', 1800, '청량한 탄산음료', '간단한 설명', 0, '칠성', '한국', 'N', 500, SYSDATE+365, '상온', 1, 30, 'CAT000003');
 
 
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('제주 감귤', '식품', 12000, '신선식품 특성상 크기가 일정하지 않을 수 있습니다.', '새콤달콤한 제주 감귤', '겨울 필수 간식 감귤', 10, '제주농협', '국산', 'N', 3000, SYSDATE+20, '냉장', '1박스', 1, 5, DATE '2025-12-05', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('부사 사과', '식품', 15000, '보관 시 밀봉하여 냉장 보관하세요.', '아삭하고 당도 높은 부사 사과', '아침에 먹는 금사과', 0, '대구농협', '국산', 'N', 2000, SYSDATE+30, '냉장', '1봉', 1, 3, DATE '2025-12-15', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('겨울 시금치', '식품', 3500, '흙이 묻어있으니 세척 후 섭취하세요.', '달고 단단한 겨울 노지 시금치', '영양 가득 시금치', 0, '남해농가', '국산', 'N', 500, SYSDATE+7, '냉장', '1단', 1, 10, DATE '2025-12-10', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('핫초코 미트', '음료', 6500, '유통기한을 확인 유의하세요.', '진하고 부드러운 핫초코', '겨울철 따뜻한 코코아', 5, '미트식품', '수입산', 'N', 400, SYSDATE+180, '상온', '1개', 1, 20, DATE '2025-12-22', 'CAT000003');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('레드향', '식품', 28000, '선물용으로 좋은 고급 만감류입니다.', '진한 향과 높은 당도의 레드향', '명절 선물 추천', 0, '서귀포농협', '국산', 'N', 2000, SYSDATE+15, '냉장', '1박스', 1, 2, DATE '2026-01-10', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('세척당근', '식품', 4000, '세척되어 있어 편리하게 조리 가능합니다.', '흙 없이 깔끔한 세척당근', '요리 필수 채소', 0, '제주구좌농가', '국산', 'N', 1000, SYSDATE+14, '냉장', '1봉', 1, 5, DATE '2026-01-05', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('대파', '식품', 2900, '수령 후 다듬어서 냉동보관하시면 오래 드십니다.', '알싸하고 시원한 국산 대파', '모든 요리의 기본', 10, '진도농가', '국산', 'N', 700, SYSDATE+10, '냉장', '1단', 1, 5, DATE '2026-01-18', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('유자차 베이스', '음료', 8000, '개봉 후에는 반드시 냉장 보관하세요.', '겨울에 따뜻하게 즐기는 유자차', '국산 유자로 만든 유자청', 0, '고흥유자영농', '국산', 'N', 1000, SYSDATE+120, '상온', '1병', 1, 5, DATE '2026-01-25', 'CAT000003');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('설향 딸기', '식품', 9900, '딸기는 쉽게 무를 수 있으니 빠르게 드세요.', '새콤달콤 과즙 가득 설향 딸기', '겨울 왕공 딸기', 15, '논산딸기농가', '국산', 'N', 500, SYSDATE+5, '냉장', '1팩', 1, 4, DATE '2026-02-02', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('한라봉', '식품', 22000, '후숙 시 당도가 더욱 올라갑니다.', '새콤달콤한 제주 한라봉', '상큼한 비타민 충전', 0, '제주농협', '국산', 'N', 2000, SYSDATE+20, '상온', '1박스', 1, 5, DATE '2026-02-14', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('브로콜리', '식품', 2500, '살짝 데쳐서 초고추장에 찍어 드세요.', '영양소가 풍부한 국산 브로콜리', '건강한 그린 푸드', 0, '제주농가', '국산', 'N', 300, SYSDATE+7, '냉장', '1송이', 1, 10, DATE '2026-02-11', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('도라지 배즙', '음료', 19000, '침전물이 생길 수 있으나 흔들어 드시면 됩니다.', '기관지에 좋은 도라지 배즙', '환절기 건강 관리', 5, '건강조은', '국산', 'N', 3000, SYSDATE+90, '상온', '30포', 1, 2, DATE '2026-02-20', 'CAT000003');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('짭짤이 토마토', '식품', 18000, '초록빛이 돌 때 먹어야 가장 맛있습니다.', '대저 짭짤이 토마토', '단맛과 짠맛의 조화', 0, '대저농협', '국산', 'N', 1000, SYSDATE+10, '상온', '1박스', 1, 3, DATE '2026-03-05', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('봄동 봄나물', '식품', 3000, '겉절이로 무쳐 드시면 맛있습니다.', '봄을 알리는 아삭한 봄동', '입맛 돋우는 봄나물', 10, '해남농가', '국산', 'N', 500, SYSDATE+5, '냉장', '1봉', 1, 5, DATE '2026-03-12', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('양파', '식품', 4500, '망에 담아 통풍이 잘되는 곳에 보관하세요.', '단단하고 알이 굵은 국산 양파', '식탁 위 필수 식재료', 0, '무안농협', '국산', 'N', 3000, SYSDATE+30, '상온', '1망', 1, 3, DATE '2026-03-22', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('유기농 녹차티백', '음료', 4500, '뜨거운 물에 1~2분 우려내세요.', '은은한 향의 보성 유기농 녹차', '차 한잔의 여유', 0, '보성다원', '국산', 'N', 50, SYSDATE+365, '상온', '20티백', 1, 10, DATE '2026-03-19', 'CAT000003');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('성주 참외', '식품', 14000, '찬물에 씻어 껍질째 혹은 깎아 드세요.', '아삭하고 달콤한 성주 참외', '봄철 대표 과일', 5, '성주농협', '국산', 'N', 1500, SYSDATE+14, '냉장', '1봉', 1, 5, DATE '2026-04-02', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('오렌지', '식품', 9900, '강제 왁싱 처리를 하지 않은 안전한 오렌지입니다.', '고당도 네이블 오렌지', '상큼함 가득 고당도 오렌지', 0, '선키스트', '수입산', 'N', 1200, SYSDATE+20, '상온', '1봉', 1, 5, DATE '2026-04-18', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('청도 미나리', '식품', 5000, '삼겹살과 곁들이면 최고의 궁합입니다.', '향이 짙은 청도 한재 미나리', '향긋한 봄 미나리', 0, '청도농가', '국산', 'N', 300, SYSDATE+5, '냉장', '1봉', 1, 10, DATE '2026-04-05', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('양배추', '식품', 3500, '겉잎을 제거하고 세척 후 사용하세요.', '위 건강에 좋은 싱싱한 양배추', '아삭한 식감 통양배추', 10, '강원농가', '국산', 'N', 1500, SYSDATE+10, '냉장', '1통', 1, 3, DATE '2026-04-15', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('콜드브루 원액', '음료', 12000, '반드시 냉장 보관하시고 물이나 우유에 타서 드세요.', '깔끔한 맛의 콜드브루 커피원액', '홈카페 에센셜 콜드브루', 0, '커피팩토리', '수입산', 'N', 500, SYSDATE+60, '냉장', '1병', 1, 5, DATE '2026-04-26', 'CAT000003');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('방울토마토', '식품', 7900, '꼭지를 떼고 보관하시면 더 오래 신선합니다.', '탱글탱글한 대추방울토마토', '한 입에 쏙 건강 간식', 0, '부여농가', '국산', 'N', 1000, SYSDATE+10, '냉장', '1팩', 1, 5, DATE '2026-05-10', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('망고', '식품', 15000, '슈가스팟이 생기면 당도가 가장 높습니다.', '달콤하고 부드러운 수입 생망고', '달콤한 열대과일 망고', 20, '글로벌푸드', '수입산', 'N', 1000, SYSDATE+10, '상온', '1팩', 1, 4, DATE '2026-05-20', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('다다기오이', '식품', 3900, '표면의 가시에 찔리지 않게 주의하세요.', '수분이 가득하고 아삭한 다다기오이', '오이소박이, 피클용 오이', 0, '진천농가', '국산', 'N', 1000, SYSDATE+7, '냉장', '5개입', 1, 5, DATE '2026-05-04', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('파프리카 혼합', '식품', 4900, '색상 비율은 랜덤으로 발송됩니다.', '아삭하고 달콤한 삼색 파프리카', '샐러드 필수 다이어트 채소', 0, '김제농가', '국산', 'N', 500, SYSDATE+7, '냉장', '1봉', 1, 10, DATE '2026-05-18', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('아이스티 복숭아', '음료', 5500, '찬물에도 잘 녹는 분말 스틱입니다.', '시원하고 달콤한 복숭아 아이스티', '여름 맞이 시원한 음료', 0, '티타임', '국산', 'N', 500, SYSDATE+365, '상온', '40스틱', 1, 10, DATE '2026-05-28', 'CAT000003');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('고창 수박', '식품', 23000, '수박 특성상 크기 및 당도가 약간 다를 수 있습니다.', '당도 선별 완료된 시원한 고창 수박', '여름 대표 과일 당도보장', 10, '고창농협', '국산', 'N', 7000, SYSDATE+10, '냉장', '1통', 1, 2, DATE '2026-06-15', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('신비복숭아', '식품', 16000, '겉은 천도 속은 백도인 신비 복숭아입니다.', '짧은 제철에만 맛보는 신비복숭아', '지금 아니면 못 먹는 복숭아', 0, '경산농가', '국산', 'N', 1000, SYSDATE+7, '냉장', '1팩', 1, 3, DATE '2026-06-22', 'CAT000001');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('초당옥수수', '식품', 19900, '초당옥수수 특성상 끝달림이 좋지 않을 수 있지만 정상상품입니다.', '생으로 먹어도 달콤한 초당옥수수', '아삭하고 달콤한 마약 옥수수', 0, '해남농가', '국산', 'N', 2000, SYSDATE+7, '냉장', '10개', 1, 5, DATE '2026-06-10', 'CAT000002');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('탄산수 플레인', '음료', 11000, '강한 탄산이 매력적인 플레인 탄산수입니다.', '칼로리 걱정 없는 깔끔한 탄산수', '톡 쏘는 청량감', 30, '스파클링', '국산', 'N', 12000, SYSDATE+180, '상온', '24캔', 1, 5, DATE '2026-06-05', 'CAT000003');
+
+INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('유기농 콤부차', '음료', 15000, '냉장 보관 후 차갑게 드시면 더욱 맛있습니다.', '새콤달콤한 유기농 레몬 콤부차', '가볍게 즐기는 발효 음료', 0, '네이처푸드', '국산', 'N', 750, SYSDATE+90, '상온', '1박스', 1, 10, DATE '2026-06-25', 'CAT000003');
+
 /* ===========================
    8.추가정보
 =========================== */
 INSERT INTO additional_info (info_content, product_id)
 VALUES('신선식품의 특성상 상품의 중량에 3%내외의 차이가 발생할 수 있습니다.신선식품 특성상 원물마다 크기 및 형태가 일정하지 않을 수 있습니다.','P000001');
 
+-- 1. P000002 (2개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('본 상품은 냉장 보관 상품이므로 수령 후 즉시 냉장고에 넣어주세요.', 'P000002');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('원물 고유의 특성상 모양이 균일하지 않을 수 있으나 품질에는 문제가 없습니다.', 'P000002');
+
+-- 2. P000005 (1개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('껍질째 드실 수 있는 상품이나, 섭취 전 흐르는 물에 깨끗이 세척해 주세요.', 'P000005');
+
+-- 3. P000009 (3개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('개봉 후에는 변질의 우려가 있으니 가급적 빨리 섭취하시기 바랍니다.', 'P000009');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('유통기한은 미개봉 상태 기준이며, 보관 조건에 따라 달라질 수 있습니다.', 'P000009');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('제품 하단에 침전물이 생길 수 있으나 원료 성분이므로 흔들어 드십시오.', 'P000009');
+
+-- 4. P000012 (2개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('신선식품의 특성상 상품의 중량에 3%내외의 차이가 발생할 수 있습니다.', 'P000012');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('기온 변화에 따라 배송 중 약간의 후숙이 진행될 수 있습니다.', 'P000012');
+
+-- 5. P000016 (1개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('이 제품은 알레르기 유발 가능성이 있는 대두, 우유를 사용한 제품과 같은 제조시설에서 생산되었습니다.', 'P000016');
+
+-- 6. P000020 (2개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('장기 보관 시에는 소분하여 냉동 보관하시는 것을 권장합니다.', 'P000020');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('조리 전 충분히 해동한 후 사용하셔야 본연의 맛을 느끼실 수 있습니다.', 'P000020');
+
+-- 7. P000024 (1개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('탄산이 포함된 제품으로 흔들 경우 내용물이 넘칠 수 있으니 주의하세요.', 'P000024');
+
+-- 8. P000028 (3개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('초당옥수수 특성상 끝달림이 좋지 않을 수 있지만 정상범주내의 정상상품입니다.', 'P000028');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('수령 후 바로 드시지 않을 경우 껍질을 벗겨 냉동 보관해 주세요.', 'P000028');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('전자레인지에 3분간 돌려 드시면 가장 아삭하고 달콤하게 즐기실 수 있습니다.', 'P000028');
+
+-- 9. P000031 (2개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('포장 용기의 모서리가 날카로우니 개봉 시 손이 베이지 않도록 주의하십시오.', 'P000031');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('직사광선을 피해 서늘하고 건조한 곳에 실온 보관하세요.', 'P000031');
+
+-- 10. P000035 (1개 작성)
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('충격에 약한 상품이므로 배송 중 미세한 눌림 현상이 발생할 수 있습니다.', 'P000035');
 
 /* ===========================
    5. 상품이미지 (product_img_id 자동생성)
 =========================== */
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'MAIN', 'http://.../p1.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000002', 'MAIN', 'http://.../p2.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'MAIN', 'http://.../p3.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000004', 'MAIN', 'http://.../p4.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000005', 'MAIN', 'http://.../p5.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000006', 'MAIN', 'http://.../p6.jpg');
+-- P000001
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'THUMB', 'http://.../p1_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'DETAIL', 'http://.../p1_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'CONTENT', 'http://.../p1_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'CONTENT', 'http://.../p1_content2.jpg');
+
+-- P000002
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000002', 'THUMB', 'http://.../p2_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000002', 'DETAIL', 'http://.../p2_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000002', 'CONTENT', 'http://.../p2_content1.jpg');
+
+-- P000003
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'THUMB', 'http://.../p3_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'DETAIL', 'http://.../p3_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'CONTENT', 'http://.../p3_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'CONTENT', 'http://.../p3_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'CONTENT', 'http://.../p3_content3.jpg');
+
+-- P000004
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000004', 'THUMB', 'http://.../p4_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000004', 'DETAIL', 'http://.../p4_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000004', 'CONTENT', 'http://.../p4_content1.jpg');
+
+-- P000005
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000005', 'THUMB', 'http://.../p5_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000005', 'DETAIL', 'http://.../p5_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000005', 'CONTENT', 'http://.../p5_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000005', 'CONTENT', 'http://.../p5_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000005', 'CONTENT', 'http://.../p5_content3.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000005', 'CONTENT', 'http://.../p5_content4.jpg');
+
+-- P000006
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000006', 'THUMB', 'http://.../p6_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000006', 'DETAIL', 'http://.../p6_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000006', 'CONTENT', 'http://.../p6_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000006', 'CONTENT', 'http://.../p6_content2.jpg');
+
+-- P000007
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000007', 'THUMB', 'http://.../p7_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000007', 'DETAIL', 'http://.../p7_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000007', 'CONTENT', 'http://.../p7_content1.jpg');
+
+-- P000008
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000008', 'THUMB', 'http://.../p8_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000008', 'DETAIL', 'http://.../p8_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000008', 'CONTENT', 'http://.../p8_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000008', 'CONTENT', 'http://.../p8_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000008', 'CONTENT', 'http://.../p8_content3.jpg');
+
+-- P000009
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000009', 'THUMB', 'http://.../p9_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000009', 'DETAIL', 'http://.../p9_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000009', 'CONTENT', 'http://.../p9_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000009', 'CONTENT', 'http://.../p9_content2.jpg');
+
+-- P000010
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000010', 'THUMB', 'http://.../p10_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000010', 'DETAIL', 'http://.../p10_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000010', 'CONTENT', 'http://.../p10_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000010', 'CONTENT', 'http://.../p10_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000010', 'CONTENT', 'http://.../p10_content3.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000010', 'CONTENT', 'http://.../p10_content4.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000010', 'CONTENT', 'http://.../p10_content5.jpg');
+
+-- P000011
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000011', 'THUMB', 'http://.../p11_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000011', 'DETAIL', 'http://.../p11_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000011', 'CONTENT', 'http://.../p11_content1.jpg');
+
+-- P000012
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000012', 'THUMB', 'http://.../p12_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000012', 'DETAIL', 'http://.../p12_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000012', 'CONTENT', 'http://.../p12_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000012', 'CONTENT', 'http://.../p12_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000012', 'CONTENT', 'http://.../p12_content3.jpg');
+
+-- P000013
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000013', 'THUMB', 'http://.../p13_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000013', 'DETAIL', 'http://.../p13_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000013', 'CONTENT', 'http://.../p13_content1.jpg');
+
+-- P000014
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000014', 'THUMB', 'http://.../p14_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000014', 'DETAIL', 'http://.../p14_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000014', 'CONTENT', 'http://.../p14_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000014', 'CONTENT', 'http://.../p14_content2.jpg');
+
+-- P000015
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000015', 'THUMB', 'http://.../p15_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000015', 'DETAIL', 'http://.../p15_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000015', 'CONTENT', 'http://.../p15_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000015', 'CONTENT', 'http://.../p15_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000015', 'CONTENT', 'http://.../p15_content3.jpg');
+
+-- P000016
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000016', 'THUMB', 'http://.../p16_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000016', 'DETAIL', 'http://.../p16_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000016', 'CONTENT', 'http://.../p16_content1.jpg');
+
+-- P000017
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000017', 'THUMB', 'http://.../p17_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000017', 'DETAIL', 'http://.../p17_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000017', 'CONTENT', 'http://.../p17_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000017', 'CONTENT', 'http://.../p17_content2.jpg');
+
+-- P000018
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000018', 'THUMB', 'http://.../p18_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000018', 'DETAIL', 'http://.../p18_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000018', 'CONTENT', 'http://.../p18_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000018', 'CONTENT', 'http://.../p18_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000018', 'CONTENT', 'http://.../p18_content3.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000018', 'CONTENT', 'http://.../p18_content4.jpg');
+
+-- P000019
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000019', 'THUMB', 'http://.../p19_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000019', 'DETAIL', 'http://.../p19_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000019', 'CONTENT', 'http://.../p19_content1.jpg');
+
+-- P000020
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000020', 'THUMB', 'http://.../p20_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000020', 'DETAIL', 'http://.../p20_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000020', 'CONTENT', 'http://.../p20_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000020', 'CONTENT', 'http://.../p20_content2.jpg');
+
+-- P000021
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000021', 'THUMB', 'http://.../p21_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000021', 'DETAIL', 'http://.../p21_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000021', 'CONTENT', 'http://.../p21_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000021', 'CONTENT', 'http://.../p21_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000021', 'CONTENT', 'http://.../p21_content3.jpg');
+
+-- P000022
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000022', 'THUMB', 'http://.../p22_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000022', 'DETAIL', 'http://.../p22_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000022', 'CONTENT', 'http://.../p22_content1.jpg');
+
+-- P000023
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000023', 'THUMB', 'http://.../p23_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000023', 'DETAIL', 'http://.../p23_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000023', 'CONTENT', 'http://.../p23_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000023', 'CONTENT', 'http://.../p23_content2.jpg');
+
+-- P000024
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000024', 'THUMB', 'http://.../p24_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000024', 'DETAIL', 'http://.../p24_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000024', 'CONTENT', 'http://.../p24_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000024', 'CONTENT', 'http://.../p24_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000024', 'CONTENT', 'http://.../p24_content3.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000024', 'CONTENT', 'http://.../p24_content4.jpg');
+
+-- P000025
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000025', 'THUMB', 'http://.../p25_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000025', 'DETAIL', 'http://.../p25_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000025', 'CONTENT', 'http://.../p25_content1.jpg');
+
+-- P000026
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000026', 'THUMB', 'http://.../p26_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000026', 'DETAIL', 'http://.../p26_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000026', 'CONTENT', 'http://.../p26_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000026', 'CONTENT', 'http://.../p26_content2.jpg');
+
+-- P000027
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000027', 'THUMB', 'http://.../p27_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000027', 'DETAIL', 'http://.../p27_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000027', 'CONTENT', 'http://.../p27_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000027', 'CONTENT', 'http://.../p27_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000027', 'CONTENT', 'http://.../p27_content3.jpg');
+
+-- P000028
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000028', 'THUMB', 'http://.../p28_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000028', 'DETAIL', 'http://.../p28_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000028', 'CONTENT', 'http://.../p28_content1.jpg');
+
+-- P000029
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000029', 'THUMB', 'http://.../p29_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000029', 'DETAIL', 'http://.../p29_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000029', 'CONTENT', 'http://.../p29_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000029', 'CONTENT', 'http://.../p29_content2.jpg');
+
+-- P000030
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'THUMB', 'http://.../p30_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'DETAIL', 'http://.../p30_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content3.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content4.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content5.jpg');
+
+-- P000031
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000031', 'THUMB', 'http://.../p31_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000031', 'DETAIL', 'http://.../p31_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000031', 'CONTENT', 'http://.../p31_content1.jpg');
+
+-- P000032
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'THUMB', 'http://.../p32_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'DETAIL', 'http://.../p32_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'CONTENT', 'http://.../p32_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'CONTENT', 'http://.../p32_content2.jpg');
+
+-- P000033
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'THUMB', 'http://.../p33_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'DETAIL', 'http://.../p33_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'CONTENT', 'http://.../p33_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'CONTENT', 'http://.../p33_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'CONTENT', 'http://.../p33_content3.jpg');
+
+-- P000034
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000034', 'THUMB', 'http://.../p34_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000034', 'DETAIL', 'http://.../p34_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000034', 'CONTENT', 'http://.../p34_content1.jpg');
+
+-- P000035
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'THUMB', 'http://.../p35_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'DETAIL', 'http://.../p35_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'CONTENT', 'http://.../p35_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'CONTENT', 'http://.../p35_content2.jpg');
+
+-- P000036
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'THUMB', 'http://.../p36_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'DETAIL', 'http://.../p36_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content1.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content2.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content3.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content4.jpg');
+
+-- P000037
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000037', 'THUMB', 'http://.../p37_thumb.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000037', 'DETAIL', 'http://.../p37_detail.jpg');
+INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000037', 'CONTENT', 'http://.../p37_content1.jpg');
+
 
 
 /* ===========================
