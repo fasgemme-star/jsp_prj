@@ -1,3 +1,4 @@
+<%@page import="kr.co.sist.member.MemberDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -168,7 +169,7 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="${ CommonUrl }/fragments/navigationBar.jsp"/>		
+			<c:import url="/fragments/navigationBar.jsp"/>		
 		</nav>
 	</header>
 	<main>
@@ -180,6 +181,7 @@
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
+			
 			<c:import url="${ CommonUrl }/fragments/row.jsp"/>	
 			<hr>
 					

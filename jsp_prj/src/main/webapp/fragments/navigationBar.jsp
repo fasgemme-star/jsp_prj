@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" info="부트스트랩 외부파일"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="container-fluid">
 				<a class="navbar-brand" href="#">Carousel</a>
 				<button class="navbar-toggler" type="button"
@@ -17,11 +18,26 @@
 							aria-disabled="true">Disabled</a></li>
 					</ul>
 					<form class="d-flex" role="search">
+					<c:choose>
+					<c:when test="${ empty userInfo }">
 						<a class="nav-link" style="color: #FFFFFF"
 							aria-current="page" href="${ CommonUrl }/login/loginForm.jsp">로그인</a>
 						&nbsp;&nbsp;
 						<a class="nav-link" style="color: #FFFFFF"
 							aria-current="page" href="${ CommonUrl }/memberjoin/joinForm.jsp">회원가입</a>
+					</c:when>
+					<c:otherwise>
+						
+						<a class="nav-link" style="color: #FFFFFF"
+							aria-current="page" href="#void">
+							<span title="${ userInfo.name }님의 마이페이지"><c:out value="${ userInfo.id }"/></span>
+							</a>
+						&nbsp;&nbsp;
+						<a class="nav-link" style="color: #FFFFFF"
+							aria-current="page" href="#void">로그아웃</a>
+					
+					</c:otherwise>
+					</c:choose>
 					</form>
 				</div>
 			</div>   

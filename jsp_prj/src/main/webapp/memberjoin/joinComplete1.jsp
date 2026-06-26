@@ -49,44 +49,24 @@ request.setCharacterEncoding("UTF-8");
 			입력하신 정보는 아래와 같습니다. <br>
 			<label>이메일 </label> : ${ param.email }<br>
 			<label>전화번호 </label> : <%= mDTO.getPhone1() %>-<%= mDTO.getPhone2() %>-<%= mDTO.getPhone3() %><br>
-			<a href="#void">로그인</a>
+			<a href="${ CommonUrl }/login/loginForm.jsp">로그인</a>
 			<%	
 			}else{//회원가입 실패: DBMS에 문제 발생한 경우
 			%>
 			<h2>회원가입 실패</h2>
-			<%= mDTO.getName() %>님 회원가입 실패 하였습니다.<br>
+			${ param.name }님 회원가입 실패 하였습니다.<br>
 			<%					
 			}//end else
 			}//end else
             %>
 			
-        <div class="member-actions">
-            <a class="member-button member-button-light" href="<%=request.getContextPath()%>/index.jsp">메인으로</a>
-            <a class="member-button" href="<%=request.getContextPath()%>/member/login.do">로그인</a>
-        </div>
 			
 			<hr>
 			
-			smsReceiveYN / ${ param.smsReceiveYN }<br>
-			emailReceiveYN / ${ param.emailReceiveYN }<br>
-			codeChecked / ${ param.codeChecked }<br>
-			id / ${ param.id }<br>
-			password / ${ param.password }<br>
-			passwordConfirm / ${ param.passwordConfirm }<br>
-			name / ${ param.name }<br>
-			email / ${ param.email }<br>
-			hobby / 
-			<c:forEach var="hobby" items="${paramValues.hobby}" varStatus="status">
-				${ hobby }
-				<c:if test="${!status.last}">,</c:if>
-			</c:forEach>
-			<br>
-			phone1 / ${ param.phone1 }<br>
-			phone2 / ${ param.phone2 }<br>
-			phone3 / ${ param.phone3 }<br>
-			zipcode / ${ param.zipcode }<br>
-			address / ${ param.address }<br>
-			address2 / ${ param.address2 }<br>
+       <%--  <div class="member-actions">
+            <a class="member-button member-button-light" href="<%=request.getContextPath()%>/index.jsp">메인으로</a>
+            <a class="member-button" href="<%=request.getContextPath()%>/login/loginForm.jsp">로그인</a>
+        </div> --%>
 
         </div>
 
