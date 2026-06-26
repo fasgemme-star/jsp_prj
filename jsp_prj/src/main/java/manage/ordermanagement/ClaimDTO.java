@@ -15,17 +15,19 @@ import lombok.ToString;
 @ToString
 public class ClaimDTO {
 	private String claimID;
-	private String orderID;
-	private String optionID;
-	private String prdName;
+	private String requestDate;
 	private String clientName;
 	private String clientTel;
+	private String claimStatus;
+	private String optionID;
+	private String prdName;
+	private int quantity;
+	
+	private String orderID;
 	private String claimType;
 	private int claimCnt;
-	private String requestDate;
 	private String reason;
 	private String reasonDetail;
-	private String claimStatus;
 	private String processingDate;
 	private List<String> img;
 }

@@ -47,6 +47,7 @@ public class CategoryDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String query = "UPDATE category SET category_name = ? WHERE category_id = ?";
+		
 		int cnt = 0;
 		
 		try {

@@ -109,7 +109,29 @@ public class SearchProductDAO {
 	    return pList;
 	}// selectSearchProduct
 	
-	public int updateProduct(ProductDTO pDTO) {
+	public int updateProduct(ProductDTO pDTO) throws SQLException {
+		DbConnection dbcon = DbConnection.getInstance();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        String query = "";
+		/*
+		 * UPDATE product SET category_id = ? and product_name = ? and price = ? WHERE
+		 * product_id = ? UPDATE product_option SET STOCKQUANTITY = ? WHERE product_id =
+		 * ?
+		 */    
+        try {
+            con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+            }
+        } finally {
+            dbcon.dbClose(rs, pstmt, con);
+        }
+    
 		return 0;
 	}// updateProduct
 }
