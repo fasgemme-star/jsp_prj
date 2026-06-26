@@ -45,4 +45,68 @@ public class MemberDAO {
 		} 
 		return idFlag;
 	}// selectId
+	
+	
+	public void insertWebmember(MemberDTO mDTO) throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		GetConnection gc = GetConnection.getInstance();
+		
+		try {
+			con = gc.getConn();
+			StringBuilder query = new StringBuilder();
+			query
+			.append("	insert into WEB_MEMBER(ID, PASSWORD, NAME, EMAIL, PHONE1, ZIPCODE, ADDRESS1, ADDRESS2, IP, SMSRECEIVEYN, EMAILRECEIVEYN)	")
+			.append("	values(?,?,?,?,?,?,?, ?,?,?,?)	");
+			
+			pstmt = con.prepareStatement(query.toString());
+			
+			pstmt.setString(1, mDTO.getId());
+			pstmt.setString(2, mDTO.getPassword());
+			pstmt.setString(3, mDTO.getName());
+			pstmt.setString(4, mDTO.getEmail());
+			pstmt.setString(5, mDTO.getPhone());
+			pstmt.setString(6, mDTO.getZipcode());
+			pstmt.setString(7, mDTO.getAddress());
+			pstmt.setString(8, mDTO.getAddress2());
+			pstmt.setString(9, mDTO.getIp());
+			pstmt.setInt(10, mDTO.getSmsReceiveYN());
+			pstmt.setInt(11, mDTO.getEmailReceiveYN());
+			
+			pstmt.executeQuery();
+			
+		} finally {
+			gc.dbClose(null, pstmt, con);
+		}
+	
+	}
+	
+	public void insertWebmemberHobby(MemberDTO mDTO) throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		GetConnection gc = GetConnection.getInstance();
+		
+		try {
+			con = gc.getConn();
+			StringBuilder query = new StringBuilder();
+			query
+			.append("	insert into HOBBY(ID, hobby)	")
+			.append("	values(?,?)	");
+			
+			pstmt = con.prepareStatement(query.toString());
+			String[] hobby = mDTO.getHobby();
+			for ( int i = 0 ; i < hobby.length; i++) {				
+				pstmt.setString(1, mDTO.getId());
+				pstmt.setString(2, hobby[i]);
+			}
+			
+			pstmt.executeQuery();
+			
+		} finally {
+			gc.dbClose(null, pstmt, con);
+		} // end finally
+		
+	}// insertWebmemberHobby
+	
+	
 }

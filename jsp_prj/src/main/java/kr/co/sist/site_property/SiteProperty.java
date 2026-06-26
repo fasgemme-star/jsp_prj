@@ -23,7 +23,7 @@ public class SiteProperty {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String selectSiteProperty="	select PROTOCOL, SERVER_NAME, SERVER_PORT, CONTEXT_ROOT, "
-				+ "UPLOAD_DIR, API_KEY, SITE_INFO from site_property where type = 1	"; 
+				+ "UPLOAD_DIR, API_KEY, SITE_INFO from site_property where type = 2	"; 
 		
 		try {
 			con = gc.getConn();
