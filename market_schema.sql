@@ -8,10 +8,8 @@ DROP TABLE client
 DROP SEQUENCE seq_client_no;
 ------------------------------------------
 /*3 장바구니 */
-DROP TRIGGER trg_cart_id;
 DROP TABLE shopping_cart
 	CASCADE CONSTRAINTS;
-DROP SEQUENCE seq_cart_id;
 ------------------------------------------
 /*4 상품 */
 DROP TRIGGER trg_product_id;
@@ -97,11 +95,6 @@ CREATE TABLE manager (
 	manager_input_date DATE DEFAULT SYSDATE/* 입력일 */
 );
 
-CREATE UNIQUE INDEX PK_manager
-	ON manager (
-		manager_ID ASC
-	);
-
 ALTER TABLE manager
 	ADD
 		CONSTRAINT PK_manager
@@ -120,23 +113,20 @@ CREATE TABLE client (
 	client_tel VARCHAR2(20), /* 휴대폰 */
 	client_birth DATE, /* 생년월일 */
 	client_ip VARCHAR2(15), /* IP */
-	client_check CHAR(1), /* 마케팅선택체크 */
+	client_check VARCHAR(1), /* 마케팅선택체크 */
 	client_start_date DATE default sysdate, /* 가입일 */
-	client_delete_account CHAR(1) default 'N', /* 탈퇴여부 */
+	client_delete_account VARCHAR(1) default 'N', /* 탈퇴여부 */
 	client_last_date DATE DEFAULT NULL/* 탈퇴일 */
 );
 
-CREATE UNIQUE INDEX PK_client
-	ON client (
-		client_No ASC
-	);
+ALTER TABLE client
+ADD	CONSTRAINT PK_client
+PRIMARY KEY (client_No);
 
 ALTER TABLE client
-	ADD
-		CONSTRAINT PK_client
-		PRIMARY KEY (
-			client_No
-		);
+ADD CONSTRAINT UK_client_ID
+UNIQUE (client_ID);
+
 CREATE SEQUENCE seq_client_no
 START WITH 1
 INCREMENT BY 1
@@ -157,34 +147,19 @@ END;
 /*3 장바구니 */
 
 CREATE TABLE shopping_cart (
-	cart_ID VARCHAR2(30) NOT NULL, /* 장바구니아이디 */
-	quantity NUMBER(5), /* 수량 */
-	input_date date default sysdate, /* 추가일 */
 	client_No VARCHAR2(30), /* 회원아이디 */
-	option_ID VARCHAR2(100) /* 상품아이디 */
+	option_ID VARCHAR2(100), /* 상품아이디 */
+	quantity NUMBER(5), /* 수량 */
+	input_date date default sysdate /* 추가일 */
 );
-
-CREATE UNIQUE INDEX PK_shopping_cart
-	ON shopping_cart (
-		cart_ID ASC
-	);
 
 ALTER TABLE shopping_cart
 	ADD
 		CONSTRAINT PK_shopping_cart
 		PRIMARY KEY (
-			cart_ID
+			client_No,
+			option_ID
 		);
-CREATE SEQUENCE seq_cart_id START WITH 1 INCREMENT BY 1 MAXVALUE 999999 NOCYCLE NOCACHE;
-
-CREATE OR REPLACE TRIGGER trg_cart_id
-BEFORE INSERT ON shopping_cart FOR EACH ROW
-BEGIN
-  IF :NEW.cart_ID IS NULL THEN
-    :NEW.cart_ID := 'CRT' || LPAD(seq_cart_id.NEXTVAL, 6, '0');
-  END IF;
-END;
-/
 ------------------------------------------
 /*4 상품 */
 
@@ -199,7 +174,7 @@ CREATE TABLE product (
 	discount NUMBER(10), /* 할인 */
 	manufacturer VARCHAR2(90), /* 제조사 */
 	origin VARCHAR2(90), /* 원산지 */
-	underage_purchase CHAR(1), /* 미성년자구매 */
+	underage_purchase VARCHAR(1), /* 미성년자구매 */
 	weight NUMBER(6), /* 중량 */
 	expiration_date DATE, /* 유통기한 */
 	storage_type VARCHAR2(100), /* 보관유형 */
@@ -207,7 +182,7 @@ CREATE TABLE product (
 	min_purchase NUMBER(5), /* 최소구매수량 */
 	max_purchase NUMBER(5), /* 최대구매수량 */
 	product_input_date DATE DEFAULT sysdate, /* 입력일 */
-	is_deleted CHAR(1) default 'N', /* 삭제상태 */
+	is_deleted VARCHAR(1) default 'N', /* 삭제상태 */
 	category_ID VARCHAR2(500) /* 카테고리아이디 */
 );
 CREATE SEQUENCE seq_product_id START WITH 1 INCREMENT BY 1 MAXVALUE 999999 NOCYCLE NOCACHE;
@@ -220,10 +195,6 @@ BEGIN
   END IF;
 END;
 /
-CREATE UNIQUE INDEX PK_product
-	ON product (
-		product_ID ASC
-	);
 
 ALTER TABLE product
 	ADD
@@ -240,11 +211,6 @@ CREATE TABLE product_image (
 	image_type VARCHAR2(50), /* 이미지종류 */
 	product_ID VARCHAR2(500) /* 상품아이디 */
 );
-
-CREATE UNIQUE INDEX PK_product_image
-	ON product_image (
-		product_img_id ASC
-	);
 
 ALTER TABLE product_image
 	ADD
@@ -267,13 +233,8 @@ END;
 CREATE TABLE category (
 	category_ID VARCHAR2(500) NOT NULL, /* 카테고리아이디 */
 	category_name VARCHAR2(50), /* 카테고리명 */
-	isdeleted CHAR(1) default 'N'
+	isdeleted VARCHAR(1) default 'N'
 );
-
-CREATE UNIQUE INDEX PK_category
-	ON category (
-		category_ID ASC
-	);
 
 ALTER TABLE category
 	ADD
@@ -301,10 +262,6 @@ CREATE TABLE product_option(
 	product_id VARCHAR2(500) /* 상품아이디　*/
 );
 
-CREATE UNIQUE INDEX PK_product_option
-	ON product_option (
-		option_id ASC
-	);
 
 ALTER TABLE product_option
 	ADD
@@ -329,11 +286,6 @@ CREATE TABLE additional_info(
 	info_content CLOB,
 	product_id VARCHAR2(500)
 );
-
-CREATE UNIQUE INDEX PK_additional_info
-	ON additional_info (
-		additional_id ASC
-	);
 
 ALTER TABLE additional_info
 	ADD
@@ -366,11 +318,6 @@ CREATE TABLE orders (
 	client_No VARCHAR2(30) /* 회원아이디 */
 );
 
-CREATE UNIQUE INDEX PK_orders
-	ON orders (
-		order_ID ASC
-	);
-
 ALTER TABLE orders
 	ADD
 		CONSTRAINT PK_orders
@@ -397,11 +344,6 @@ CREATE TABLE order_details (
 	order_ID VARCHAR2(30) /* 주문아이디 */
 );
 
-CREATE UNIQUE INDEX PK_order_details
-	ON order_details (
-		order_details_ID ASC
-	);
-
 ALTER TABLE order_details
 	ADD
 		CONSTRAINT PK_order_details
@@ -426,12 +368,6 @@ CREATE TABLE PAYMENT (
 	payment_type VARCHAR2(50), /* 결제타입 */
 	payment_date DATE /* 결제일자 */
 );
-
-
-CREATE UNIQUE INDEX PK_PAYMENT
-	ON PAYMENT (
-		paymentID ASC
-	);
 
 ALTER TABLE PAYMENT
 	ADD
@@ -462,15 +398,18 @@ CREATE TABLE delivery_destination (
 	delivery_ID VARCHAR2(30) NOT NULL, /* 배송아이디 */
 	delivery_postcode VARCHAR2(30), /* 배송우편번호 */
 	delivery_addr VARCHAR2(300), /* 배송주소 */
-	first_destination CHAR(1), /* 기본배송지FLAG */
+	first_destination VARCHAR(1), /* 기본배송지FLAG */
 	delivery_input_date DATE  default sysdate, /* 입력일 */
 	client_No VARCHAR2(30) /* 회원아이디 */
 );
 
-CREATE UNIQUE INDEX PK_delivery_destination
-	ON delivery_destination (
-		delivery_ID ASC
-	);
+CREATE UNIQUE INDEX uq_default_delivery
+ON delivery_destination (
+    CASE
+        WHEN first_destination = 'Y'
+        THEN client_No
+    END
+);
 
 ALTER TABLE delivery_destination
 	ADD
@@ -495,20 +434,16 @@ CREATE TABLE inquiry (
 	inquiry_ID VARCHAR2(30) NOT NULL, /* 문의아이디 */
 	inquiry_date DATE  default sysdate, /* 문의일자 */
 	inquiry_title VARCHAR2(200), /* 제목 */
-	inquiry_secret CHAR(1), /* 비밀글 */
+	inquiry_secret VARCHAR(1), /* 비밀글 */
 	inquiry_content CLOB, /* 내용 */
 	answer_status VARCHAR2(30), /* 답변상태 없어도 */
 	answer CLOB, /* 답변 */
 	answer_date DATE, /* 답변일자 */
-	inquiry_status CHAR(1) default 'N',	/* 삭제상태 */
+	inquiry_status VARCHAR(1) default 'N',	/* 삭제상태 */
 	inquiry_code VARCHAR2(30), /* 문의코드 */
-	order_details_ID VARCHAR2(30) /* 주문상세아이디 */
+	order_details_ID VARCHAR2(30), /* 주문상세아이디 */
+	client_no VARCHAR2(30) NOT NULL
 );
-
-CREATE UNIQUE INDEX PK_inquiry
-	ON inquiry (
-		inquiry_ID ASC
-	);
 
 ALTER TABLE inquiry
 	ADD
@@ -532,11 +467,6 @@ CREATE TABLE inquiry_type (
 	inquiry_name VARCHAR2(200), /* 문의명 */
 	inquiry_type VARCHAR2(30) /* 문의유형 */
 );
-
-CREATE UNIQUE INDEX PK_inquiry_type
-	ON inquiry_type (
-		inquiry_code ASC
-	);
 
 ALTER TABLE inquiry_type
 	ADD
@@ -567,11 +497,6 @@ CREATE TABLE claim (
 	order_details_ID VARCHAR2(30) /* 주문상세아이디 */
 );
 
-CREATE UNIQUE INDEX PK_claim
-	ON claim (
-		claim_ID ASC
-	);
-
 ALTER TABLE claim
 	ADD
 		CONSTRAINT PK_claim
@@ -595,12 +520,6 @@ CREATE TABLE claim_image (
 	claim_ID VARCHAR2(30) NOT NULL, /* 클레임아이디 */
 	file_name VARCHAR2(500) /* 파일명 */
 );
-
-CREATE UNIQUE INDEX PK_claim_image
-	ON claim_image (
-		claim_img_ID ASC,
-		claim_ID ASC
-	);
 
 ALTER TABLE claim_image
 	ADD
@@ -730,6 +649,17 @@ ALTER TABLE inquiry
 			order_details_ID
 		);
 
+ALTER TABLE inquiry
+	ADD
+		CONSTRAINT FK_client_TO_inquiry
+		FOREIGN KEY (
+			client_no
+		)
+		REFERENCES client (
+			client_no
+		);
+
+
 ALTER TABLE product_image
 	ADD
 		CONSTRAINT FK_product_TO_product_image
@@ -800,14 +730,14 @@ VALUES ('admin01','김관리', '1234', '010-1234-5541', 'admin01@test.com');
 /* ===========================
    2. 회원 (client_No 자동생성: C0001, C0002, C0003...)
 =========================== */
-INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check)
-VALUES ('user01', '1234', '홍길동', 'hong@test.com', '01011111111', DATE '2000-01-01', '1.1.1.1', 'Y');
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES ('user01', '1234', '홍길동', 'hong@test.com', '010-1111-1111', DATE '2000-01-01', '1.1.1.1', 'Y', DATE '2026-01-07');
 
-INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check)
-VALUES ('user02', '1234', '김철수', 'kim@test.com', '01022222222', DATE '1999-02-02', '2.2.2.2', 'N');
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES ('user02', '1234', '김철수', 'kim@test.com', '010-2222-2222', DATE '1999-02-02', '2.2.2.2', 'N', DATE '2026-01-09');
 
-INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check)
-VALUES ('user03', '1234', '이영희', 'lee@test.com', '01033333333', DATE '2001-03-03', '3.3.3.3', 'Y');
+INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
+VALUES ('user03', '1234', '이영희', 'lee@test.com', '010-3333-3333', DATE '2001-03-03', '3.3.3.3', 'Y', DATE '2026-01-10');
 
 
 INSERT INTO client (client_ID, client_hash, client_name, client_email, client_tel, client_birth, client_ip, client_check, client_start_date)
@@ -909,25 +839,6 @@ INSERT INTO category (category_name) VALUES ('음료'); -- CAT000003
 /* ===========================
    4. 상품 (product_ID 자동생성: P000001 ~ P000006)
 =========================== */
-INSERT INTO product (product_name, product_type, price, notice, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type,UNIT, min_purchase, max_purchase, category_ID)
-VALUES ('사과', '식품', 3000,'초당옥수수 특성상 ~~~~~ 지않을 수 있지만 정상범주내의 정상상품입니다.', '맛있는 사과', '간단한 설명' ,0, '농협', '국산', 'N', 1000, SYSDATE+30, '상온', '1망', 1, 10, 'CAT000001');
-
-INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('당근', '식품', 2000, '신선한 당근', '간단한 설명', 10, '농협', '국산', 'N', 500, SYSDATE+20, '냉장', 1, 20, 'CAT000002');
-
-INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('콜라', '음료', 2500, '탄산음료', '간단한 설명', 0, '코카콜라', '한국', 'N', 1500, SYSDATE+365, '상온', 1, 30, 'CAT000003');
-
-INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('바나나', '식품', 4000, '달콤한 바나나', '간단한 설명', 0, '돌', '필리핀', 'N', 1200, SYSDATE+14, '상온', 1, 10, 'CAT000001');
-
-INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('양파', '식품', 3500, '국산 양파', '간단한 설명', 5, '농협', '국산', 'N', 1500, SYSDATE+30, '상온', 1, 20, 'CAT000002');
-
-INSERT INTO product (product_name, product_type, price, description,shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, min_purchase, max_purchase, category_ID)
-VALUES ('사이다', '음료', 1800, '청량한 탄산음료', '간단한 설명', 0, '칠성', '한국', 'N', 500, SYSDATE+365, '상온', 1, 30, 'CAT000003');
-
-
 INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
 VALUES ('제주 감귤', '식품', 12000, '신선식품 특성상 크기가 일정하지 않을 수 있습니다.', '새콤달콤한 제주 감귤', '겨울 필수 간식 감귤', 10, '제주농협', '국산', 'N', 3000, SYSDATE+20, '냉장', '1박스', 1, 5, DATE '2025-12-05', 'CAT000001');
 
@@ -969,9 +880,6 @@ VALUES ('짭짤이 토마토', '식품', 18000, '초록빛이 돌 때 먹어야 가장 맛있습니다.'
 
 INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
 VALUES ('봄동 봄나물', '식품', 3000, '겉절이로 무쳐 드시면 맛있습니다.', '봄을 알리는 아삭한 봄동', '입맛 돋우는 봄나물', 10, '해남농가', '국산', 'N', 500, SYSDATE+5, '냉장', '1봉', 1, 5, DATE '2026-03-12', 'CAT000002');
-
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('양파', '식품', 4500, '망에 담아 통풍이 잘되는 곳에 보관하세요.', '단단하고 알이 굵은 국산 양파', '식탁 위 필수 식재료', 0, '무안농협', '국산', 'N', 3000, SYSDATE+30, '상온', '1망', 1, 3, DATE '2026-03-22', 'CAT000002');
 
 INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
 VALUES ('유기농 녹차티백', '음료', 4500, '뜨거운 물에 1~2분 우려내세요.', '은은한 향의 보성 유기농 녹차', '차 한잔의 여유', 0, '보성다원', '국산', 'N', 50, SYSDATE+365, '상온', '20티백', 1, 10, DATE '2026-03-19', 'CAT000003');
@@ -1024,9 +932,6 @@ VALUES ('유기농 콤부차', '음료', 15000, '냉장 보관 후 차갑게 드시면 더욱 맛있습�
 /* ===========================
    8.추가정보
 =========================== */
-INSERT INTO additional_info (info_content, product_id)
-VALUES('신선식품의 특성상 상품의 중량에 3%내외의 차이가 발생할 수 있습니다.신선식품 특성상 원물마다 크기 및 형태가 일정하지 않을 수 있습니다.','P000001');
-
 -- 1. P000002 (2개 작성)
 INSERT INTO additional_info (info_content, product_id)
 VALUES ('본 상품은 냉장 보관 상품이므로 수령 후 즉시 냉장고에 넣어주세요.', 'P000002');
@@ -1037,55 +942,56 @@ VALUES ('원물 고유의 특성상 모양이 균일하지 않을 수 있으나 품질에는 문제가 없습�
 INSERT INTO additional_info (info_content, product_id)
 VALUES ('껍질째 드실 수 있는 상품이나, 섭취 전 흐르는 물에 깨끗이 세척해 주세요.', 'P000005');
 
--- 3. P000009 (3개 작성)
+-- 3. P000008 (3개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('개봉 후에는 변질의 우려가 있으니 가급적 빨리 섭취하시기 바랍니다.', 'P000009');
+VALUES ('개봉 후에는 변질의 우려가 있으니 가급적 빨리 섭취하시기 바랍니다.', 'P000008');
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('유통기한은 미개봉 상태 기준이며, 보관 조건에 따라 달라질 수 있습니다.', 'P000009');
+VALUES ('유통기한은 미개봉 상태 기준이며, 보관 조건에 따라 달라질 수 있습니다.', 'P000008');
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('제품 하단에 침전물이 생길 수 있으나 원료 성분이므로 흔들어 드십시오.', 'P000009');
+VALUES ('제품 하단에 침전물이 생길 수 있으나 원료 성분이므로 흔들어 드십시오.', 'P000008');
 
--- 4. P000012 (2개 작성)
+-- 4. P000010 (2개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('신선식품의 특성상 상품의 중량에 3%내외의 차이가 발생할 수 있습니다.', 'P000012');
+VALUES ('신선식품의 특성상 상품의 중량에 3%내외의 차이가 발생할 수 있습니다.', 'P000010');
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('기온 변화에 따라 배송 중 약간의 후숙이 진행될 수 있습니다.', 'P000012');
+VALUES ('기온 변화에 따라 배송 중 약간의 후숙이 진행될 수 있습니다.', 'P000010');
 
--- 5. P000016 (1개 작성)
+-- 5. P000012 (1개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('이 제품은 알레르기 유발 가능성이 있는 대두, 우유를 사용한 제품과 같은 제조시설에서 생산되었습니다.', 'P000016');
+VALUES ('이 제품은 알레르기 유발 가능성이 있는 대두, 우유를 사용한 제품과 같은 제조시설에서 생산되었습니다.', 'P000012');
 
--- 6. P000020 (2개 작성)
+-- 6. P000023 (2개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('장기 보관 시에는 소분하여 냉동 보관하시는 것을 권장합니다.', 'P000020');
+VALUES ('장기 보관 시에는 소분하여 냉동 보관하시는 것을 권장합니다.', 'P000023');
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('조리 전 충분히 해동한 후 사용하셔야 본연의 맛을 느끼실 수 있습니다.', 'P000020');
+VALUES ('조리 전 충분히 해동한 후 사용하셔야 본연의 맛을 느끼실 수 있습니다.', 'P000023');
 
--- 7. P000024 (1개 작성)
+-- 7. P000027 (1개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('탄산이 포함된 제품으로 흔들 경우 내용물이 넘칠 수 있으니 주의하세요.', 'P000024');
+VALUES ('충격에 약한 상품이므로 배송 중 미세한 눌림 현상이 발생할 수 있습니다.', 'P000027');
 
 -- 8. P000028 (3개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('초당옥수수 특성상 끝달림이 좋지 않을 수 있지만 정상범주내의 정상상품입니다.', 'P000028');
+VALUES ('초당옥수수 특성상 끝달림이 좋지 않을 수 있지만 정상범주내의 정상상품입니다.', 'P000029');
 INSERT INTO additional_info (info_content, product_id)
 VALUES ('수령 후 바로 드시지 않을 경우 껍질을 벗겨 냉동 보관해 주세요.', 'P000028');
 INSERT INTO additional_info (info_content, product_id)
 VALUES ('전자레인지에 3분간 돌려 드시면 가장 아삭하고 달콤하게 즐기실 수 있습니다.', 'P000028');
 
--- 9. P000031 (2개 작성)
+-- 9. P000029 (1개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('포장 용기의 모서리가 날카로우니 개봉 시 손이 베이지 않도록 주의하십시오.', 'P000031');
-INSERT INTO additional_info (info_content, product_id)
-VALUES ('직사광선을 피해 서늘하고 건조한 곳에 실온 보관하세요.', 'P000031');
+VALUES ('탄산이 포함된 제품으로 흔들 경우 내용물이 넘칠 수 있으니 주의하세요.', 'P000029');
 
--- 10. P000035 (1개 작성)
+-- 10. P000030 (2개 작성)
 INSERT INTO additional_info (info_content, product_id)
-VALUES ('충격에 약한 상품이므로 배송 중 미세한 눌림 현상이 발생할 수 있습니다.', 'P000035');
+VALUES ('포장 용기의 모서리가 날카로우니 개봉 시 손이 베이지 않도록 주의하십시오.', 'P000030');
+INSERT INTO additional_info (info_content, product_id)
+VALUES ('직사광선을 피해 서늘하고 건조한 곳에 실온 보관하세요.', 'P000030');
 
 /* ===========================
    5. 상품이미지 (product_img_id 자동생성)
 =========================== */
+/*
 -- P000001
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'THUMB', 'http://.../p1_thumb.jpg');
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'DETAIL', 'http://.../p1_detail.jpg');
@@ -1273,163 +1179,267 @@ INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONT
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content3.jpg');
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content4.jpg');
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONTENT', 'http://.../p30_content5.jpg');
-
--- P000031
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000031', 'THUMB', 'http://.../p31_thumb.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000031', 'DETAIL', 'http://.../p31_detail.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000031', 'CONTENT', 'http://.../p31_content1.jpg');
-
--- P000032
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'THUMB', 'http://.../p32_thumb.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'DETAIL', 'http://.../p32_detail.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'CONTENT', 'http://.../p32_content1.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000032', 'CONTENT', 'http://.../p32_content2.jpg');
-
--- P000033
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'THUMB', 'http://.../p33_thumb.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'DETAIL', 'http://.../p33_detail.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'CONTENT', 'http://.../p33_content1.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'CONTENT', 'http://.../p33_content2.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000033', 'CONTENT', 'http://.../p33_content3.jpg');
-
--- P000034
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000034', 'THUMB', 'http://.../p34_thumb.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000034', 'DETAIL', 'http://.../p34_detail.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000034', 'CONTENT', 'http://.../p34_content1.jpg');
-
--- P000035
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'THUMB', 'http://.../p35_thumb.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'DETAIL', 'http://.../p35_detail.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'CONTENT', 'http://.../p35_content1.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000035', 'CONTENT', 'http://.../p35_content2.jpg');
-
--- P000036
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'THUMB', 'http://.../p36_thumb.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'DETAIL', 'http://.../p36_detail.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content1.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content2.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content3.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000036', 'CONTENT', 'http://.../p36_content4.jpg');
-
--- P000037
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000037', 'THUMB', 'http://.../p37_thumb.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000037', 'DETAIL', 'http://.../p37_detail.jpg');
-INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000037', 'CONTENT', 'http://.../p37_content1.jpg');
-
-
-
+*/
 /* ===========================
    7. 상품 옵션 (option_id 자동생성: OPT000001...)
 =========================== */
 -- 장바구니 및 주문상세에서 활용하기 위해 기본 옵션을 추가했습니다.
-INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('기본 사과', 0, 100, 'P000001'); -- OPT000001
-INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('기본 당근', 0, 150, 'P000002'); -- OPT000002
-INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('기본 콜라', 0, 200, 'P000003'); -- OPT000003
-INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('기본 바나나', 0, 80, 'P000004'); -- OPT000004
-INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('기본 양파', 0, 120, 'P000005'); -- OPT000005
-INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('기본 사이다', 0, 300, 'P000006'); -- OPT000006
+-- 1. 제주 감귤 (P000001)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('제주 타이벡 감귤 3kg 로얄과', 0, 110, 'P000001');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('제주 타이벡 감귤 5kg 로얄과', 7000, 85, 'P000001');
+
+-- 2. 부사 사과 (P000002)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('실속형 부사사과 5kg', 0, 130, 'P000002');
+
+-- 3. 겨울 시금치 (P000003)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('달달한 노지 시금치 1단', 0, 250, 'P000003');
+
+-- 4. 핫초코 미트 (P000004)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('오리지널 핫초코 30스틱', 0, 95, 'P000004');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('대용량 오리지널 60스틱', 5000, 50, 'P000004');
+
+-- 5. 레드향 (P000005)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('제주 레드향 2kg 가정용', 0, 80, 'P000005');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('제주 레드향 3kg 선물용', 12000, 40, 'P000005');
+
+-- 6. 세척당근 (P000006)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('간편 세척당근 1kg', 0, 180, 'P000006');
+
+-- 7. 대파 (P000007)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('흙대파 1단', 0, 400, 'P000007');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('깔끔 손질대파 500g', 1000, 150, 'P000007');
+
+-- 8. 유자차 베이스 (P000008)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('달콤 유자청 1kg 병', 0, 120, 'P000008');
+
+-- 9. 설향 딸기 (P000009)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('논산 설향 딸기 500g 1팩', 0, 70, 'P000009');
+
+-- 10. 한라봉 (P000010)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('제주 한라봉 2kg 실속형', 0, 95, 'P000010');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('제주 한라봉 3kg 정품과', 9000, 60, 'P000010');
+
+-- 11. 브로콜리 (P000011)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('국산 싱싱 브로콜리 2송이', 0, 160, 'P000011');
+
+-- 12. 도라지 배즙 (P000012)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('순수 도라지배즙 30포', 0, 110, 'P000012');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('순수 도라지배즙 60포', 16000, 60, 'P000012');
+
+-- 13. 짭짤이 토마토 (P000013)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('대저 짭짤이 토마토 1kg 랜덤과', 0, 140, 'P000013');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('대저 짭짤이 토마토 2.5kg 로얄과', 18000, 80, 'P000013');
+
+-- 14. 봄동 봄나물 (P000014)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('봄동 배추 500g', 0, 200, 'P000014');
+
+-- 15. 유기농 녹차티백 (P000015)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('보성 현미녹차 50티백', 0, 130, 'P000015');
+
+-- 16. 성주 참외 (P000016)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('성주 참외 1.5kg (5-7과)', 0, 100, 'P000016');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('성주 참외 3kg 가정용 못난이', 6000, 90, 'P000016');
+
+-- 17. 오렌지 (P000017)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('고당도 네이블 오렌지 10과', 0, 180, 'P000017');
+
+-- 18. 청도 미나리 (P000018)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('청도 한재 한재미나리 300g', 0, 150, 'P000018');
+
+-- 19. 양배추 (P000019)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('통양배추 1통 (1.5kg 내외)', 0, 170, 'P000019');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('편리한 채썬 양배추 500g', 1500, 100, 'P000019');
+
+-- 20. 콜드브루 원액 (P000020)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('예가체프 블렌드 원액 500ml', 0, 90, 'P000020');
+
+-- 21. 방울토마토 (P000021)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('국산 대추방울토마토 1kg', 0, 140, 'P000021');
+
+-- 22. 망고 (P000022)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('태국 골드망고 4과 팩', 0, 75, 'P000022');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('태국 골드망고 8과 박스', 14000, 40, 'P000022');
+
+-- 23. 다다기오이 (P000023)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('백다다기오이 5개 묶음', 0, 220, 'P000023');
+
+-- 24. 파프리카 혼합 (P000024)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('삼색 파프리카 3개입 1봉', 0, 190, 'P000024');
+
+-- 25. 아이스티 복숭아 (P000025)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('복숭아 아이스티 스틱 40T', 0, 140, 'P000025');
+
+-- 26. 고창 수박 (P000026)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('당도선별 고창수박 6-7kg', 0, 50, 'P000026');
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('특대 고창수박 8-9kg', 7000, 30, 'P000026');
+
+-- 27. 신비복숭아 (P000027)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('경산 신비복숭아 1kg 팩', 0, 85, 'P000027');
+
+-- 28. 초당옥수수 (P000028)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('생먹는 초당옥수수 10개입', 0, 120, 'P000028');
+
+-- 29. 탄산수 플레인 (P000029)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('플레인 탄산수 500ml x 20개', 0, 160, 'P000029');
+
+-- 30. 유기농 콤부차 (P000030)
+INSERT INTO product_option (option_name, extra_charge, stockQuantity, product_id) VALUES ('레몬 콤부차 분말형 30스틱', 0, 110, 'P000030');
 
 
 /* ===========================
    3. 장바구니 (cart_ID 자동생성, client_No 매핑)
 =========================== */
-INSERT INTO shopping_cart (quantity, client_No, option_ID) VALUES (2, 'C000001', 'OPT000001');
-INSERT INTO shopping_cart (quantity, client_No, option_ID) VALUES (1, 'C000002', 'OPT000002');
-INSERT INTO shopping_cart (quantity, client_No, option_ID) VALUES (3, 'C000003', 'OPT000003');
+
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (2, 'C000001', 'OPT000001', DATE '2026-01-07');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (1, 'C000001', 'OPT000008', DATE '2026-01-07');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (4, 'C000001', 'OPT000025', DATE '2026-01-07');
+
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (1, 'C000002', 'OPT000012', DATE '2026-01-09');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (3, 'C000002', 'OPT000038', DATE '2026-01-09');
+
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (5, 'C000003', 'OPT000003', DATE '2026-01-10');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (2, 'C000003', 'OPT000015', DATE '2026-01-10');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (1, 'C000003', 'OPT000022', DATE '2026-01-10');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (2, 'C000003', 'OPT000041', DATE '2026-01-10');
+
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (1, 'C000004', 'OPT000019', DATE '2026-01-12');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (2, 'C000004', 'OPT000030', DATE '2026-01-12');
+
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (3, 'C000005', 'OPT000005', DATE '2026-01-28');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (1, 'C000005', 'OPT000011', DATE '2026-01-28');
+INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (6, 'C000005', 'OPT000034', DATE '2026-01-28');
 
 
 /* ===========================
    9. 주문 (order_ID 자동생성: O000001, O000002...)
 =========================== */
-INSERT INTO orders (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, delivery_completion_date, client_No)
-VALUES (25000, '일반배송', '배송완료', '배송요청사항없음', DATE '2026-06-06', DATE '2026-06-08', 'C000001');
+INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-07','일반배송', '배송대기', '배송요청사항없음',null,null, 'C000001');
 
-INSERT INTO orders (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, client_No)
-VALUES (47000, '일반배송', '배송중', '배송요청사항없음', DATE '2026-06-08', 'C000002');
+INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-09','일반배송', '배송대기', '배송요청사항없음', null, null, 'C000002');
 
-INSERT INTO orders (total_amount, order_status, delivery_status, delivery_request, delivery_start_date, client_No)
-VALUES (80000, '일반배송', '배송대기', '배송요청사항없음', DATE '2026-06-10', 'C000003');
+INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-10','일반배송', '배송중', '배송요청사항없음', DATE '2026-01-10', null, 'C000003');
 
+INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-12','일반배송', '배송완료', '배송요청사항없음', DATE '2026-01-13', DATE '2026-06-14', 'C000004');
+
+INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-28','일반배송', '배송완료', '배송요청사항없음', DATE '2026-01-29', DATE '2026-02-01', 'C000005');
 
 /* ===========================
    10. 주문상세 (order_details_ID 자동생성: OD000001...)
 =========================== */
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 25000, 'OPT000001', 'O000001'); -- OD000001
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 12000, 'OPT000002', 'O000002'); -- OD000002
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 33000, 'OPT000003', 'O000002'); -- OD000003
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 2000,  'OPT000004', 'O000002'); -- OD000004
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 16000, 'OPT000006', 'O000003'); -- OD000005
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000004', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000004', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000005', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000005', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000005', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
-INSERT INTO order_details (quantity, price, option_ID, order_ID) VALUES (1, 64000, 'OPT000006', 'O000003'); -- OD000006
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 24000,'OPT000001','O000001');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 40000,'OPT000008','O000001');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (4, 39600,'OPT000025','O000001');
+
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 8000,'OPT000012','O000002');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (3, 48000,'OPT000038','O000002');
+
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (5, 75000,'OPT000003','O000003');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 62000,'OPT000015','O000003');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 4500,'OPT000022','O000003');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 30000,'OPT000041','O000003');
+
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 18000,'OPT000019','O000004');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 15800,'OPT000030','O000004');
+
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (3, 19500,'OPT000005','O000005');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 3900,'OPT000011','O000005');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (6, 29400,'OPT000034','O000005');
+
 
 
 /* ===========================
    11. 결제 (paymentID 자동생성)
 =========================== */
-INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000001', '일반결제', DATE '2026-06-06');
-INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000002', '자동결제', DATE '2026-06-08');
-INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000003', '브랜드페이', DATE '2026-06-10');
-
+INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000001', '일반결제', DATE '2026-01-07');
+INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000002', '자동결제', DATE '2026-01-09');
+INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000003', '브랜드페이', DATE '2026-01-10');
+INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000004', '브랜드페이', DATE '2026-01-12');
+INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000005', '브랜드페이', DATE '2026-01-28');
 
 /* ===========================
    13. 배송지 (delivery_ID 자동생성: DLV000001...)
 =========================== */
 -- 주의: select_delivery가 참조할 ID가 먼저 생성되어야 하므로 순서를 바꿨습니다.
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No)
-VALUES ('05800', '서울시 송파구 문정동', 'T', 'C000001'); -- DLV000001
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('05800', '서울시 송파구 문정동', 'T', 'C000001', DATE '2026-01-07');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No)
-VALUES ('05820', '서울시 송파구 장지동', 'F', 'C000001'); -- DLV000002
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('05820', '서울시 송파구 장지동', 'F', 'C000001', DATE '2026-01-07');
+
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('06134', '서울특별시 강남구 테헤란로 152', 'T', 'C000002', DATE '2026-01-09');
+
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('48058', '부산광역시 해운대구 센텀중앙로 97', 'F', 'C000002', DATE '2026-01-09');
+
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('35209', '대전광역시 서구 둔산로 100', 'T', 'C000003', DATE '2026-01-10');
+
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('21984', '인천광역시 연수구 송도과학로 32', 'T', 'C000004', DATE '2026-01-12');
+
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('61947', '광주광역시 서구 상무중앙로 58', 'F', 'C000004', DATE '2026-01-12');
+
+INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('05820', '서울시 송파구 장지동', 'T', 'C000005', DATE '2026-01-28');
 
 
 /* ===========================
    12. 선택배송지 (매핑 테이블)
 =========================== */
 INSERT INTO select_delivery (delivery_ID, order_ID) VALUES ('DLV000001', 'O000001');
-INSERT INTO select_delivery (delivery_ID, order_ID) VALUES ('DLV000001', 'O000002');
-INSERT INTO select_delivery (delivery_ID, order_ID) VALUES ('DLV000002', 'O000003');
+INSERT INTO select_delivery (delivery_ID, order_ID) VALUES ('DLV000003', 'O000002');
+INSERT INTO select_delivery (delivery_ID, order_ID) VALUES ('DLV000005', 'O000003');
+INSERT INTO select_delivery (delivery_ID, order_ID) VALUES ('DLV000006', 'O000004');
+INSERT INTO select_delivery (delivery_ID, order_ID) VALUES ('DLV000008', 'O000005');
 
 
 /* ===========================
    15. 문의유형 (inquiry_code 자동생성: TYP000001...)
 =========================== */
 -- 문의내역 테이블보다 먼저 들어가야 에러가 안 납니다.
-INSERT INTO inquiry_type (inquiry_name, inquiry_type) VALUES ('배송지연관련', '1대1 문의'); -- TYP000001
+INSERT INTO inquiry_type (inquiry_name, inquiry_type) VALUES ('주문/결제', '1대1 문의'); -- TYP000001
+INSERT INTO inquiry_type (inquiry_name, inquiry_type) VALUES ('서비스/오류/기타', '1대1 문의'); -- TYP000001
 INSERT INTO inquiry_type (inquiry_name, inquiry_type) VALUES ('상품상세문의', '상품 문의');   -- TYP000002
 
 
 /* ===========================
    14. 문의 (inquiry_ID 자동생성)
 =========================== */
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, answer, answer_date, inquiry_code, order_details_ID)
-VALUES (SYSDATE, '배송이 안 와요', 'T', '언제 오나요?', '답변완료', '조금만 기다려주세요.', SYSDATE, 'TYP000001', 'OD000003');
+--상품
+INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, answer, answer_date, inquiry_code, order_details_ID, CLIENT_NO)
+VALUES (SYSDATE, '배송이 안 와요', 'T', '언제 오나요?', '답변완료', '조금만 기다려주세요.', SYSDATE, 'TYP000002', 'OD000001', 'C000001');
 
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID)
-VALUES (SYSDATE, '유통기한 문의', 'F', '언제까지인가요?', '대기중', 'TYP000002', 'OD000003');
+INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID, CLIENT_NO)
+VALUES (SYSDATE, '유통기한 문의', 'F', '언제까지인가요?', '대기중', 'TYP000002', 'OD000004', 'C000002');
 
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID)
-VALUES (SYSDATE, '재입고 일정', 'T', '재입고 언제 되죠?', '대기중', 'TYP000002', 'OD000003');
+INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID, CLIENT_NO)
+VALUES (SYSDATE, '재입고 일정', 'T', '재입고 언제 되죠?', '대기중', 'TYP000002', 'OD000008', 'C000003');
+--1대1
+INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code,  CLIENT_NO)
+VALUES (SYSDATE, '환불 문의', 'T', '환불 문의', '답변완료', 'TYP000001', 'C000004');
+
+INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code,  CLIENT_NO)
+VALUES (SYSDATE, '결제 오류', 'T', '카드 결제는 완료되었는데 주문이 생성되지 않았습니다', '대기중', 'TYP000001', 'C000005');
 
 
 /* ===========================
    16. 클레임 (claim_ID 자동생성: CLM000001...)
 =========================== */
 INSERT INTO claim (claim_type, requestdate, reason, reason_detail, status, processingdate, order_details_ID)
-VALUES ('환불', SYSDATE-5, '상품 파손', '배송 중 상품이 파손되어 환불 요청', '처리완료', SYSDATE-3, 'OD000001');
+VALUES ('환불', DATE '2026-01-08', '상품 파손', '배송 중 상품이 파손되어 환불 요청', '처리완료', DATE '2026-01-08', 'OD000001');
 
 INSERT INTO claim (claim_type, requestdate, reason, reason_detail, status, processingdate, order_details_ID)
-VALUES ('교환', SYSDATE-2, '오배송', '주문한 상품과 다른 상품이 배송됨', '처리중', NULL, 'OD000003');
+VALUES ('교환', DATE '2026-01-09', '오배송', '주문한 상품과 다른 상품이 배송됨', '처리중', NULL, 'OD000003');
 
 INSERT INTO claim (claim_type, requestdate, reason, reason_detail, status, processingdate, order_details_ID)
-VALUES ('반품', SYSDATE-1, '단순변심', '생각했던 상품과 달라 반품 요청', '접수완료', NULL, 'OD000005');
+VALUES ('반품', DATE '2026-01-10', '단순변심', '생각했던 상품과 달라 반품 요청', '접수완료', NULL, 'OD000005');
 
 
 /* ===========================
