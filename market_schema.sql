@@ -12,10 +12,10 @@ DROP TABLE shopping_cart
 	CASCADE CONSTRAINTS;
 ------------------------------------------
 /*4 상품 */
-DROP TRIGGER trg_product_id;
+--DROP TRIGGER trg_product_id;
 DROP TABLE product
 	CASCADE CONSTRAINTS;
-DROP SEQUENCE seq_product_id;
+--DROP SEQUENCE seq_product_id;
 /*5 상품이미지 */
 DROP TRIGGER trg_product_img_id;
 DROP TABLE product_image
@@ -185,16 +185,16 @@ CREATE TABLE product (
 	is_deleted VARCHAR(1) default 'N', /* 삭제상태 */
 	category_ID VARCHAR2(500) /* 카테고리아이디 */
 );
-CREATE SEQUENCE seq_product_id START WITH 1 INCREMENT BY 1 MAXVALUE 999999 NOCYCLE NOCACHE;
-
-CREATE OR REPLACE TRIGGER trg_product_id
-BEFORE INSERT ON product FOR EACH ROW
-BEGIN
-  IF :NEW.product_ID IS NULL THEN
-    :NEW.product_ID := 'P' || LPAD(seq_product_id.NEXTVAL, 6, '0');
-  END IF;
-END;
-/
+--CREATE SEQUENCE seq_product_id START WITH 1 INCREMENT BY 1 MAXVALUE 999999 NOCYCLE NOCACHE;
+--
+--CREATE OR REPLACE TRIGGER trg_product_id
+--BEFORE INSERT ON product FOR EACH ROW
+--BEGIN
+--  IF :NEW.product_ID IS NULL THEN
+--    :NEW.product_ID := 'P' || LPAD(seq_product_id.NEXTVAL, 6, '0');
+--  END IF;
+--END;
+--/
 
 ALTER TABLE product
 	ADD
@@ -314,6 +314,7 @@ CREATE TABLE orders (
 	delivery_status VARCHAR2(30), /* 배송상태 */
 	delivery_request VARCHAR2(500), /* 배송요청사항 */
 	delivery_start_date DATE, /* 배송시작일 */
+	Tracking_number VARCHAR2(100), /* 송장번호 */
 	delivery_completion_date DATE, /* 배송완료일 */
 	client_No VARCHAR2(30) /* 회원아이디 */
 );
@@ -839,95 +840,95 @@ INSERT INTO category (category_name) VALUES ('음료'); -- CAT000003
 /* ===========================
    4. 상품 (product_ID 자동생성: P000001 ~ P000006)
 =========================== */
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('제주 감귤', '식품', 12000, '신선식품 특성상 크기가 일정하지 않을 수 있습니다.', '새콤달콤한 제주 감귤', '겨울 필수 간식 감귤', 10, '제주농협', '국산', 'N', 3000, SYSDATE+20, '냉장', '1박스', 1, 5, DATE '2025-12-05', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000001', '제주 감귤', '식품', 12000, '신선식품 특성상 크기가 일정하지 않을 수 있습니다.', '새콤달콤한 제주 감귤', '겨울 필수 간식 감귤', 10, '제주농협', '국산', 'N', 3000, SYSDATE+20, '냉장', '1박스', 1, 5, DATE '2025-12-05', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('부사 사과', '식품', 15000, '보관 시 밀봉하여 냉장 보관하세요.', '아삭하고 당도 높은 부사 사과', '아침에 먹는 금사과', 0, '대구농협', '국산', 'N', 2000, SYSDATE+30, '냉장', '1봉', 1, 3, DATE '2025-12-15', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000002', '부사 사과', '식품', 15000, '보관 시 밀봉하여 냉장 보관하세요.', '아삭하고 당도 높은 부사 사과', '아침에 먹는 금사과', 0, '대구농협', '국산', 'N', 2000, SYSDATE+30, '냉장', '1봉', 1, 3, DATE '2025-12-15', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('겨울 시금치', '식품', 3500, '흙이 묻어있으니 세척 후 섭취하세요.', '달고 단단한 겨울 노지 시금치', '영양 가득 시금치', 0, '남해농가', '국산', 'N', 500, SYSDATE+7, '냉장', '1단', 1, 10, DATE '2025-12-10', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000003', '겨울 시금치', '식품', 3500, '흙이 묻어있으니 세척 후 섭취하세요.', '달고 단단한 겨울 노지 시금치', '영양 가득 시금치', 0, '남해농가', '국산', 'N', 500, SYSDATE+7, '냉장', '1단', 1, 10, DATE '2025-12-10', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('핫초코 미트', '음료', 6500, '유통기한을 확인 유의하세요.', '진하고 부드러운 핫초코', '겨울철 따뜻한 코코아', 5, '미트식품', '수입산', 'N', 400, SYSDATE+180, '상온', '1개', 1, 20, DATE '2025-12-22', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000004', '핫초코 미트', '음료', 6500, '유통기한을 확인 유의하세요.', '진하고 부드러운 핫초코', '겨울철 따뜻한 코코아', 5, '미트식품', '수입산', 'N', 400, SYSDATE+180, '상온', '1개', 1, 20, DATE '2025-12-22', 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('레드향', '식품', 28000, '선물용으로 좋은 고급 만감류입니다.', '진한 향과 높은 당도의 레드향', '명절 선물 추천', 0, '서귀포농협', '국산', 'N', 2000, SYSDATE+15, '냉장', '1박스', 1, 2, DATE '2026-01-10', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000005', '레드향', '식품', 28000, '선물용으로 좋은 고급 만감류입니다.', '진한 향과 높은 당도의 레드향', '명절 선물 추천', 0, '서귀포농협', '국산', 'N', 2000, SYSDATE+15, '냉장', '1박스', 1, 2, DATE '2026-01-10', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('세척당근', '식품', 4000, '세척되어 있어 편리하게 조리 가능합니다.', '흙 없이 깔끔한 세척당근', '요리 필수 채소', 0, '제주구좌농가', '국산', 'N', 1000, SYSDATE+14, '냉장', '1봉', 1, 5, DATE '2026-01-05', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000006', '세척당근', '식품', 4000, '세척되어 있어 편리하게 조리 가능합니다.', '흙 없이 깔끔한 세척당근', '요리 필수 채소', 0, '제주구좌농가', '국산', 'N', 1000, SYSDATE+14, '냉장', '1봉', 1, 5, DATE '2026-01-05', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('대파', '식품', 2900, '수령 후 다듬어서 냉동보관하시면 오래 드십니다.', '알싸하고 시원한 국산 대파', '모든 요리의 기본', 10, '진도농가', '국산', 'N', 700, SYSDATE+10, '냉장', '1단', 1, 5, DATE '2026-01-18', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000007', '대파', '식품', 2900, '수령 후 다듬어서 냉동보관하시면 오래 드십니다.', '알싸하고 시원한 국산 대파', '모든 요리의 기본', 10, '진도농가', '국산', 'N', 700, SYSDATE+10, '냉장', '1단', 1, 5, DATE '2026-01-18', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('유자차 베이스', '음료', 8000, '개봉 후에는 반드시 냉장 보관하세요.', '겨울에 따뜻하게 즐기는 유자차', '국산 유자로 만든 유자청', 0, '고흥유자영농', '국산', 'N', 1000, SYSDATE+120, '상온', '1병', 1, 5, DATE '2026-01-25', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000008', '유자차 베이스', '음료', 8000, '개봉 후에는 반드시 냉장 보관하세요.', '겨울에 따뜻하게 즐기는 유자차', '국산 유자로 만든 유자청', 0, '고흥유자영농', '국산', 'N', 1000, SYSDATE+120, '상온', '1병', 1, 5, DATE '2026-01-25', 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('설향 딸기', '식품', 9900, '딸기는 쉽게 무를 수 있으니 빠르게 드세요.', '새콤달콤 과즙 가득 설향 딸기', '겨울 왕공 딸기', 15, '논산딸기농가', '국산', 'N', 500, SYSDATE+5, '냉장', '1팩', 1, 4, DATE '2026-02-02', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000009', '설향 딸기', '식품', 9900, '딸기는 쉽게 무를 수 있으니 빠르게 드세요.', '새콤달콤 과즙 가득 설향 딸기', '겨울 왕공 딸기', 15, '논산딸기농가', '국산', 'N', 500, SYSDATE+5, '냉장', '1팩', 1, 4, DATE '2026-02-02', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('한라봉', '식품', 22000, '후숙 시 당도가 더욱 올라갑니다.', '새콤달콤한 제주 한라봉', '상큼한 비타민 충전', 0, '제주농협', '국산', 'N', 2000, SYSDATE+20, '상온', '1박스', 1, 5, DATE '2026-02-14', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000010', '한라봉', '식품', 22000, '후숙 시 당도가 더욱 올라갑니다.', '새콤달콤한 제주 한라봉', '상큼한 비타민 충전', 0, '제주농협', '국산', 'N', 2000, SYSDATE+20, '상온', '1박스', 1, 5, DATE '2026-02-14', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('브로콜리', '식품', 2500, '살짝 데쳐서 초고추장에 찍어 드세요.', '영양소가 풍부한 국산 브로콜리', '건강한 그린 푸드', 0, '제주농가', '국산', 'N', 300, SYSDATE+7, '냉장', '1송이', 1, 10, DATE '2026-02-11', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000011', '브로콜리', '식품', 2500, '살짝 데쳐서 초고추장에 찍어 드세요.', '영양소가 풍부한 국산 브로콜리', '건강한 그린 푸드', 0, '제주농가', '국산', 'N', 300, SYSDATE+7, '냉장', '1송이', 1, 10, DATE '2026-02-11', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('도라지 배즙', '음료', 19000, '침전물이 생길 수 있으나 흔들어 드시면 됩니다.', '기관지에 좋은 도라지 배즙', '환절기 건강 관리', 5, '건강조은', '국산', 'N', 3000, SYSDATE+90, '상온', '30포', 1, 2, DATE '2026-02-20', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000012', '도라지 배즙', '음료', 19000, '침전물이 생길 수 있으나 흔들어 드시면 됩니다.', '기관지에 좋은 도라지 배즙', '환절기 건강 관리', 5, '건강조은', '국산', 'N', 3000, SYSDATE+90, '상온', '30포', 1, 2, DATE '2026-02-20', 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('짭짤이 토마토', '식품', 18000, '초록빛이 돌 때 먹어야 가장 맛있습니다.', '대저 짭짤이 토마토', '단맛과 짠맛의 조화', 0, '대저농협', '국산', 'N', 1000, SYSDATE+10, '상온', '1박스', 1, 3, DATE '2026-03-05', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000013', '짭짤이 토마토', '식품', 18000, '초록빛이 돌 때 먹어야 가장 맛있습니다.', '대저 짭짤이 토마토', '단맛과 짠맛의 조화', 0, '대저농협', '국산', 'N', 1000, SYSDATE+10, '상온', '1박스', 1, 3, DATE '2026-03-05', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('봄동 봄나물', '식품', 3000, '겉절이로 무쳐 드시면 맛있습니다.', '봄을 알리는 아삭한 봄동', '입맛 돋우는 봄나물', 10, '해남농가', '국산', 'N', 500, SYSDATE+5, '냉장', '1봉', 1, 5, DATE '2026-03-12', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000014', '봄동 봄나물', '식품', 3000, '겉절이로 무쳐 드시면 맛있습니다.', '봄을 알리는 아삭한 봄동', '입맛 돋우는 봄나물', 10, '해남농가', '국산', 'N', 500, SYSDATE+5, '냉장', '1봉', 1, 5, DATE '2026-03-12', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('유기농 녹차티백', '음료', 4500, '뜨거운 물에 1~2분 우려내세요.', '은은한 향의 보성 유기농 녹차', '차 한잔의 여유', 0, '보성다원', '국산', 'N', 50, SYSDATE+365, '상온', '20티백', 1, 10, DATE '2026-03-19', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000015', '유기농 녹차티백', '음료', 4500, '뜨거운 물에 1~2분 우려내세요.', '은은한 향의 보성 유기농 녹차', '차 한잔의 여유', 0, '보성다원', '국산', 'N', 50, SYSDATE+365, '상온', '20티백', 1, 10, DATE '2026-03-19', 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('성주 참외', '식품', 14000, '찬물에 씻어 껍질째 혹은 깎아 드세요.', '아삭하고 달콤한 성주 참외', '봄철 대표 과일', 5, '성주농협', '국산', 'N', 1500, SYSDATE+14, '냉장', '1봉', 1, 5, DATE '2026-04-02', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000016', '성주 참외', '식품', 14000, '찬물에 씻어 껍질째 혹은 깎아 드세요.', '아삭하고 달콤한 성주 참외', '봄철 대표 과일', 5, '성주농협', '국산', 'N', 1500, SYSDATE+14, '냉장', '1봉', 1, 5, DATE '2026-04-02', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('오렌지', '식품', 9900, '강제 왁싱 처리를 하지 않은 안전한 오렌지입니다.', '고당도 네이블 오렌지', '상큼함 가득 고당도 오렌지', 0, '선키스트', '수입산', 'N', 1200, SYSDATE+20, '상온', '1봉', 1, 5, DATE '2026-04-18', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000017', '오렌지', '식품', 9900, '강제 왁싱 처리를 하지 않은 안전한 오렌지입니다.', '고당도 네이블 오렌지', '상큼함 가득 고당도 오렌지', 0, '선키스트', '수입산', 'N', 1200, SYSDATE+20, '상온', '1봉', 1, 5, DATE '2026-04-18', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('청도 미나리', '식품', 5000, '삼겹살과 곁들이면 최고의 궁합입니다.', '향이 짙은 청도 한재 미나리', '향긋한 봄 미나리', 0, '청도농가', '국산', 'N', 300, SYSDATE+5, '냉장', '1봉', 1, 10, DATE '2026-04-05', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000018', '청도 미나리', '식품', 5000, '삼겹살과 곁들이면 최고의 궁합입니다.', '향이 짙은 청도 한재 미나리', '향긋한 봄 미나리', 0, '청도농가', '국산', 'N', 300, SYSDATE+5, '냉장', '1봉', 1, 10, DATE '2026-04-05', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('양배추', '식품', 3500, '겉잎을 제거하고 세척 후 사용하세요.', '위 건강에 좋은 싱싱한 양배추', '아삭한 식감 통양배추', 10, '강원농가', '국산', 'N', 1500, SYSDATE+10, '냉장', '1통', 1, 3, DATE '2026-04-15', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000019', '양배추', '식품', 3500, '겉잎을 제거하고 세척 후 사용하세요.', '위 건강에 좋은 싱싱한 양배추', '아삭한 식감 통양배추', 10, '강원농가', '국산', 'N', 1500, SYSDATE+10, '냉장', '1통', 1, 3, DATE '2026-04-15', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('콜드브루 원액', '음료', 12000, '반드시 냉장 보관하시고 물이나 우유에 타서 드세요.', '깔끔한 맛의 콜드브루 커피원액', '홈카페 에센셜 콜드브루', 0, '커피팩토리', '수입산', 'N', 500, SYSDATE+60, '냉장', '1병', 1, 5, DATE '2026-04-26', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000020', '콜드브루 원액', '음료', 12000, '반드시 냉장 보관하시고 물이나 우유에 타서 드세요.', '깔끔한 맛의 콜드브루 커피원액', '홈카페 에센셜 콜드브루', 0, '커피팩토리', '수입산', 'N', 500, SYSDATE+60, '냉장', '1병', 1, 5, DATE '2026-04-26', 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('방울토마토', '식품', 7900, '꼭지를 떼고 보관하시면 더 오래 신선합니다.', '탱글탱글한 대추방울토마토', '한 입에 쏙 건강 간식', 0, '부여농가', '국산', 'N', 1000, SYSDATE+10, '냉장', '1팩', 1, 5, DATE '2026-05-10', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000021', '방울토마토', '식품', 7900, '꼭지를 떼고 보관하시면 더 오래 신선합니다.', '탱글탱글한 대추방울토마토', '한 입에 쏙 건강 간식', 0, '부여농가', '국산', 'N', 1000, SYSDATE+10, '냉장', '1팩', 1, 5, DATE '2026-05-10', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('망고', '식품', 15000, '슈가스팟이 생기면 당도가 가장 높습니다.', '달콤하고 부드러운 수입 생망고', '달콤한 열대과일 망고', 20, '글로벌푸드', '수입산', 'N', 1000, SYSDATE+10, '상온', '1팩', 1, 4, DATE '2026-05-20', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000022', '망고', '식품', 15000, '슈가스팟이 생기면 당도가 가장 높습니다.', '달콤하고 부드러운 수입 생망고', '달콤한 열대과일 망고', 20, '글로벌푸드', '수입산', 'N', 1000, SYSDATE+10, '상온', '1팩', 1, 4, DATE '2026-05-20', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('다다기오이', '식품', 3900, '표면의 가시에 찔리지 않게 주의하세요.', '수분이 가득하고 아삭한 다다기오이', '오이소박이, 피클용 오이', 0, '진천농가', '국산', 'N', 1000, SYSDATE+7, '냉장', '5개입', 1, 5, DATE '2026-05-04', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000023', '다다기오이', '식품', 3900, '표면의 가시에 찔리지 않게 주의하세요.', '수분이 가득하고 아삭한 다다기오이', '오이소박이, 피클용 오이', 0, '진천농가', '국산', 'N', 1000, SYSDATE+7, '냉장', '5개입', 1, 5, DATE '2026-05-04', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('파프리카 혼합', '식품', 4900, '색상 비율은 랜덤으로 발송됩니다.', '아삭하고 달콤한 삼색 파프리카', '샐러드 필수 다이어트 채소', 0, '김제농가', '국산', 'N', 500, SYSDATE+7, '냉장', '1봉', 1, 10, DATE '2026-05-18', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000024', '파프리카 혼합', '식품', 4900, '색상 비율은 랜덤으로 발송됩니다.', '아삭하고 달콤한 삼색 파프리카', '샐러드 필수 다이어트 채소', 0, '김제농가', '국산', 'N', 500, SYSDATE+7, '냉장', '1봉', 1, 10, DATE '2026-05-18', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('아이스티 복숭아', '음료', 5500, '찬물에도 잘 녹는 분말 스틱입니다.', '시원하고 달콤한 복숭아 아이스티', '여름 맞이 시원한 음료', 0, '티타임', '국산', 'N', 500, SYSDATE+365, '상온', '40스틱', 1, 10, DATE '2026-05-28', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000025', '아이스티 복숭아', '음료', 5500, '찬물에도 잘 녹는 분말 스틱입니다.', '시원하고 달콤한 복숭아 아이스티', '여름 맞이 시원한 음료', 0, '티타임', '국산', 'N', 500, SYSDATE+365, '상온', '40스틱', 1, 10, DATE '2026-05-28', 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('고창 수박', '식품', 23000, '수박 특성상 크기 및 당도가 약간 다를 수 있습니다.', '당도 선별 완료된 시원한 고창 수박', '여름 대표 과일 당도보장', 10, '고창농협', '국산', 'N', 7000, SYSDATE+10, '냉장', '1통', 1, 2, DATE '2026-06-15', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000026', '고창 수박', '식품', 23000, '수박 특성상 크기 및 당도가 약간 다를 수 있습니다.', '당도 선별 완료된 시원한 고창 수박', '여름 대표 과일 당도보장', 10, '고창농협', '국산', 'N', 7000, SYSDATE+10, '냉장', '1통', 1, 2, DATE '2026-06-15', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('신비복숭아', '식품', 16000, '겉은 천도 속은 백도인 신비 복숭아입니다.', '짧은 제철에만 맛보는 신비복숭아', '지금 아니면 못 먹는 복숭아', 0, '경산농가', '국산', 'N', 1000, SYSDATE+7, '냉장', '1팩', 1, 3, DATE '2026-06-22', 'CAT000001');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000027', '신비복숭아', '식품', 16000, '겉은 천도 속은 백도인 신비 복숭아입니다.', '짧은 제철에만 맛보는 신비복숭아', '지금 아니면 못 먹는 복숭아', 0, '경산농가', '국산', 'N', 1000, SYSDATE+7, '냉장', '1팩', 1, 3, DATE '2026-06-22', 'CAT000001');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('초당옥수수', '식품', 19900, '초당옥수수 특성상 끝달림이 좋지 않을 수 있지만 정상상품입니다.', '생으로 먹어도 달콤한 초당옥수수', '아삭하고 달콤한 마약 옥수수', 0, '해남농가', '국산', 'N', 2000, SYSDATE+7, '냉장', '10개', 1, 5, DATE '2026-06-10', 'CAT000002');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000028', '초당옥수수', '식품', 19900, '초당옥수수 특성상 끝달림이 좋지 않을 수 있지만 정상상품입니다.', '생으로 먹어도 달콤한 초당옥수수', '아삭하고 달콤한 마약 옥수수', 0, '해남농가', '국산', 'N', 2000, SYSDATE+7, '냉장', '10개', 1, 5, DATE '2026-06-10', 'CAT000002');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('탄산수 플레인', '음료', 11000, '강한 탄산이 매력적인 플레인 탄산수입니다.', '칼로리 걱정 없는 깔끔한 탄산수', '톡 쏘는 청량감', 30, '스파클링', '국산', 'N', 12000, SYSDATE+180, '상온', '24캔', 1, 5, DATE '2026-06-05', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000029', '탄산수 플레인', '음료', 11000, '강한 탄산이 매력적인 플레인 탄산수입니다.', '칼로리 걱정 없는 깔끔한 탄산수', '톡 쏘는 청량감', 30, '스파클링', '국산', 'N', 12000, SYSDATE+180, '상온', '24캔', 1, 5, DATE '2026-06-05', 'CAT000003');
 
-INSERT INTO product (product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
-VALUES ('유기농 콤부차', '음료', 15000, '냉장 보관 후 차갑게 드시면 더욱 맛있습니다.', '새콤달콤한 유기농 레몬 콤부차', '가볍게 즐기는 발효 음료', 0, '네이처푸드', '국산', 'N', 750, SYSDATE+90, '상온', '1박스', 1, 10, DATE '2026-06-25', 'CAT000003');
+INSERT INTO product (PRODUCT_ID, product_name, product_type, price, notice, description, shortinfo, discount, manufacturer, origin, underage_purchase, weight, expiration_date, storage_type, UNIT, min_purchase, max_purchase, PRODUCT_INPUT_DATE, category_ID)
+VALUES ('P000030', '유기농 콤부차', '음료', 15000, '냉장 보관 후 차갑게 드시면 더욱 맛있습니다.', '새콤달콤한 유기농 레몬 콤부차', '가볍게 즐기는 발효 음료', 0, '네이처푸드', '국산', 'N', 750, SYSDATE+90, '상온', '1박스', 1, 10, DATE '2026-06-25', 'CAT000003');
 
 /* ===========================
    8.추가정보
@@ -991,7 +992,7 @@ VALUES ('직사광선을 피해 서늘하고 건조한 곳에 실온 보관하세요.', 'P000030');
 /* ===========================
    5. 상품이미지 (product_img_id 자동생성)
 =========================== */
-/*
+
 -- P000001
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'THUMB', 'http://.../p1_thumb.jpg');
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000001', 'DETAIL', 'http://.../p1_detail.jpg');
@@ -1009,7 +1010,7 @@ INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'DETA
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'CONTENT', 'http://.../p3_content1.jpg');
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'CONTENT', 'http://.../p3_content2.jpg');
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000003', 'CONTENT', 'http://.../p3_content3.jpg');
-
+/*
 -- P000004
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000004', 'THUMB', 'http://.../p4_thumb.jpg');
 INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000004', 'DETAIL', 'http://.../p4_detail.jpg');
@@ -1313,42 +1314,42 @@ INSERT INTO shopping_cart (quantity, client_No, option_ID, INPUT_DATE) VALUES (6
 /* ===========================
    9. 주문 (order_ID 자동생성: O000001, O000002...)
 =========================== */
-INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
-VALUES (DATE '2026-01-07','일반배송', '배송대기', '배송요청사항없음',null,null, 'C000001');
+INSERT INTO orders (ORDER_DATE, total_amount, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-07', 103600, '일반배송', '배송대기', '배송요청사항없음',null,null, 'C000001');
 
-INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
-VALUES (DATE '2026-01-09','일반배송', '배송대기', '배송요청사항없음', null, null, 'C000002');
+INSERT INTO orders (ORDER_DATE, total_amount, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-09', 56000, '일반배송', '배송대기', '배송요청사항없음', null, null, 'C000002');
 
-INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
-VALUES (DATE '2026-01-10','일반배송', '배송중', '배송요청사항없음', DATE '2026-01-10', null, 'C000003');
+INSERT INTO orders (ORDER_DATE, total_amount, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-10', 171500, '일반배송', '배송중', '배송요청사항없음', DATE '2026-01-10', null, 'C000003');
 
-INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
-VALUES (DATE '2026-01-12','일반배송', '배송완료', '배송요청사항없음', DATE '2026-01-13', DATE '2026-06-14', 'C000004');
+INSERT INTO orders (ORDER_DATE, total_amount, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-12', 33800, '일반배송', '배송완료', '배송요청사항없음', DATE '2026-01-13', DATE '2026-06-14', 'C000004');
 
-INSERT INTO orders (ORDER_DATE, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
-VALUES (DATE '2026-01-28','일반배송', '배송완료', '배송요청사항없음', DATE '2026-01-29', DATE '2026-02-01', 'C000005');
+INSERT INTO orders (ORDER_DATE, total_amount, ORDER_STATUS, DELIVERY_STATUS, DELIVERY_REQUEST, DELIVERY_START_DATE, DELIVERY_COMPLETION_DATE, CLIENT_NO)
+VALUES (DATE '2026-01-28', 52800, '일반배송', '배송완료', '배송요청사항없음', DATE '2026-01-29', DATE '2026-02-01', 'C000005');
 
 /* ===========================
    10. 주문상세 (order_details_ID 자동생성: OD000001...)
 =========================== */
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 24000,'OPT000001','O000001');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 12000,'OPT000001','O000001');
 INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 40000,'OPT000008','O000001');
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (4, 39600,'OPT000025','O000001');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (4, 9900,'OPT000025','O000001');
 
 INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 8000,'OPT000012','O000002');
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (3, 48000,'OPT000038','O000002');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (3, 16000,'OPT000038','O000002');
 
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (5, 75000,'OPT000003','O000003');
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 62000,'OPT000015','O000003');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (5, 15000,'OPT000003','O000003');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 31000,'OPT000015','O000003');
 INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 4500,'OPT000022','O000003');
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 30000,'OPT000041','O000003');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 15000,'OPT000041','O000003');
 
 INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 18000,'OPT000019','O000004');
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 15800,'OPT000030','O000004');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (2, 7900,'OPT000030','O000004');
 
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (3, 19500,'OPT000005','O000005');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (3, 6500,'OPT000005','O000005');
 INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (1, 3900,'OPT000011','O000005');
-INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (6, 29400,'OPT000034','O000005');
+INSERT INTO ORDER_DETAILS (QUANTITY, PRICE, OPTION_ID, ORDER_ID) VALUES (6, 4900,'OPT000034','O000005');
 
 
 
