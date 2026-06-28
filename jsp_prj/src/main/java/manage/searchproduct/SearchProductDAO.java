@@ -26,17 +26,20 @@ public class SearchProductDAO {
 			DbConnection dbcon = DbConnection.getInstance();
 	        Connection con = null;
 	        PreparedStatement pstmt = null;
+	        PreparedStatement pstmt2 = null;
 	        ResultSet rs = null;
+	        ResultSet rs2 = null;
 	        RangeDTO rDTO = new RangeDTO();
 	        
-	        String query = "SELECT COUNT(1) AS total_cnt, " +
-	                       "COUNT(CASE WHEN STATUS = '판매중' THEN 1 END) AS active_cnt, " +
-	                       "FROM product";	
+	        String queryTotal = "SELECT count(1) total_cnt FROM PRODUCT_OPTION";	
+	        String queryOnSale = "SELECT count(1) active_cnt FROM PRODUCT_OPTION WHERE STOCKQUANTITY != 0";	
 	        
 	        try {
 	            con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
-	            pstmt = con.prepareStatement(query);
+	            pstmt = con.prepareStatement(queryTotal);
+	            pstmt2 = con.prepareStatement(queryOnSale);
 	            rs = pstmt.executeQuery();
+	            rs2 = pstmt2.executeQuery();
 
 	            if (rs.next()) {
 	                // 넘겨받은 range 객체에 카운트 값을 바로 세팅합니다.

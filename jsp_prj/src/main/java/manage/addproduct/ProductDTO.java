@@ -22,10 +22,9 @@ public class ProductDTO {
 	private int minPurchae;
 	private int maxPurchase;
 	private int discount; 
-	private List<String> img; 
 	private String manufacturer;
 	private String origin;
-	private int underAgePurchase;
+	private String underAgePurchase;
 	private int weight;
 	private String expirationDate;
 	private String storageType;

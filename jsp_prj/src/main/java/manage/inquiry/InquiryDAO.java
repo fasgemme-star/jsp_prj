@@ -47,6 +47,11 @@ public class InquiryDAO {
 		return cnt;
 	}// selectInquiryCnt
 
+	/**
+	 * @param status 전체: 0, 미처리: 1, 완료: 2
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<InquiryDTO> selectInquiryList(int status) throws SQLException{
 		List<InquiryDTO> iList = new ArrayList<InquiryDTO>();
 		InquiryDTO iDTO = new InquiryDTO();

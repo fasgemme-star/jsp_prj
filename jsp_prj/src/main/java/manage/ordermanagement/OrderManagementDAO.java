@@ -22,6 +22,7 @@ public class OrderManagementDAO {
 		return oDAO;
 	} // getInstance()
 	
+	
 	public List<OrderDTO> selectOrderList(){
 		List<OrderDTO> oList = new ArrayList<OrderDTO>();
 		DbConnection dbcon = DbConnection.getInstance();

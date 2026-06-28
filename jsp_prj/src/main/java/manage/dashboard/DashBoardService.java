@@ -68,9 +68,7 @@ public class DashBoardService {
 	}// getBestProductList
 	
 	public static void main(String[] args) {
-		DashBoardService a = new DashBoardService();
-		int i = a.getNonResponseInquiryCount();
-			System.out.println(i);
+		
 		
 	}
 }

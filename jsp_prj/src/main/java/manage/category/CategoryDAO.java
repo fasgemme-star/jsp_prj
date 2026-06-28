@@ -26,7 +26,7 @@ public class CategoryDAO {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		String query = "INSERT INTO CATEGORY (category_id, category_name) VALUES ('C004', ?)";
+		String query = "INSERT INTO CATEGORY (category_name) VALUES (?)";
 		int cnt = 0;
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));

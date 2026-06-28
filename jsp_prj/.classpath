@@ -15,5 +15,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="C:/dev/driver/ojdbc8.jar"/>
 	<classpathentry kind="lib" path="C:/dev/lombok/lombok.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/sist_chipher.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/standard.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

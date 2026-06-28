@@ -15,4 +15,7 @@ public class RangeDTO {
 	private int totalCnt;
 	private int pageCnt;
 	private String keyword;
+	
+	private String startDate;
+	private String endDate;
 }
