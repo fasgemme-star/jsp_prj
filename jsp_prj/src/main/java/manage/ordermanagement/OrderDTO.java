@@ -12,17 +12,20 @@ import lombok.ToString;
 @Setter
 @ToString
 public class OrderDTO {
+	private String orderDetailsID;
 	private String clientID;
 	private String cartID;
 	private String orderID;
 	private String prdName;
+	private String optionID;
 	private String orderDate;
-	private int totalAmount;
 	private String orderStatus;
 	private String deliveryStatus;
 	private String deliveryRequest;
 	private String deliveryStartDate;
 	private String deliveryCompletionDate;
-	private int quentity;
+	private int quantity;
 	private int price;
+	private int discountPrice;
+	private int totalAmount;
 }

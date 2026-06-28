@@ -50,14 +50,10 @@ public class AddProductDAO {
 			String nextProductId = "P000001";
 			if (productNo != null && productNo.startsWith("P")) {
 	            try {
-	                // "P000030" 에서 숫자 부분 "000030"만 추출 후 정수로 변환 (30)
 	                int num = Integer.parseInt(productNo.substring(1));
-	                // 1을 더함 (31)
 	                num++;
-	                // 다시 "P" 문자와 결합하고 6자리 숫자로 맞춤 (%06d -> "000031")
 	                nextProductId = String.format("P%06d", num);
 	            } catch (NumberFormatException e) {
-	                // 변환 오류 시 안전장치로 기존 pDTO에 입력된 아이디 사용 혹은 기본값 설정
 	                nextProductId = pDTO.getPrdID(); 
 	            }
 	        }

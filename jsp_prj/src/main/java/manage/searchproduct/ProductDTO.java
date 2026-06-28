@@ -34,5 +34,7 @@ public class ProductDTO {
 	private String storageType;
 	private String salesUnit;
 	private String additionalInfo;
+	
+	private int quantity;
 
 }

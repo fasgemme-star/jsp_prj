@@ -1,6 +1,5 @@
 package manage.ordermanagement;
 
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,18 +15,19 @@ import lombok.ToString;
 public class ClaimDTO {
 	private String claimID;
 	private String requestDate;
+	private String claimType;
 	private String clientName;
 	private String clientTel;
-	private String claimStatus;
+	
 	private String optionID;
 	private String prdName;
 	private int quantity;
 	
-	private String orderID;
-	private String claimType;
-	private int claimCnt;
 	private String reason;
 	private String reasonDetail;
+	private String order_detail_ID;
+	private int claimCnt;
+	private String claimStatus;
 	private String processingDate;
-	private List<String> img;
+
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +24,24 @@ public class OrderManagementDAO {
 	} // getInstance()
 	
 	
-	public List<OrderDTO> selectOrderList(){
+	public List<OrderDTO> selectOrderList(RangeDTO rDTO) throws SQLException{
 		List<OrderDTO> oList = new ArrayList<OrderDTO>();
 		DbConnection dbcon = DbConnection.getInstance();
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    StringBuilder query = new StringBuilder("");
+	    StringBuilder query = new StringBuilder();
+	    		query.append("	SELECT od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, p.price+po.extra_charge price, (p.price+po.extra_charge)*(1 - discount * 0.01) discount, od.quantity, o.total_amount	");
+	    		query.append( "	from orders o	");
+	    		query.append( "	join order_details od on o.order_id = od.order_id	");
+	    		query.append("	join product_option po on po.option_id = od.option_id	");
+	    		query.append( "	join product p on p.product_id = po.product_id	");
+	    		query.append( "	WHERE 1=1	");
 		
 	    if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
 	        query.append("AND PRODUCT_NAME LIKE ? ");
 	    }
-	    if (rDTO.getStatus() != null && !rDTO.getStatus().equals("전체") && !rDTO.getStatus().isEmpty()) {
+	    if (rDTO.getDelivery_status() != null && !rDTO.getDelivery_status().equals("전체") && !rDTO.getDelivery_status().isEmpty()) {
             query.append("AND STATUS = ? ");
         }
 	    if (rDTO.getStartDate() != null && !rDTO.getStartDate().isEmpty() && 
@@ -53,8 +60,8 @@ public class OrderManagementDAO {
             if (rDTO.getKeyword() != null && !rDTO.getKeyword().trim().isEmpty()) {
                 pstmt.setString(paramIndex++, "%" + rDTO.getKeyword() + "%");
             }
-            if (rDTO.getStatus() != null && !rDTO.getStatus().equals("전체") && !rDTO.getStatus().isEmpty()) {
-                pstmt.setString(paramIndex++, rDTO.getStatus());
+            if (rDTO.getDelivery_status() != null && !rDTO.getDelivery_status().equals("전체") && !rDTO.getDelivery_status().isEmpty()) {
+                pstmt.setString(paramIndex++, rDTO.getDelivery_status());
             }
             if (rDTO.getStartDate() != null && !rDTO.getStartDate().isEmpty() && 
             		rDTO.getEndDate() != null && !rDTO.getEndDate().isEmpty()) {
@@ -65,57 +72,83 @@ public class OrderManagementDAO {
             // 4. 쿼리 실행 및 결과 담기
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                ProductDTO pDTO = new ProductDTO();
-                pDTO.setPrdID(rs.getString("PRODUCT_ID"));
-                pDTO.setPrdName(rs.getString("PRODUCT_NAME"));
-                pDTO.setStatus(rs.getString("STATUS"));
-                pDTO.setPrice(rs.getInt("PRICE")); // 가격 데이터 담기
+                OrderDTO oDTO = new OrderDTO();
+                oDTO.setOrderDetailsID(rs.getString("order_details_id"));
+                oDTO.setOrderID(rs.getString("order_id"));
+                oDTO.setDeliveryStatus(rs.getString("delivery_status"));
+                oDTO.setOrderDate(rs.getString("order_date"));
+                oDTO.setOptionID(rs.getString("option_id")); 
+                oDTO.setPrdName(rs.getString("option_name")); 
+                oDTO.setPrice(rs.getInt("price")); 
+                oDTO.setDiscountPrice(rs.getInt("discount_price")); 
+                oDTO.setQuantity(rs.getInt("quantity")); 
+                oDTO.setTotalAmount(rs.getInt("total_amount")); 
                 
-                pList.add(pDTO);
+                oList.add(oDTO);
             }
         } finally {
             // 5. 자원 해제
             dbcon.dbClose(rs, pstmt, con);
         }
  
-	    return pList;
 		
 		return oList;
 	}// selectOrderList
-	
-	public OrderDTO selectOrderDetail(int orderID) {
-		OrderDTO oDTO = new OrderDTO();
-		return oDTO;
-	}// selectOrderDetail
-	
-	public List<OrderDTO> selectOrderByClient(String clientID){
-		List<OrderDTO> oList = new ArrayList<OrderDTO>();
-		return oList;
-	}// selectOrderByClient
-	
-	public List<OrderDTO> selectOrderByStatus(String status){
-		List<OrderDTO> oList = new ArrayList<OrderDTO>();
-		return oList;
-	}// selectOrderByStatus
-	
-	public List<OrderDTO> selectOrderByDate(String startDate, String endDate){
-		List<OrderDTO> oList = new ArrayList<OrderDTO>();
-		return oList;
-	}// selectOrderByDate
-	
-	public ClaimDTO selectClaimDetail(String claimID) {
-		ClaimDTO cDTO = new ClaimDTO();
+		
+	public int updateDeliveryStatus(String orderID) throws SQLException {
 		DbConnection dbcon = DbConnection.getInstance();
-	    Connection con = null;
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
-	    String query ="";
-	    
-		return cDTO;
-	}// selectClaimDetail
-	
-	public int updateDeliveryStatus(int orderID) {
-		return 0;
+		Connection con = null;
+		PreparedStatement pstmtMaxTN = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String queryMaxTN = "SELECT MAX(tracking_number) FROM orders";
+		String query = "update orders set tracking_number = ? where order_id = ?";
+		
+		int cnt = 0;
+		
+		try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+			con.setAutoCommit(false);
+			
+			String TrackingNumber = null;
+			pstmtMaxTN = con.prepareStatement(queryMaxTN);
+			rs = pstmtMaxTN.executeQuery();
+			if (rs.next()) {
+				TrackingNumber = rs.getString(1);
+			}
+			
+			String nextTrackingNumber = "TN000001";
+			if (TrackingNumber != null && TrackingNumber.startsWith("TN")) {
+	            try {
+	                int num = Integer.parseInt(TrackingNumber.substring(2));
+	                num++;
+	                nextTrackingNumber = String.format("TN%06d", num);
+	            } catch (NumberFormatException e) {
+	            	
+	            }
+	        }
+			
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, nextTrackingNumber);
+	        pstmt.setString(2, orderID);
+			cnt = pstmt.executeUpdate();
+			con.commit();
+		}catch(SQLException e) {
+			if (con != null) {
+				try {
+					con.rollback();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+			throw e;
+		} finally { 
+			// 6.연결 끊기
+			dbcon.dbClose(rs, pstmt, null);
+			dbcon.dbClose(null, pstmtMaxTN, con);
+		} // end finally
+		
+		return cnt;
 	}// updateDeliveryStatus
 	
 	public int updateClaimStatus(int claimID, String status) {

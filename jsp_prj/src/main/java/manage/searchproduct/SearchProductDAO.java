@@ -116,25 +116,61 @@ public class SearchProductDAO {
 		DbConnection dbcon = DbConnection.getInstance();
         Connection con = null;
         PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement pstmt2 = null;
+        int totalAffectedRows = 0;
         
-        String query = "";
-		/*
-		 * UPDATE product SET category_id = ? and product_name = ? and price = ? WHERE
-		 * product_id = ? UPDATE product_option SET STOCKQUANTITY = ? WHERE product_id =
-		 * ?
-		 */    
+        String query = "UPDATE product SET category_id = ?, product_name = ?, price = ? WHERE  product_id = ?";
+        String query2 = "UPDATE product_option SET STOCKQUANTITY = ? WHERE product_id =	 ?";
+		
+		     
         try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+            con.setAutoCommit(false);
             pstmt = con.prepareStatement(query);
-            rs = pstmt.executeQuery();
-
-            if (rs.next()) {
+            
+            pstmt.setString(1, pDTO.getCategory());
+            pstmt.setString(2, pDTO.getPrdName());
+            pstmt.setInt(3, pDTO.getPrice());
+            pstmt.setString(4, pDTO.getPrdID());
+            
+            int productCnt = pstmt.executeUpdate();
+            
+            if (productCnt == 0) {
+                throw new SQLException();
             }
+            pstmt2 = con.prepareStatement(query2);
+            
+            pstmt2.setInt(1, pDTO.getQuantity());
+            pstmt2.setString(2, pDTO.getPrdID());
+            
+            int optionCnt = pstmt.executeUpdate();
+            if (optionCnt == 0) {
+                throw new SQLException();
+            }
+            con.commit();
+            totalAffectedRows = productCnt + optionCnt;
+        }catch(SQLException e) {
+        	if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        	throw e;
+          
         } finally {
-            dbcon.dbClose(rs, pstmt, con);
+        	if (con != null) {
+                try {
+                    con.setAutoCommit(true); // 커넥션 풀 반납 전 기본값 복구
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            dbcon.dbClose(null, pstmt, con);
+            dbcon.dbClose(null, pstmt2, null);
         }
     
-		return 0;
+		return totalAffectedRows;
 	}// updateProduct
 }
