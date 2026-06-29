@@ -1,9 +1,8 @@
-<%@page import="kr.co.sist.member.MemberDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/siteProperty.jsp" %>
-
+<%@ include file="../include/loginCheck.jsp" %>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -13,7 +12,7 @@
 <meta name="author"
 	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 <meta name="generator" content="Astro v5.13.2">
-<title>Carousel Template · Bootstrap v5.3</title>
+<title>마이페이지</title>
 <link rel="canonical"
 	href="https://getbootstrap.com/docs/5.3/examples/carousel/">
 
@@ -22,12 +21,6 @@
 <c:import url="${CommonUrl}/fragments/external_file.jsp"/>
 <!-- 변수와 메소드 공유 가능 -->
 <%-- <%@include file="../include/external_file.jsp" %> --%>
-
-<script type="text/javascript">
-//var obj = new XMLHttpRequest();
-//alert(obj);
-</script>
-
 <style>
 .bd-placeholder-img {
 	font-size: 1.125rem;
@@ -110,10 +103,22 @@
 	display: block !important
 }
 
-.blue { color: #0000FF; }
-.red { color: #FF0000; }
+/* 프로필디자인 */
+#profileWrap { width: 100%; min-height: 600px; margin-top: 20px; }
+#profileImg { width: 30%; vertical-align: top; float: left; text-align: right; padding-right: 20px; }
+#userInfo { width: 70%; vertical-align: top; float: right; padding-left: 20px; border-left: 1px solid #333; }
+
 
 </style>
+
+<script type="text/javascript">
+$(function() {
+	$("#btnProfile").click(function() {
+		//버튼을 클릭했을 때 input type="file"을 클릭한 이벤트 발생
+		$("#profile").click();
+	});
+});
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -179,25 +184,68 @@
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<c:import url="${CommonUrl}/fragments/carousel.jsp"/>
+		<div id="profileWrap">
+			<form action="mypageProcess.jsp" method="post" id="mypageform" name="mypageform">
+			<div id="profileImg">
+			<img src="${ CommonUrl }${ UploadDir }/profile/default_profile.png" style="border-radius: 150px; "/><br>
+			<input type="file" name="profile" id="profile" style="display: none;"/>
+			<input type="button" value="이미지 업로드" class="btn btn-sm btn-success" id="btnProfile">
+			</div>
+			<div id="userInfo">
+				<h3>마이페이지 - 정보수정</h3>
+				<table>
+					<tr>
+						<td>아이디</td>
+						<td><strong><c:out value="${ userInfo.id }"/></strong></td>
+					</tr>
+					<tr>
+						<td>이름</td>
+						<td><input type="text" name="name" value="" readonly="readonly"></td>
+					</tr>
+					<tr>
+						<td>이메일</td>
+						<td><input type="text" name="email" value=""></td>
+					</tr>
+					<tr>
+						<td>전화번호</td>
+						<td><input type="text" name="phone" value="" ></td>
+					</tr>
+					<tr>
+						<td>우편번호</td>
+						<td><input type="text" name="zipcode" value="" style="width: 70px;" readonly="readonly"/>
+						<input type="button" value="검색" class="btn btn-sm btn-success"/>
+						</td>
+					</tr>
+					<tr>
+						<td>주소</td>
+						<td><input type="text" name="address" value="" style="widows: 300px" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td>상세주소</td>
+						<td><input type="text" name="address2" value="" style="widows: 300px"/></td>
+					</tr>
+					<tr>
+						<td>가입 IP</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>가입일</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<input type="button" value="변경" class="btn btn-sm btn-warning" id="btnUpdate"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+			</form>
 		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			
-			<c:import url="${ CommonUrl }/fragments/row.jsp"/>	
-			<hr>
-					
-			<c:import url="${ CommonUrl }/fragments/detail.jsp"/>			
-		</div>
-		<!-- /.container -->
-		<!-- FOOTER -->
-		<footer class="container">
-		</footer>
+
 	</main>
+		<footer class="container">
+			<c:import url="${ CommonUrl }/fragments/footer.jsp"/>			
+		</footer>
 	<script src="${CommonUrl}/common/JS/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>

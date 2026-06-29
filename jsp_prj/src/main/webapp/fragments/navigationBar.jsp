@@ -29,7 +29,7 @@
 					<c:otherwise>
 						
 						<a class="nav-link" style="color: #FFFFFF"
-							aria-current="page" href="#void">
+							aria-current="page" href="${ CommonUrl }/mypage/mypage.jsp">
 							<span title="${ userInfo.name }님의 마이페이지"><c:out value="${ userInfo.id }"/></span>
 							</a>
 						&nbsp;&nbsp;

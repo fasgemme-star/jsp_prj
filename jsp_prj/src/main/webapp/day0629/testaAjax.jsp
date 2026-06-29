@@ -1,9 +1,5 @@
-<%@page import="kr.co.sist.member.MemberDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/siteProperty.jsp" %>
-
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -19,15 +15,9 @@
 
 <meta name="theme-color" content="#712cf9">
 <!-- 변수와 메소드 공유 불가능 -->
-<c:import url="${CommonUrl}/fragments/external_file.jsp"/>
+<jsp:include page="../fragments/external_file.jsp"/>
 <!-- 변수와 메소드 공유 가능 -->
 <%-- <%@include file="../include/external_file.jsp" %> --%>
-
-<script type="text/javascript">
-//var obj = new XMLHttpRequest();
-//alert(obj);
-</script>
-
 <style>
 .bd-placeholder-img {
 	font-size: 1.125rem;
@@ -114,6 +104,83 @@
 .red { color: #FF0000; }
 
 </style>
+
+<script type="text/javascript">
+$(function(){
+	$("#btnHTML").click(requestHTML);
+	$("#btnTEXT").click(requestTEXT);
+	$("#btnXML").click(requestXML);
+	$("#btnJSON").click(requestJSON);
+});//ready
+
+function requestHTML(){
+	$.ajax({
+		url:"responseHtml.jsp",
+		type: "get",
+		data: "name=테스트&age=20",
+		error: function(xhr){
+			console.log(xhr.status + " / " + xhr.statusText);
+		},
+		success: function(data){
+			$("#output").html(data);
+		}
+	});//ajax
+}//requestHTML	
+
+function requestTEXT(){
+	$.ajax({
+		url:"responseText.jsp",
+		dataType:"text",
+		error: function(xhr){
+			console.log(xhr.status + " / " + xhr.statusText);
+		},
+		success: function(data){
+			var arr = data.split(",");
+			var output="<ul>";
+			
+			var selNode = $("#subject")[0];
+//			alert(selNode.length);
+			$.each(arr,function(i, ele){				
+			output += "<li>" + ele + "</li>";
+			selNode.options[i+1] = new Option(ele, ele);
+			});
+			
+			output +="</ul>";
+			
+			$("#output").html(output);
+		}
+	});//ajax
+}//requestTEXT
+
+function requestXML(){
+	$.ajax({
+		url:"responseXml.jsp",
+		dataType:"xml",
+		error: function(xhr){
+			console.log(xhr.status + " / " + xhr.statusText);
+		},
+		success: function(xmlDoc){
+		//alert(xmlDoc);
+			$("#output").html("<strong>" + $(xmlDoc).find("msg").text() + "</strong>");
+		}
+	});//ajax
+}//requestXML	
+
+function requestJSON(){
+	$.ajax({
+		url:"testJsonObj.jsp",
+		dataType:"json",
+		error: function(xhr){
+			console.log(xhr.status + " / " + xhr.statusText);
+		},
+		success: function(jsonObj){
+			$("#output").html("<strong>" + jsonObj.name + "</strong><br>" + jsonObj.age + " / " + jsonObj.addr);
+		}
+	});//ajax
+}//requestJSON
+
+
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -175,30 +242,29 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="/fragments/navigationBar.jsp"/>		
+			<jsp:include page="../fragments/navigationBar.jsp"/>		
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<c:import url="${CommonUrl}/fragments/carousel.jsp"/>
-		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			
-			<c:import url="${ CommonUrl }/fragments/row.jsp"/>	
-			<hr>
-					
-			<c:import url="${ CommonUrl }/fragments/detail.jsp"/>			
-		</div>
-		<!-- /.container -->
+		<div style="margin-top: 30px;">
+		<h3>AJAX 요청에 대한 응답</h3>
+		<input type="button" class="btn btn-sm btn-success" value="HTML요청" id="btnHTML">
+		<input type="button" class="btn btn-sm btn-primary" value="TEXT요청" id="btnTEXT">
+		<input type="button" class="btn btn-sm btn-warning" value="XML요청" id="btnXML">
+		<input type="button" class="btn btn-sm btn-info" value="JSON요청" id="btnJSON">
+		
+		<br>
+		<select id="subject">
+			<option value="none">---과목선택---</option>
+		</select>
+		<div id="output"></div>
+		</div>		
 		<!-- FOOTER -->
 		<footer class="container">
+			<jsp:include page="../fragments/footer.jsp"/>			
 		</footer>
 	</main>
-	<script src="${CommonUrl}/common/JS/bootstrap.bundle.min.js"
+	<script src="http://localhost/jsp_prj/common/JS/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>
