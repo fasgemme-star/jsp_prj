@@ -10,6 +10,7 @@ import java.util.List;
 
 import dbcon.DbConnection;
 import dbcon.Path;
+import manage.ordermanagement.OrderDTO;
 
 public class InquiryDAO {
 	private static InquiryDAO iDAO;
@@ -116,10 +117,10 @@ public class InquiryDAO {
 		query.append("	select c.client_no, c.client_name, INQUIRY_TITLE, INQUIRY_CONTENT,	");
 		query.append( "	INQUIRY_DATE, ANSWER_STATUS, ANSWER, ANSWER_DATE, it.INQUIRY_TYPE, od.ORDER_DETAILS_ID	");
 		query.append( "	from client c	");
-		query.append( "	join \"order\" o on c.CLIENT_NO = o.CLIENT_NO	");
+		query.append( "	join orders o on c.CLIENT_NO = o.CLIENT_NO	");
 		query.append("	join ORDER_DETAILS od on o.ORDER_ID = od.ORDER_ID	");
 		query.append("	join inquiry i on od.ORDER_DETAILS_ID = i.ORDER_DETAILS_ID	");
-			query.append( "	join INQUIRY_TYPE it on i.INQUIRY_CODE = it.INQUIRY_CODE where inquiry_id = ? ");
+		query.append( "	join INQUIRY_TYPE it on i.INQUIRY_CODE = it.INQUIRY_CODE where inquiry_id = ? ");
 
 		try {
 		    con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -192,8 +193,41 @@ public class InquiryDAO {
 		return cnt;
 	}// deleteInquiry
 	
-	public OrderDTO selectOrderDetail(String orderID) {
+	public OrderDTO selectOrderDetail(String orderID) throws SQLException {
 		OrderDTO oDTO = new OrderDTO();
+		DbConnection dbcon = DbConnection.getInstance();
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    StringBuilder query = new StringBuilder();
+		query.append("	SELECT od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount	");
+		query.append( "	from orders o join order_details od on o.order_id = od.order_id	");
+		query.append("	join product_option po on po.option_id = od.option_id	");
+		query.append( "	join product p on p.product_id = po.product_id	");
+		query.append( "	WHERE order_details_id = ?	");
+		
+		try {
+            con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+            pstmt = con.prepareStatement(query.toString());
+            pstmt.setString(1, orderID);
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                oDTO.setOrderDetailsID(rs.getString("order_details_id"));
+                oDTO.setOrderID(rs.getString("order_id"));
+                oDTO.setDeliveryStatus(rs.getString("delivery_status"));
+                oDTO.setOrderDate(rs.getString("order_date"));
+                oDTO.setOptionID(rs.getString("option_id")); 
+                oDTO.setPrdName(rs.getString("option_name")); 
+                oDTO.setPrice(rs.getInt("price")); 
+                oDTO.setDiscountPrice(rs.getInt("discount_price")); 
+                oDTO.setQuantity(rs.getInt("quantity")); 
+                oDTO.setTotalAmount(rs.getInt("total_amount")); 
+            }
+        } finally {
+            // 5. 자원 해제
+            dbcon.dbClose(rs, pstmt, con);
+        }
 		return oDTO;
 	}// selectOrderDetail
 	

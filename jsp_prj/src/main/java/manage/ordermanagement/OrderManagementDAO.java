@@ -10,6 +10,7 @@ import java.util.List;
 
 import dbcon.DbConnection;
 import dbcon.Path;
+import manage.client.ClientDTO;
 import manage.searchproduct.ProductDTO;
 
 public class OrderManagementDAO {
@@ -31,7 +32,7 @@ public class OrderManagementDAO {
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
 	    StringBuilder query = new StringBuilder();
-	    		query.append("	SELECT od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, p.price+po.extra_charge price, (p.price+po.extra_charge)*(1 - discount * 0.01) discount, od.quantity, o.total_amount	");
+	    		query.append("	od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount	");
 	    		query.append( "	from orders o	");
 	    		query.append( "	join order_details od on o.order_id = od.order_id	");
 	    		query.append("	join product_option po on po.option_id = od.option_id	");
@@ -154,5 +155,45 @@ public class OrderManagementDAO {
 	public int updateClaimStatus(int claimID, String status) {
 		return 0;
 	}// updateClaimStatus
+	
+	public ClaimDTO selectClaimDetail(String OrderDetailid) {
+		ClientDTO cDTO = new ClientDTO();
+		DbConnection dbcon = DbConnection.getInstance();
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String query = "	select CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE, TOTAL_AMOUNT	"
+	    		+ "	    from client c join orders o	"
+	    		+ "	    on c.client_no = o.client_no where c.client_No = ? ";
+		/*
+		 * select CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, OPTION_ID,
+		 * OPTION_NAME from claim c join order_details od on c.order_details_id =
+		 * od.order_details_id join orders o on o.order_id = od.order_id join client c
+		 * on c.client_no = o.client_no join product_option po on po.option_id =
+		 * od.option_id ;
+		 */
+	    
+	    try {
+            con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, clientID);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                cDTO.setClientName(rs.getString("CLIENT_NAME"));
+                cDTO.setEmail(rs.getString("CLIENT_EMAIL"));
+                cDTO.setPhone(rs.getString("CLIENT_TEL"));
+                cDTO.setJoinDate(rs.getString("CLIENT_START_DATE"));
+                cDTO.setTotalPayment(rs.getInt("TOTAL_AMOUNT"));
+            }
+        } finally {
+            // 5. 자원 해제
+            dbcon.dbClose(rs, pstmt, con);
+        }
+
+		return cDTO;
+		
+		
+	}
 	
 }

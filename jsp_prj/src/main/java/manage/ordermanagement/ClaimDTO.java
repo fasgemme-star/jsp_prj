@@ -13,6 +13,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ClaimDTO {
+	private String order_detail_ID;
+	
 	private String claimID;
 	private String requestDate;
 	private String claimType;
@@ -25,7 +27,6 @@ public class ClaimDTO {
 	
 	private String reason;
 	private String reasonDetail;
-	private String order_detail_ID;
 	private int claimCnt;
 	private String claimStatus;
 	private String processingDate;
