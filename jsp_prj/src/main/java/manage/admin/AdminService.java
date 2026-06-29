@@ -16,23 +16,23 @@ public class AdminService {
 		return result;
 	}// login
 	
-	public int changePW(String id, String pw, String newPW) {
+	public int changePW(AdminDTO aDTO, String newPW) {
 		int result = 0;
 		
 		//로그인 성공 여부 저장
 		int checkAdmin = 0;
 		try {
-			checkAdmin = aDAO.selectAdmin(id, pw);
+			checkAdmin = aDAO.selectAdmin(aDTO.getAdminID(), aDTO.getAdminPW());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		if (checkAdmin == 1) {//로그인성공
 			try {
-				if(aDAO.updatePW(id, newPW) == 1) {
-					System.out.println("변경 성공");//변경성공
+				if(aDAO.updatePW(aDTO, newPW) == 1) {
+					//변경성공
 				}else {
-					System.out.println("변경 실패");//변경실패
+					//변경실패
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

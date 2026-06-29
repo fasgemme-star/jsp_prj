@@ -22,6 +22,11 @@ public class CategoryDAO {
 		return cDAO;
 	} // getInstance()
 	
+	/**
+	 * @param name
+	 * @return 1: 성공, 0: 실패
+	 * @throws SQLException
+	 */
 	public int insertCategory(String name) throws SQLException {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
@@ -42,6 +47,12 @@ public class CategoryDAO {
 		return cnt;
 	}// insertCategory
 	
+	/**
+	 * @param categoryID
+	 * @param newName
+	 * @return 1: 성공, 0: 실패
+	 * @throws SQLException
+	 */
 	public int updateCategory(String categoryID, String newName) throws SQLException {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
@@ -66,6 +77,11 @@ public class CategoryDAO {
 		return cnt;
 	}// updateCategory
 	
+	/**
+	 * @param categoryID
+	 * @return	1: 성공, 0: 실패
+	 * @throws SQLException
+	 */
 	public int deleteCategory(String categoryID) throws SQLException {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;

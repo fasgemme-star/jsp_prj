@@ -54,7 +54,13 @@ public class AdminDAO {
 		} // end finally
 	}// selectAdmin
 	
-	public int updatePW(String id, String newPW) throws SQLException {
+	/**
+	 * @param aDTO
+	 * @param newPW
+	 * @return 1: 성공, 0: 실패
+	 * @throws SQLException
+	 */
+	public int updatePW(AdminDTO aDTO, String newPW) throws SQLException {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -67,10 +73,12 @@ public class AdminDAO {
 			query.append("update manager set manager_hash = '");
 			query.append(newPW);
 			query.append("' where manager_id = '");
-			query.append(id);
+			query.append(aDTO.getAdminID());
 			query.append("'");
 			pstmt = con.prepareStatement(query.toString());
 			cnt = pstmt.executeUpdate();
+			
+			
 			
 		} finally { 
 			// 6.연결 끊기
@@ -86,22 +94,20 @@ public class AdminDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		StringBuilder query = new StringBuilder();
+		String query = "select MANAGER_NAME, MANAGER_ID, MANAGER_TEL, MANAGER_EMAIL from manager where manager_id = ?";
 		
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
-			query.append("select MANAGER_NAME, MANAGER_ID, MANAGER_TEL, MANAGER_EMAIL from manager where manager_id = '");
-			query.append(id);
-			query.append("'");
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				aDTO.setAdminName(rs.getString("manager_name"));
-				aDTO.setAdminID(rs.getString("manager_id"));
-				aDTO.setTel(rs.getString("manager_tel"));
-				aDTO.setAdminEmail(rs.getString("manager_email"));
+				aDTO.setAdminName(rs.getString("MANAGER_NAME"));
+				aDTO.setAdminID(rs.getString("MANAGER_ID"));
+				aDTO.setTel(rs.getString("MANAGER_TEL"));
+				aDTO.setAdminEmail(rs.getString("MANAGER_EMAIL"));
 			}// end if
 		} finally { 
 			// 6.연결 끊기

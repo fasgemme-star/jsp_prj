@@ -42,9 +42,10 @@ public class SearchProductDAO {
 	            rs2 = pstmt2.executeQuery();
 
 	            if (rs.next()) {
-	                // 넘겨받은 range 객체에 카운트 값을 바로 세팅합니다.
 	            	rDTO.setTotalCnt(rs.getInt("total_cnt"));
-	            	rDTO.setActiveCnt(rs.getInt("active_cnt"));
+	            }
+	            if (rs2.next()) {
+	            	rDTO.setActiveCnt(rs2.getInt("active_cnt"));
 	            }
 	        } finally {
 	            dbcon.dbClose(rs, pstmt, con);

@@ -78,7 +78,7 @@ public class ClientDAO {
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    StringBuilder query = new StringBuilder( "	select c.CLIENT_NO CLIENT_NO, CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE from client where 1=1	");
+	    StringBuilder query = new StringBuilder( "	select CLIENT_NO, CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE from client where CLIENT_DELETE_ACCOUNT = 'N' and 1=1	");
 	    
 	    if (rDTO.getKeyword() != null && !rDTO.getKeyword().trim().isEmpty()) {
 	        query.append("AND (CLIENT_NAME LIKE ? OR CLIENT_EMAIL LIKE ? OR CLIENT_TEL LIKE ?) ");
@@ -107,7 +107,6 @@ public class ClientDAO {
                 cDTO.setEmail(rs.getString("CLIENT_EMAIL"));
                 cDTO.setPhone(rs.getString("CLIENT_TEL"));
                 cDTO.setJoinDate(rs.getString("CLIENT_START_DATE"));
-                cDTO.setTotalPayment(rs.getInt("TOTAL_AMOUNT"));
                 
                 cList.add(cDTO);
             }
@@ -127,7 +126,7 @@ public class ClientDAO {
 	    ResultSet rs = null;
 	    String query = "	select CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE, TOTAL_AMOUNT	"
 	    		+ "	    from client c join orders o	"
-	    		+ "	    on c.client_no = o.client_no where c.client_No = ?";
+	    		+ "	    on c.client_no = o.client_no where c.client_No = ? ";
 	    
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -150,11 +149,17 @@ public class ClientDAO {
 		return cDTO;
 	}// selectClientDetail
 	
-	public int updateClientPW(String ClientNo) throws SQLException {
+	/**
+	 * @param ClientNo
+	 * @param newPW 랜덤 비밀번호
+	 * @return 1: 성공, 0: 실패
+	 * @throws SQLException
+	 */
+	public int updateClientPW(String ClientNo, String newPW) throws SQLException {
 		DbConnection dbcon = DbConnection.getInstance();
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
-	    String query = "	update client set client_hash='2345' where client_no = ?	";
+	    String query = "	update client set client_hash=? where client_no = ?	";
 	    
 	    int cnt = 0;
 	    
@@ -162,7 +167,8 @@ public class ClientDAO {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, ClientNo);
+			pstmt.setString(1, newPW);
+			pstmt.setString(2, ClientNo);
 			cnt = pstmt.executeUpdate();
 
 		} finally {

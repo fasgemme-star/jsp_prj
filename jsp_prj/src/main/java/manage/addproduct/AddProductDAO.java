@@ -34,7 +34,7 @@ public class AddProductDAO {
 		int cnt = 0;
 		String queryMaxID = "SELECT MAX(PRODUCT_ID) FROM product";
 		String queryProduct = "insert into product(product_id, CATEGORY_ID, PRODUCT_NAME, DESCRIPTION, PRICE, MIN_PURCHASE, MAX_PURCHASE, DISCOUNT, MANUFACTURER, ORIGIN, UNDERAGE_PURCHASE, WEIGHT, EXPIRATION_DATE, STORAGE_TYPE, UNIT, NOTICE) values("
-				+ "										?,	?,             ?,           ?,      ?,           ?,            ?,        ?,            ?,      ?,                 ?,      ?,               ?,            ?,    ?,     ?)";
+				+ "										    ?,	         ?,            ?,           ?,     ?,            ?,            ?,        ?,            ?,      ?,                 ?,      ?,               ?,            ?,    ?,     ?)";
 		String queryImg = "insert into PRODUCT_IMAGE(IMAGE_TYPE, URL, PRODUCT_ID) values(?,?,?)";
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
