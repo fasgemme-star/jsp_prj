@@ -16,4 +16,5 @@ public class RangeDTO {
 	public int endNum;
 	public String searchType;
 	public String keyword;
+	public int status;
 }

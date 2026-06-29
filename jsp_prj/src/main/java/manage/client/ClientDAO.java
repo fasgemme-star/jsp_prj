@@ -179,4 +179,6 @@ public class ClientDAO {
 		
 		return cnt;
 	}// updateClientPW
+	
+	//파일출력 메소드 추가
 }

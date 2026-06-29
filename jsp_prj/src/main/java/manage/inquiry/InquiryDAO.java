@@ -52,7 +52,7 @@ public class InquiryDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<InquiryDTO> selectInquiryList(int status) throws SQLException{
+	public List<InquiryDTO> selectInquiryList(RangeDTO rDTO) throws SQLException{
 		List<InquiryDTO> iList = new ArrayList<InquiryDTO>();
 		InquiryDTO iDTO = new InquiryDTO();
 		DbConnection dbcon = DbConnection.getInstance();
@@ -63,7 +63,7 @@ public class InquiryDAO {
 	    		query.append("	select c.client_no, c.client_name, INQUIRY_ID, INQUIRY_TITLE, INQUIRY_CONTENT,	");
 	    		query.append( "	INQUIRY_DATE, ANSWER_STATUS, ANSWER, ANSWER_DATE, it.INQUIRY_TYPE, od.ORDER_DETAILS_ID	");
 	    		query.append( "	from client c	");
-	    		query.append( "	join \"order\" o on c.CLIENT_NO = o.CLIENT_NO	");
+	    		query.append( "	join orders o on c.CLIENT_NO = o.CLIENT_NO	");
 	    		query.append("	join ORDER_DETAILS od on o.ORDER_ID = od.ORDER_ID	");
 	    		query.append("	join inquiry i on od.ORDER_DETAILS_ID = i.ORDER_DETAILS_ID	");
 	   			query.append( "	join INQUIRY_TYPE it on i.INQUIRY_CODE = it.INQUIRY_CODE where 1=1	");
@@ -71,13 +71,13 @@ public class InquiryDAO {
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
             //전체: 0, 미처리: 1, 완료: 2
-            if (status != 0) {
+            if (rDTO.getStatus() != 0) {
             	query.append(" AND	ANSWER_STATUS = '?'	");
             }
             pstmt = con.prepareStatement(query.toString());
-            if(status == 1) {
+            if(rDTO.getStatus() == 1) {
             	pstmt.setString(1,"대기중");
-            } else if (status == 2) {
+            } else if (rDTO.getStatus() == 2) {
             	pstmt.setString(1,"답변완료");
 			}
    
