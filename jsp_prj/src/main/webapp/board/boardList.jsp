@@ -1,9 +1,6 @@
-<%@page import="kr.co.sist.member.MemberDTO"%>
+<%@page import="kr.co.sist.board.BoardService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/siteProperty.jsp" %>
-
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -19,15 +16,9 @@
 
 <meta name="theme-color" content="#712cf9">
 <!-- 변수와 메소드 공유 불가능 -->
-<c:import url="${CommonUrl}/fragments/external_file.jsp"/>
+<jsp:include page="../fragments/external_file.jsp"/>
 <!-- 변수와 메소드 공유 가능 -->
 <%-- <%@include file="../include/external_file.jsp" %> --%>
-
-<script type="text/javascript">
-//var obj = new XMLHttpRequest();
-//alert(obj);
-</script>
-
 <style>
 .bd-placeholder-img {
 	font-size: 1.125rem;
@@ -175,33 +166,61 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="/fragments/navigationBar.jsp"/>		
+			<jsp:include page="../fragments/navigationBar.jsp"/>		
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<c:import url="${CommonUrl}/fragments/carousel.jsp"/>
-		</div>
-		<div>
-			<a href="${ CommonUrl }/board/boardList.jsp">게시판</a>
+		<div id="board">
+			<%
+			// 1.전체 레코드 수 구하기
+			BoardService bs = new BoardService();
+			int totalCount = bs.TotalCount();
+			
+			// 2.한 화면에 보여질 게시글의 수
+			int pageScale = 10;
+			
+			// 3.총페이지수
+			int totalPage = (int)Math.ceil((double)totalCount/pageScale);
+			
+			// 4.시작 번호 구하기
+			String tempPage = request.getParameter("currentPage");
+			int currentPage = 1;
+			if ( tempPage != null) {
+				currentPage = Integer.parseInt(tempPage);
+			}
+			int startNum = 1;
+			startNum = currentPage * pageScale - pageScale + 1;
+			
+			
+			pageContext.setAttribute("totalCount", totalCount);
+			pageContext.setAttribute("pageScale", pageScale);
+			pageContext.setAttribute("totalPage", totalPage);
+			pageContext.setAttribute("startNum", startNum);
+			%>
+			총 레코드: ${ totalCount }<br>
+			한 화면에 보여질 게시글의 수: ${ pageScale }<br>
+			페이지 수: ${ totalPage }<br>
+			시작번호: ${ startNum }<br>
+			
 		</div>
 		<!-- Marketing messaging and featurettes
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
-			
-			<c:import url="${ CommonUrl }/fragments/row.jsp"/>	
-			<hr>
-					
-			<c:import url="${ CommonUrl }/fragments/detail.jsp"/>			
+			<!-- Three columns of text below the carousel -->
+				<%--<jsp:include page="../fragments/row.jsp"/>--%>
+			<!-- /.row -->
+			<!-- START THE FEATURETTES -->
+				<%--<jsp:include page="../fragments/detail.jsp"/>--%>
+			<!-- /END THE FEATURETTES -->
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
+			<jsp:include page="../fragments/footer.jsp"/>			
 		</footer>
 	</main>
-	<script src="${CommonUrl}/common/JS/bootstrap.bundle.min.js"
+	<script src="http://localhost/jsp_prj/common/JS/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>

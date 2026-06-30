@@ -14,6 +14,7 @@
 						<li class="nav-item"><a class="nav-link active"
 							aria-current="page" href="${ CommonUrl }/index.html">Home</a></li>
 						<li class="nav-item"><a class="nav-link" href="javascript:history.back()" >이전으로</a></li>
+						<li class="nav-item"><a class="nav-link" href="${ CommonUrl }/board/boardList.jsp" >게시판</a></li>
 						<li class="nav-item"><a class="nav-link disabled"
 							aria-disabled="true">Disabled</a></li>
 					</ul>
