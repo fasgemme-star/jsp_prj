@@ -1186,105 +1186,105 @@ INSERT INTO product_image (product_ID, image_type, URL) VALUES ('P000030', 'CONT
 =========================== */
 -- 장바구니 및 주문상세에서 활용하기 위해 기본 옵션을 추가했습니다.
 -- 1. 제주 감귤 (P000001)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('제주 타이벡 감귤 3kg 로얄과', 0, 110, 'P000001');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('제주 타이벡 감귤 5kg 로얄과', 7000, 85, 'P000001');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('제주 타이벡 감귤 3kg 로얄과', 12000, 0, 110, 'P000001');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('제주 타이벡 감귤 5kg 로얄과', 19000, 10, 85, 'P000001');
 
 -- 2. 부사 사과 (P000002)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('실속형 부사사과 5kg', 0, 130, 'P000002');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('실속형 부사사과 5kg', 15000, 0, 130, 'P000002');
 
 -- 3. 겨울 시금치 (P000003)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('달달한 노지 시금치 1단', 0, 250, 'P000003');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('달달한 노지 시금치 1단', 3500, 0, 250, 'P000003');
 
 -- 4. 핫초코 미트 (P000004)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('오리지널 핫초코 30스틱', 0, 95, 'P000004');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('대용량 오리지널 60스틱', 5000, 50, 'P000004');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('오리지널 핫초코 30스틱', 6500, 0, 95, 'P000004');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('대용량 오리지널 60스틱', 10500, 5, 50, 'P000004');
 
 -- 5. 레드향 (P000005)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('제주 레드향 2kg 가정용', 0, 80, 'P000005');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('제주 레드향 3kg 선물용', 12000, 40, 'P000005');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('제주 레드향 2kg 가정용', 28000, 0, 80, 'P000005');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('제주 레드향 3kg 선물용', 40000, 0, 40, 'P000005');
 
 -- 6. 세척당근 (P000006)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('간편 세척당근 1kg', 0, 180, 'P000006');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('간편 세척당근 1kg', 4000, 0, 180, 'P000006');
 
 -- 7. 대파 (P000007)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('흙대파 1단', 0, 400, 'P000007');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('깔끔 손질대파 500g', 1000, 150, 'P000007');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('흙대파 1단', 2900, 0, 400, 'P000007');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('깔끔 손질대파 500g', 3900, 10, 150, 'P000007');
 
 -- 8. 유자차 베이스 (P000008)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('달콤 유자청 1kg 병', 0, 120, 'P000008');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('달콤 유자청 1kg 병', 8000, 0, 120, 'P000008');
 
 -- 9. 설향 딸기 (P000009)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('논산 설향 딸기 500g 1팩', 0, 70, 'P000009');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('논산 설향 딸기 500g 1팩', 9900, 15, 70, 'P000009');
 
 -- 10. 한라봉 (P000010)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('제주 한라봉 2kg 실속형', 0, 95, 'P000010');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('제주 한라봉 3kg 정품과', 9000, 60, 'P000010');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('제주 한라봉 2kg 실속형', 22000, 0, 95, 'P000010');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('제주 한라봉 3kg 정품과', 31000, 0, 60, 'P000010');
 
 -- 11. 브로콜리 (P000011)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('국산 싱싱 브로콜리 2송이', 0, 160, 'P000011');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('국산 싱싱 브로콜리 2송이', 2500, 0, 160, 'P000011');
 
 -- 12. 도라지 배즙 (P000012)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('순수 도라지배즙 30포', 0, 110, 'P000012');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('순수 도라지배즙 60포', 16000, 60, 'P000012');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('순수 도라지배즙 30포', 19000, 0, 110, 'P000012');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('순수 도라지배즙 60포', 35000, 5, 60, 'P000012');
 
 -- 13. 짭짤이 토마토 (P000013)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('대저 짭짤이 토마토 1kg 랜덤과', 0, 140, 'P000013');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('대저 짭짤이 토마토 2.5kg 로얄과', 18000, 80, 'P000013');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('대저 짭짤이 토마토 1kg 랜덤과', 18000, 0, 140, 'P000013');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('대저 짭짤이 토마토 2.5kg 로얄과', 36000, 0, 80, 'P000013');
 
 -- 14. 봄동 봄나물 (P000014)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('봄동 배추 500g', 0, 200, 'P000014');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('봄동 배추 500g', 3000, 0, 200, 'P000014');
 
 -- 15. 유기농 녹차티백 (P000015)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('보성 현미녹차 50티백', 0, 130, 'P000015');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('보성 현미녹차 50티백', 4500, 10, 130, 'P000015');
 
 -- 16. 성주 참외 (P000016)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('성주 참외 1.5kg (5-7과)', 0, 100, 'P000016');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('성주 참외 3kg 가정용 못난이', 6000, 90, 'P000016');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('성주 참외 1.5kg (5-7과)', 14000, 0, 100, 'P000016');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('성주 참외 3kg 가정용 못난이', 20000, 10, 90, 'P000016');
 
 -- 17. 오렌지 (P000017)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('고당도 네이블 오렌지 10과', 0, 180, 'P000017');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('고당도 네이블 오렌지 10과', 9900, 5, 180, 'P000017');
 
 -- 18. 청도 미나리 (P000018)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('청도 한재 한재미나리 300g', 0, 150, 'P000018');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('청도 한재 한재미나리 300g', 5000, 0, 150, 'P000018');
 
 -- 19. 양배추 (P000019)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('통양배추 1통 (1.5kg 내외)', 0, 170, 'P000019');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('편리한 채썬 양배추 500g', 1500, 100, 'P000019');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('통양배추 1통 (1.5kg 내외)', 3500, 0, 170, 'P000019');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('편리한 채썬 양배추 500g', 5000, 0, 100, 'P000019');
 
 -- 20. 콜드브루 원액 (P000020)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('예가체프 블렌드 원액 500ml', 0, 90, 'P000020');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('예가체프 블렌드 원액 500ml', 12000, 10, 90, 'P000020');
 
 -- 21. 방울토마토 (P000021)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('국산 대추방울토마토 1kg', 0, 140, 'P000021');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('국산 대추방울토마토 1kg', 7900, 0, 140, 'P000021');
 
 -- 22. 망고 (P000022)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('태국 골드망고 4과 팩', 0, 75, 'P000022');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('태국 골드망고 8과 박스', 14000, 40, 'P000022');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('태국 골드망고 4과 팩', 15000, 0, 75, 'P000022');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('태국 골드망고 8과 박스', 29000, 5, 40, 'P000022');
 
 -- 23. 다다기오이 (P000023)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('백다다기오이 5개 묶음', 0, 220, 'P000023');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('백다다기오이 5개 묶음', 3900, 0, 220, 'P000023');
 
 -- 24. 파프리카 혼합 (P000024)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('삼색 파프리카 3개입 1봉', 0, 190, 'P000024');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('삼색 파프리카 3개입 1봉', 4900, 0, 190, 'P000024');
 
 -- 25. 아이스티 복숭아 (P000025)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('복숭아 아이스티 스틱 40T', 0, 140, 'P000025');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('복숭아 아이스티 스틱 40T', 5500, 0, 140, 'P000025');
 
 -- 26. 고창 수박 (P000026)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('당도선별 고창수박 6-7kg', 0, 50, 'P000026');
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('특대 고창수박 8-9kg', 7000, 30, 'P000026');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('당도선별 고창수박 6-7kg', 23000, 0, 50, 'P000026');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('특대 고창수박 8-9kg', 30000, 10, 30, 'P000026');
 
 -- 27. 신비복숭아 (P000027)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('경산 신비복숭아 1kg 팩', 0, 85, 'P000027');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('경산 신비복숭아 1kg 팩', 16000, 0, 85, 'P000027');
 
 -- 28. 초당옥수수 (P000028)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('생먹는 초당옥수수 10개입', 0, 120, 'P000028');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('생먹는 초당옥수수 10개입', 19900, 0, 120, 'P000028');
 
 -- 29. 탄산수 플레인 (P000029)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('플레인 탄산수 500ml x 20개', 0, 160, 'P000029');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('플레인 탄산수 500ml x 20개', 11000, 0, 160, 'P000029');
 
 -- 30. 유기농 콤부차 (P000030)
-INSERT INTO product_option (option_name, price, stockQuantity, product_id) VALUES ('레몬 콤부차 분말형 30스틱', 0, 110, 'P000030');
+INSERT INTO product_option (option_name, price, discount, stockQuantity, product_id) VALUES ('레몬 콤부차 분말형 30스틱', 15000, 0, 110, 'P000030');
 
 
 /* ===========================
