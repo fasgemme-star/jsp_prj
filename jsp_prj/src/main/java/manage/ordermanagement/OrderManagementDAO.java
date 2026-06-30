@@ -32,7 +32,7 @@ public class OrderManagementDAO {
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
 	    StringBuilder query = new StringBuilder();
-	    		query.append("	od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount	");
+	    		query.append("	od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount, od.claim_id	");
 	    		query.append( "	from orders o	");
 	    		query.append( "	join order_details od on o.order_id = od.order_id	");
 	    		query.append("	join product_option po on po.option_id = od.option_id	");
@@ -84,6 +84,7 @@ public class OrderManagementDAO {
                 oDTO.setDiscountPrice(rs.getInt("discount_price")); 
                 oDTO.setQuantity(rs.getInt("quantity")); 
                 oDTO.setTotalAmount(rs.getInt("total_amount")); 
+                oDTO.setClaimID(rs.getString("claim_id")); 
                 
                 oList.add(oDTO);
             }
@@ -152,47 +153,120 @@ public class OrderManagementDAO {
 		return cnt;
 	}// updateDeliveryStatus
 	
-	public int updateClaimStatus(int claimID, String status) {
-		return 0;
+	public int updateClaimStatus(String claimID, String result) throws SQLException {
+		DbConnection dbcon = DbConnection.getInstance();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String query = "update claim set status=?, processingdate=sysdate where claim_id = ?";
+		
+		int cnt = 0;
+		
+		try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, result);
+			pstmt.setString(2, claimID);
+			
+			cnt = pstmt.executeUpdate();
+			
+		} finally { 
+			// 6.연결 끊기
+			dbcon.dbClose(null, pstmt, con);
+		} // end finally
+		
+		return cnt;
 	}// updateClaimStatus
 	
-	public ClaimDTO selectClaimDetail(String OrderDetailid) {
-		ClientDTO cDTO = new ClientDTO();
+	/**
+	 * @param OrderDetailid 주문상세ID
+	 * @param i 0: 반품, 1: 취소
+	 * @return
+	 * @throws SQLException 
+	 */
+	public ClaimDTO selectClaimDetail(String claimID, int i) throws SQLException {
+		ClaimDTO cDTO = null;
+		List<String> iList = null;
 		DbConnection dbcon = DbConnection.getInstance();
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
+	    PreparedStatement pstmt2 = null;
 	    ResultSet rs = null;
-	    String query = "	select CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE, TOTAL_AMOUNT	"
-	    		+ "	    from client c join orders o	"
-	    		+ "	    on c.client_no = o.client_no where c.client_No = ? ";
-		/*
-		 * select CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, OPTION_ID,
-		 * OPTION_NAME from claim c join order_details od on c.order_details_id =
-		 * od.order_details_id join orders o on o.order_id = od.order_id join client c
-		 * on c.client_no = o.client_no join product_option po on po.option_id =
-		 * od.option_id ;
-		 */
+	    ResultSet rs2 = null;
+	    String cQuery = " select CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, od.OPTION_ID, OPTION_NAME, po.price, od.quantity	"
+	    		+ "	from claim c join order_details od on c.order_details_id = od.order_details_id join orders o on o.order_id = od.order_id	"
+	    		+ "	join client c on c.client_no = o.client_no join product_option po on po.option_id = od.option_id where claim_id = ?";
+	   
+	    String rQuery = "	select CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, od.OPTION_ID, OPTION_NAME, po.price, od.quantity, c.reason, c.reason_detail	"
+	    		+ "	from claim c join order_details od on c.order_details_id = od.order_details_id join orders o on o.order_id = od.order_id	"
+	    		+ "	join client c on c.client_no = o.client_no join product_option po on po.option_id = od.option_id where claim_id = ?	";	    
+	    
+	    String rQueryImg = "	select file_name from claim_image where claim_id = ?	"; 
+	    
 	    
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, clientID);
+    	    if (i == 0) {				// 취소
+    	    	pstmt = con.prepareStatement(cQuery);
+    	    	pstmt.setString(1, claimID);
+    	    	rs = pstmt.executeQuery();
+    	    	
+    	    	while (rs.next()) {
+    	    		cDTO =  new ClaimDTO();
+    	    		cDTO.setClaimID(rs.getString("CLAIM_ID"));
+    	    		cDTO.setRequestDate(rs.getString("REQUESTDATE"));
+    	    		cDTO.setClaimType(rs.getString("CLAIM_TYPE"));
+    	    		cDTO.setClientName(rs.getString("CLIENT_NAME"));
+    	    		cDTO.setClientTel(rs.getString("CLIENT_TEL"));
+    	    		cDTO.setOptionID(rs.getString("OPTION_ID"));
+    	    		cDTO.setOptionID(rs.getString("OPTION_NAME"));
+    	    		cDTO.setPrice(rs.getInt("price"));
+    	    		cDTO.setQuantity(rs.getInt("quantity"));
+    	    	}
+    	    	
+    	    	
+    	    	
+    	    } else if (i == 1) {		// 반품/교환
+    	    	pstmt = con.prepareStatement(rQueryImg);
+    	    	pstmt.setString(1, claimID);
+    	    	rs = pstmt.executeQuery();
+    	    	
+    	    	while(rs.next()) {
+    	    		iList = new ArrayList<String>();
+    	    		iList.add(rs.getString("file_name"));
+    	    	}
+    	    	
+    	    	pstmt2 = con.prepareStatement(rQuery);
+    	    	pstmt2.setString(1, claimID);
+    	    	rs2 = pstmt.executeQuery();
 
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                cDTO.setClientName(rs.getString("CLIENT_NAME"));
-                cDTO.setEmail(rs.getString("CLIENT_EMAIL"));
-                cDTO.setPhone(rs.getString("CLIENT_TEL"));
-                cDTO.setJoinDate(rs.getString("CLIENT_START_DATE"));
-                cDTO.setTotalPayment(rs.getInt("TOTAL_AMOUNT"));
-            }
+    	    	while (rs.next()) {
+    	    		cDTO =  new ClaimDTO();
+    	    		cDTO.setClaimID(rs.getString("CLAIM_ID"));
+    	    		cDTO.setRequestDate(rs.getString("REQUESTDATE"));
+    	    		cDTO.setClaimType(rs.getString("CLAIM_TYPE"));
+    	    		cDTO.setClientName(rs.getString("CLIENT_NAME"));
+    	    		cDTO.setClientTel(rs.getString("CLIENT_TEL"));
+    	    		cDTO.setOptionID(rs.getString("OPTION_ID"));
+    	    		cDTO.setOptionID(rs.getString("OPTION_NAME"));
+    	    		cDTO.setPrice(rs.getInt("price"));
+    	    		cDTO.setQuantity(rs.getInt("quantity"));
+    	    		cDTO.setReason(rs.getString("reason"));
+    	    		cDTO.setReasonDetail(rs.getString("reason_detail"));
+    	    	}
+    	    	cDTO.setImg(iList);
+    	    	
+    		}// end else if
+
         } finally {
             // 5. 자원 해제
+        	if( pstmt2 != null) {
+        		dbcon.dbClose(rs2, pstmt2, null);
+        	}
             dbcon.dbClose(rs, pstmt, con);
         }
 
 		return cDTO;
-		
 		
 	}
 	

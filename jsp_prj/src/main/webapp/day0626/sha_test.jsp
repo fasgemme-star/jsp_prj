@@ -32,9 +32,9 @@ String sha2 = DataEncryption.messageDigest("SHA-1", password);
 <%=sha2 %>
 <br>
 <%
-String key = "a123456789123415";
+String key = "a012345678912345";
 DataEncryption de = new DataEncryption(key);
-String name = "테스트";
+String name = "010-1234-5678";
 String encryption = de.encrypt(name);
 
 DataDecryption dd = new DataDecryption(key);

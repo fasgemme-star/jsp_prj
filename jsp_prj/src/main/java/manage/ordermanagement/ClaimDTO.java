@@ -1,6 +1,8 @@
 package manage.ordermanagement;
 
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,9 @@ public class ClaimDTO {
 	private String claimType;
 	private String clientName;
 	private String clientTel;
+	private List<String> img;
+	
+	private int price;
 	
 	private String optionID;
 	private String prdName;

@@ -25,4 +25,5 @@ public class OrderDTO {
 	private String deliveryCompletionDate;
 	private int quentity;
 	private int price;
+	private int discount;
 }

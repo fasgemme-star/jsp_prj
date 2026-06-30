@@ -1,4 +1,6 @@
-package client.orderCheck;
+package day0630;
+
+import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,16 +8,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class RangeDTO {
-	private int startNum;
-	private int endNum;
-	
-	private String date;
-	private String keyword;
-	
+public class AjaxDTO {
+	private String na;
+	private int age;
+	private String address;
+	private String type;
 }
