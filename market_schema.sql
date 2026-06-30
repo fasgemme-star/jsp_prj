@@ -1434,7 +1434,7 @@ VALUES (SYSDATE, '결제 오류', 'T', '카드 결제는 완료되었는데 주문이 생성되지 않�
    16. 클레임 (claim_ID 자동생성: CLM000001...)
 =========================== */
 INSERT INTO claim (claim_type, requestdate, reason, reason_detail, status, processingdate, order_details_ID)
-VALUES ('환불', DATE '2026-01-08', '상품 파손', '배송 중 상품이 파손되어 환불 요청', '처리완료', DATE '2026-01-08', 'OD000001');
+VALUES ('취소', DATE '2026-01-08', '구매취소','단순 변심으로 취소 신청', '처리완료', DATE '2026-01-08', 'OD000001');
 
 INSERT INTO claim (claim_type, requestdate, reason, reason_detail, status, processingdate, order_details_ID)
 VALUES ('교환', DATE '2026-01-09', '오배송', '주문한 상품과 다른 상품이 배송됨', '처리중', NULL, 'OD000003');
@@ -1447,6 +1447,9 @@ VALUES ('반품', DATE '2026-01-10', '단순변심', '생각했던 상품과 달라 반품 요청',
    17. 클레임이미지 (claim_img_ID 자동생성)
 =========================== */
 INSERT INTO claim_image (claim_ID, file_name) VALUES ('CLM000001', 'damage1.jpg');
+INSERT INTO claim_image (claim_ID, file_name) VALUES ('CLM000001', 'damage2.jpg');
+INSERT INTO claim_image (claim_ID, file_name) VALUES ('CLM000001', 'damage3.jpg');
+INSERT INTO claim_image (claim_ID, file_name) VALUES ('CLM000001', 'damage4.jpg');
 INSERT INTO claim_image (claim_ID, file_name) VALUES ('CLM000002', 'wrong_item.jpg');
 INSERT INTO claim_image (claim_ID, file_name) VALUES ('CLM000003', 'return_request.jpg');
 
