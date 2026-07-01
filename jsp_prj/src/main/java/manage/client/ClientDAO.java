@@ -124,9 +124,10 @@ public class ClientDAO {
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    String query = "	select CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE, TOTAL_AMOUNT	"
-	    		+ "	    from client c join orders o	"
-	    		+ "	    on c.client_no = o.client_no where c.client_No = ? ";
+	    String query = "SELECT c.CLIENT_NAME, c.CLIENT_EMAIL, c.CLIENT_TEL, c.CLIENT_START_DATE, NVL(SUM(o.TOTAL_AMOUNT), 0) AS TOTAL_AMOUNT "
+				 + "FROM client c LEFT OUTER JOIN orders o ON c.client_no = o.client_no "
+				 + "WHERE c.client_no = ? "
+				 + "GROUP BY c.CLIENT_NAME, c.CLIENT_EMAIL, c.CLIENT_TEL, c.CLIENT_START_DATE";
 	    
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -134,7 +135,7 @@ public class ClientDAO {
             pstmt.setString(1, clientID);
 
             rs = pstmt.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 cDTO.setClientName(rs.getString("CLIENT_NAME"));
                 cDTO.setEmail(rs.getString("CLIENT_EMAIL"));
                 cDTO.setPhone(rs.getString("CLIENT_TEL"));

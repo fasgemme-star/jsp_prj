@@ -48,6 +48,9 @@ public class SearchProductDAO {
 	            	rDTO.setActiveCnt(rs2.getInt("active_cnt"));
 	            }
 	        } finally {
+	        	if (pstmt2 != null) {
+					dbcon.dbClose(rs2, pstmt2, null);
+				}
 	            dbcon.dbClose(rs, pstmt, con);
 	        }
         

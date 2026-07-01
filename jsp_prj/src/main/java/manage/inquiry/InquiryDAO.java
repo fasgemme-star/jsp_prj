@@ -55,7 +55,7 @@ public class InquiryDAO {
 	 */
 	public List<InquiryDTO> selectInquiryList(RangeDTO rDTO) throws SQLException{
 		List<InquiryDTO> iList = new ArrayList<InquiryDTO>();
-		InquiryDTO iDTO = new InquiryDTO();
+		InquiryDTO iDTO = null;
 		DbConnection dbcon = DbConnection.getInstance();
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
@@ -73,7 +73,7 @@ public class InquiryDAO {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
             //전체: 0, 미처리: 1, 완료: 2
             if (rDTO.getStatus() != 0) {
-            	query.append(" AND	ANSWER_STATUS = '?'	");
+            	query.append(" AND	ANSWER_STATUS = ?	");
             }
             pstmt = con.prepareStatement(query.toString());
             if(rDTO.getStatus() == 1) {
@@ -84,6 +84,7 @@ public class InquiryDAO {
    
             rs = pstmt.executeQuery();
             while (rs.next()) {
+            	iDTO = new InquiryDTO();
             	iDTO.setClientNo(rs.getString("client_no"));
             	iDTO.setClientName(rs.getString("client_name"));
             	iDTO.setInquiryID(rs.getString("INQUIRY_ID"));
@@ -130,7 +131,7 @@ public class InquiryDAO {
 
 		
 		    rs = pstmt.executeQuery();
-		    while (rs.next()) {
+		    if (rs.next()) {
 		    	iDTO.setClientNo(rs.getString("client_no"));
 		    	iDTO.setClientName(rs.getString("client_name"));
 		    	iDTO.setTitle(rs.getString("INQUIRY_TITLE"));
@@ -154,7 +155,7 @@ public class InquiryDAO {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		String query = "update inquiry set answer = ? where inquiry_id = ?";
+		String query = "update inquiry set answer = ?, answer_status = '답변완료', answer_date = sysdate where inquiry_id = ?";
 		int cnt = 0;
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -199,20 +200,18 @@ public class InquiryDAO {
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    StringBuilder query = new StringBuilder();
-		query.append("	SELECT od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount	");
-		query.append( "	from orders o join order_details od on o.order_id = od.order_id	");
-		query.append("	join product_option po on po.option_id = od.option_id	");
-		query.append( "	join product p on p.product_id = po.product_id	");
-		query.append( "	WHERE order_details_id = ?	");
-		
+	    String query = "SELECT od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount "
+				 + "FROM orders o JOIN order_details od ON o.order_id = od.order_id "
+				 + "JOIN product_option po ON po.option_id = od.option_id "
+				 + "JOIN product p ON p.product_id = po.product_id "
+				 + "WHERE order_details_id = ?";
 		try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
-            pstmt = con.prepareStatement(query.toString());
+            pstmt = con.prepareStatement(query);
             pstmt.setString(1, orderID);
             rs = pstmt.executeQuery();
             
-            while (rs.next()) {
+            if (rs.next()) {
                 oDTO.setOrderDetailsID(rs.getString("order_details_id"));
                 oDTO.setOrderID(rs.getString("order_id"));
                 oDTO.setDeliveryStatus(rs.getString("delivery_status"));

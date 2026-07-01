@@ -51,13 +51,12 @@ public class DashBoardDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		StringBuilder query = new StringBuilder();
+		String query = "SELECT count(1) cnt FROM client WHERE client_start_date >= SYSDATE-7";
 		int total = 0;
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			
-			query.append("select count(1) cnt from client where client_start_date >= SYSDATE-7");
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
@@ -102,7 +101,7 @@ public class DashBoardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder query = new StringBuilder();
-		int total = -1;
+		int total = 0;
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			
@@ -126,21 +125,20 @@ public class DashBoardDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		StringBuilder query = new StringBuilder();
-		int[] newClientArr = null;
+		int[] newClientArr = new int[12];
 		int i=0;
+		String query = "SELECT cnt, year FROM( "
+				 + "SELECT count(1) cnt, to_char(CLIENT_START_DATE,'YYYY-MM') as year FROM client WHERE client_delete_account = 'N' "
+				 + "GROUP BY to_char(CLIENT_START_DATE,'YYYY-MM') ORDER BY year) "
+				 + "WHERE year BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-01' AND TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-12'";
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
-			query.append("	select cnt, year from(	");
-			query.append("	select count(1) cnt, to_char(CLIENT_START_DATE,'YYYY-MM') as year from client where client_delete_account = 'N'	");
-			query.append("	group by to_char(CLIENT_START_DATE,'YYYY-MM') order by year)	");
-			query.append("	where year between TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-01' and TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-12'	");
-			
 			pstmt = con.prepareStatement(query.toString());
 			rs = pstmt.executeQuery();
-			newClientArr = new int[12];
-			if(rs.next()) {
-				newClientArr[i++] = rs.getInt("cnt");
+			while(rs.next()) {
+				String yearMonth = rs.getString("year"); 
+				int month = Integer.parseInt(yearMonth.substring(5, 7)); 
+				newClientArr[month - 1] = rs.getInt("cnt"); 
 			}
 		} finally { 
 			// 6.연결 끊기
@@ -155,28 +153,27 @@ public class DashBoardDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		StringBuilder query = new StringBuilder();
-		int[] newClientArr = null;
-		int i=0;
+		int[] dropOutArr = new int[12]; // 1~12월 데이터를 담을 배열 초기화
+		
+		String query = "SELECT cnt, year FROM( "
+					 + "SELECT count(1) cnt, to_char(CLIENT_START_DATE,'YYYY-MM') as year FROM client WHERE client_delete_account = 'Y' "
+					 + "GROUP BY to_char(CLIENT_START_DATE,'YYYY-MM') ORDER BY year) "
+					 + "WHERE year BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-01' AND TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-12'";
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
-			query.append("	select cnt, year from(	");
-			query.append("	select count(1) cnt, to_char(CLIENT_START_DATE,'YYYY-MM') as year from client where client_delete_account = 'Y'	");
-			query.append("	group by to_char(CLIENT_START_DATE,'YYYY-MM') order by year)	");
-			query.append("	where year between TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-01' and TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')||'-12'	");
-			
 			pstmt = con.prepareStatement(query.toString());
 			rs = pstmt.executeQuery();
-			newClientArr = new int[12];
-			if(rs.next()) {
-				newClientArr[i++] = rs.getInt("cnt");
+			while(rs.next()) {
+				String yearMonth = rs.getString("year"); 
+				int month = Integer.parseInt(yearMonth.substring(5, 7)); 
+				dropOutArr[month - 1] = rs.getInt("cnt");
 			}
 		} finally { 
 			// 6.연결 끊기
 			dbcon.dbClose(rs, pstmt, con);
 		} // end finally
 		
-		return newClientArr;
+		return dropOutArr;
 	}// selectclientDropOut
 	
 	public Map<String, Integer> selectBestProduct() throws SQLException{

@@ -32,7 +32,7 @@ public class OrderManagementDAO {
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
 	    StringBuilder query = new StringBuilder();
-	    		query.append("	od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount, od.claim_id	");
+	    		query.append("	select od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount, od.claim_id	");
 	    		query.append( "	from orders o	");
 	    		query.append( "	join order_details od on o.order_id = od.order_id	");
 	    		query.append("	join product_option po on po.option_id = od.option_id	");
@@ -145,6 +145,13 @@ public class OrderManagementDAO {
 			}
 			throw e;
 		} finally { 
+			if (con != null) {
+				try {
+					con.setAutoCommit(true);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			// 6.연결 끊기
 			dbcon.dbClose(rs, pstmt, null);
 			dbcon.dbClose(null, pstmtMaxTN, con);
@@ -186,23 +193,22 @@ public class OrderManagementDAO {
 	 */
 	public ClaimDTO selectClaimDetail(String claimID, int i) throws SQLException {
 		ClaimDTO cDTO = null;
-		List<String> iList = null;
+		List<String> iList =  new ArrayList<String>();
 		DbConnection dbcon = DbConnection.getInstance();
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    PreparedStatement pstmt2 = null;
 	    ResultSet rs = null;
 	    ResultSet rs2 = null;
-	    String cQuery = " select CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, od.OPTION_ID, OPTION_NAME, po.price, od.quantity	"
-	    		+ "	from claim c join order_details od on c.order_details_id = od.order_details_id join orders o on o.order_id = od.order_id	"
-	    		+ "	join client c on c.client_no = o.client_no join product_option po on po.option_id = od.option_id where claim_id = ?";
-	   
-	    String rQuery = "	select CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, od.OPTION_ID, OPTION_NAME, po.price, od.quantity, c.reason, c.reason_detail	"
-	    		+ "	from claim c join order_details od on c.order_details_id = od.order_details_id join orders o on o.order_id = od.order_id	"
-	    		+ "	join client c on c.client_no = o.client_no join product_option po on po.option_id = od.option_id where claim_id = ?	";	    
-	    
-	    String rQueryImg = "	select file_name from claim_image where claim_id = ?	"; 
-	    
+	    String cQuery = "SELECT CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, od.OPTION_ID, OPTION_NAME, po.price, od.quantity "
+				  + "FROM claim clm JOIN order_details od ON clm.order_details_id = od.order_details_id JOIN orders o ON o.order_id = od.order_id "
+				  + "JOIN client c ON c.client_no = o.client_no JOIN product_option po ON po.option_id = od.option_id WHERE claim_id = ?";
+ 
+	String rQuery = "SELECT CLAIM_ID, REQUESTDATE, CLAIM_TYPE, CLIENT_NAME, CLIENT_TEL, od.OPTION_ID, OPTION_NAME, po.price, od.quantity, clm.reason, clm.reason_detail "
+				  + "FROM claim clm JOIN order_details od ON clm.order_details_id = od.order_details_id JOIN orders o ON o.order_id = od.order_id "
+				  + "JOIN client c ON c.client_no = o.client_no JOIN product_option po ON po.option_id = od.option_id WHERE claim_id = ?";     
+	
+	String rQueryImg = "SELECT file_name FROM claim_image WHERE claim_id = ?";
 	    
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -211,7 +217,7 @@ public class OrderManagementDAO {
     	    	pstmt.setString(1, claimID);
     	    	rs = pstmt.executeQuery();
     	    	
-    	    	while (rs.next()) {
+    	    	if (rs.next()) {
     	    		cDTO =  new ClaimDTO();
     	    		cDTO.setClaimID(rs.getString("CLAIM_ID"));
     	    		cDTO.setRequestDate(rs.getString("REQUESTDATE"));
@@ -219,7 +225,7 @@ public class OrderManagementDAO {
     	    		cDTO.setClientName(rs.getString("CLIENT_NAME"));
     	    		cDTO.setClientTel(rs.getString("CLIENT_TEL"));
     	    		cDTO.setOptionID(rs.getString("OPTION_ID"));
-    	    		cDTO.setOptionID(rs.getString("OPTION_NAME"));
+    	    		cDTO.setPrdName(rs.getString("OPTION_NAME"));
     	    		cDTO.setPrice(rs.getInt("price"));
     	    		cDTO.setQuantity(rs.getInt("quantity"));
     	    	}
@@ -232,15 +238,14 @@ public class OrderManagementDAO {
     	    	rs = pstmt.executeQuery();
     	    	
     	    	while(rs.next()) {
-    	    		iList = new ArrayList<String>();
     	    		iList.add(rs.getString("file_name"));
     	    	}
     	    	
     	    	pstmt2 = con.prepareStatement(rQuery);
     	    	pstmt2.setString(1, claimID);
-    	    	rs2 = pstmt.executeQuery();
+    	    	rs2 = pstmt2.executeQuery();
 
-    	    	while (rs.next()) {
+    	    	if (rs2.next()) {
     	    		cDTO =  new ClaimDTO();
     	    		cDTO.setClaimID(rs.getString("CLAIM_ID"));
     	    		cDTO.setRequestDate(rs.getString("REQUESTDATE"));

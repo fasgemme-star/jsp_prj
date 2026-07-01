@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.order.DeliveryDTO;
 import dbcon.DbConnection;
 import dbcon.Path;
 
@@ -75,7 +76,7 @@ public class CartDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		int cnt = 0;
-		String query = "	delete from shopping_cart where client_no = ? and option_no = ?	";
+		String query = "	delete from shopping_cart where client_no = ? and option_id = ?	";
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			pstmt = con.prepareStatement(query);
@@ -91,12 +92,12 @@ public class CartDAO {
 		return cnt;
 	}// deleteCart
 
-	public int clearCart(CartDTO cDTO) throws SQLException {
+	public int deleteCartAll(CartDTO cDTO) throws SQLException {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		int cnt = 0;
-		String query = "	delete from SHOPPING_CART sc join product_option po on sc.option_id = po.option_id where client_no = ? and option_no = ? and STOCKQUANTITY = 0	";
+		String query = "	delete from shopping_cart where client_no = ? and option_id = ? and option_id in (select option_id from product_option where STOCKQUANTITY = 0)	";
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			pstmt = con.prepareStatement(query);
@@ -140,7 +141,7 @@ public class CartDAO {
 			}
 			
 		} finally {
-			dbcon.dbClose(null, pstmt, con);
+			dbcon.dbClose(rs, pstmt, con);
 		} 
 		
 		return oList;
@@ -174,9 +175,14 @@ public class CartDAO {
 			}
 			
 		} finally {
-			dbcon.dbClose(null, pstmt, con);
+			dbcon.dbClose(rs, pstmt, con);
 		} 
 		
 		return oList;
 	}
+	
+public String updateDeliveryRequest(DeliveryDTO deliveryDTO) {
+    	
+        return null;
+    }// insertDeliveryAddr
 }

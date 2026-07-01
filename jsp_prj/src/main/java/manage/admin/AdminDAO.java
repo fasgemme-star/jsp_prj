@@ -31,16 +31,13 @@ public class AdminDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		StringBuilder query = new StringBuilder();
+		String query = "select manager_id from manager where manager_id = ? and manager_hash = ?";
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
-			query.append("select manager_id from manager where manager_id = '");
-			query.append(id);
-			query.append("' and manager_hash = '");
-			query.append(pw);
-			query.append("'");
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
@@ -49,7 +46,6 @@ public class AdminDAO {
 				return 0;
 			}
 		} finally { 
-			// 6.연결 끊기
 			dbcon.dbClose(rs, pstmt, con);
 		} // end finally
 	}// selectAdmin
@@ -64,18 +60,15 @@ public class AdminDAO {
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		StringBuilder query = new StringBuilder();
 		int cnt = 0;
+		String query = "update manager set manager_hash = ? where manager_id = ?";
 		
 		try {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 
-			query.append("update manager set manager_hash = '");
-			query.append(newPW);
-			query.append("' where manager_id = '");
-			query.append(aDTO.getAdminID());
-			query.append("'");
-			pstmt = con.prepareStatement(query.toString());
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, newPW);
+			pstmt.setString(2, aDTO.getAdminID());
 			cnt = pstmt.executeUpdate();
 			
 			
