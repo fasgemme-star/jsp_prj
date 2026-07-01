@@ -398,6 +398,8 @@ CREATE TABLE delivery_destination (
 	delivery_ID VARCHAR2(30) NOT NULL, /* 배송아이디 */
 	delivery_postcode VARCHAR2(30), /* 배송우편번호 */
 	delivery_addr VARCHAR2(300), /* 배송주소 */
+  recipient varchar2(300),   	/* 수신인명 */
+  recipient_phone varchar2(100),	/* 수신인 전화 */
 	first_destination VARCHAR(1), /* 기본배송지FLAG */
 	delivery_input_date DATE  default sysdate, /* 입력일 */
 	client_No VARCHAR2(30) /* 회원아이디 */
@@ -1366,29 +1368,29 @@ INSERT INTO payment (order_ID, payment_type, payment_date) VALUES ('O000005', '�
    13. 배송지 (delivery_ID 자동생성: DLV000001...)
 =========================== */
 -- 주의: select_delivery가 참조할 ID가 먼저 생성되어야 하므로 순서를 바꿨습니다.
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('05800', '서울시 송파구 문정동', 'T', 'C000001', DATE '2026-01-07');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('홍길동', '010-1111-1111', '05800', '서울시 송파구 문정동', 'T', 'C000001', DATE '2026-01-07');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('05820', '서울시 송파구 장지동', 'F', 'C000001', DATE '2026-01-07');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('홍길동', '010-1111-1111', '05820', '서울시 송파구 장지동', 'F', 'C000001', DATE '2026-01-07');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('06134', '서울특별시 강남구 테헤란로 152', 'T', 'C000002', DATE '2026-01-09');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('김철수', '010-2222-2222', '06134', '서울특별시 강남구 테헤란로 152', 'T', 'C000002', DATE '2026-01-09');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('48058', '부산광역시 해운대구 센텀중앙로 97', 'F', 'C000002', DATE '2026-01-09');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('김철수', '010-2222-2222', '48058', '부산광역시 해운대구 센텀중앙로 97', 'F', 'C000002', DATE '2026-01-09');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('35209', '대전광역시 서구 둔산로 100', 'T', 'C000003', DATE '2026-01-10');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('이영희', '010-3333-3333', '35209', '대전광역시 서구 둔산로 100', 'T', 'C000003', DATE '2026-01-10');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('21984', '인천광역시 연수구 송도과학로 32', 'T', 'C000004', DATE '2026-01-12');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('박민수', '010-1111-0004', '21984', '인천광역시 연수구 송도과학로 32', 'T', 'C000004', DATE '2026-01-12');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('61947', '광주광역시 서구 상무중앙로 58', 'F', 'C000004', DATE '2026-01-12');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('박민수', '010-1111-0004', '61947', '광주광역시 서구 상무중앙로 58', 'F', 'C000004', DATE '2026-01-12');
 
-INSERT INTO delivery_destination (delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
-VALUES ('05820', '서울시 송파구 장지동', 'T', 'C000005', DATE '2026-01-28');
+INSERT INTO delivery_destination (recipient , recipient_phone, delivery_postcode, delivery_addr, first_destination, client_No, DELIVERY_INPUT_DATE)
+VALUES ('최유리', '010-1111-0005', '05820', '서울시 송파구 장지동', 'T', 'C000005', DATE '2026-01-28');
 
 
 /* ===========================
