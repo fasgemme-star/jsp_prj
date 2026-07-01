@@ -14,6 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ClaimDTO {
+	private String clientID;
+	private String orderDetailsID;
 	private String claimID;
 	private String orderID;
 	private String optionID;

@@ -174,4 +174,28 @@ public class SearchProductDAO {
     
 		return totalAffectedRows;
 	}// updateProduct
+	
+	public int deleteProduct(ProductDTO pDTO) throws SQLException {
+		DbConnection dbcon = DbConnection.getInstance();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        int cnt = 0;
+        String query = "UPDATE product_option SET is_deleted = 'Y' where option_id = ?";
+        try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, pDTO.getPrdID());
+			
+			cnt = pstmt.executeUpdate();
+			
+		} finally { 
+			// 6.연결 끊기
+			dbcon.dbClose(null, pstmt, con);
+		} // end finally
+		
+		return cnt;
+	}
+	
+	
 }

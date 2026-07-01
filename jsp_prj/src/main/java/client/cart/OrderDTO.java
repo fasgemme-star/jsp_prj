@@ -23,6 +23,7 @@ public class OrderDTO {
 	private String deliveryRequest;
 	private String deliveryStartDate;
 	private String deliveryCompletionDate;
-	private int quentity;
+	private int quantity;
 	private int price;
+	private int discount;
 }

@@ -8,27 +8,31 @@ import java.util.List;
 public class SearchProductService {
 	private SearchProductDAO spDAO = SearchProductDAO.getInstance();
 	
-	public int totalCount(RangeDTO rDTO) {
-		return 0;
-	}// totalCountㅇ
+	public int getTotalCount() {
+		RangeDTO rDTO = new RangeDTO();
+		try {
+			rDTO = spDAO.selectCount();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int total = rDTO.getTotalCnt();
+		return total;
+	}
 	
-	public int pageScale(int num) {
-		return 0;
-	}// pageScale
-	
-	public int totalPage(int totalCnt, int pageScale) {
-		return 0;
-	}// totalPage
-	
-	public int startNum(int totalPage, int pageScale) {
-		return 0;
-	}// startNum
-	
-	public int endNum(int totalpage, int pageScale) {
-		return 0;
-	}// endNum
-	
-	public int getInitialCount() {
+	public int getOnSaleCount() {
+		RangeDTO rDTO = new RangeDTO();
+		try {
+			rDTO = spDAO.selectCount();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int onSaleCnt = rDTO.getActiveCnt();
+		
+		return onSaleCnt;
+	}
+	public int getSoldoutCount() {
 		RangeDTO rDTO = new RangeDTO();
 		try {
 			rDTO = spDAO.selectCount();
@@ -40,7 +44,7 @@ public class SearchProductService {
 		int onSaleCnt = rDTO.getActiveCnt();
 		int soldoutCnt = total - onSaleCnt;
 		
-		return 0;
+		return soldoutCnt;
 	}
 	
 	public List<ProductDTO> searchItem(RangeDTO rDTO){
@@ -56,11 +60,28 @@ public class SearchProductService {
 	}
 	
 
-	public int changeProduct(ProductDTO pDTO) {
-		return 0;
+	public void changeProduct(ProductDTO pDTO) {
+	
+		try {
+			spDAO.updateProduct(pDTO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * @param pDTO
+	 * @return 1:성공, 0: 실패
+	 */
 	public int deleteProduct(ProductDTO pDTO) {
-		return 0;
+		int result = 0;
+		try {
+			result = spDAO.deleteProduct(pDTO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

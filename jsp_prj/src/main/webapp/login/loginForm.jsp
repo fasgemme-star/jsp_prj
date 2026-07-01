@@ -73,7 +73,10 @@ function chkNull(){
 			</div>
 			<c:if test="${ param.flag =='N' }">
 				<div class="form-floating">
-					<span style="color: #FF0000;" id="warning">아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.</span>
+					<span style="color: #FF0000;" id="warning">아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.
+						
+					</span>
+				
 					<script type="text/javascript">
 						for (var i = 0; i < 5; i++) {
 							$("#warning").fadeOut(500).fadeIn(500);
@@ -83,6 +86,9 @@ function chkNull(){
 				</div>
 			</c:if>
 			<button class="btn btn-primary w-100 py-2" id="btnSubmit">로그인</button>
+			<div style="text-align: right; padding-top: 10px">
+			<input type="button" class="btn btn-sm btn-outline-primary" value="회원가입" onclick="location.href='${ CommonUrl }/memberjoin/joinForm.jsp'">
+			</div>
 			<p class="mt-5 mb-3 text-body-secondary">&copy; class 2</p>
 		</form>
 	</main>

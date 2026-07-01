@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.claim.ClaimDTO;
+import client.claim.RangeDTO;
 import dbcon.DbConnection;
 import dbcon.Path;
 
@@ -22,74 +24,73 @@ public class ClaimChkDAO {
 		return cDAO;
 	} // getInstance()
 	
-	public List<ClaimDTO> selectClaimByUserID(String userID) throws SQLException{
+	public List<ClaimDTO> selectClaimByUserID(String userID, RangeDTO rDTO) throws SQLException{
 		List<ClaimDTO> cList = new ArrayList<ClaimDTO>();
+		ClaimDTO cDTO = null;
 		DbConnection dbcon = DbConnection.getInstance();
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
 	    
-	    StringBuilder query = new StringBuilder();
+	    String query = "select claim_id, requestdate, reason, reason_detail, status, processingdate from claim clm join order_details od on clm.ORDER_DETAILS_ID=od.ORDER_DETAILS_ID join orders o on od.ORDER_ID = o.ORDER_ID where client_no = ? and claim_type = ?";
 	    
-//	    select CLAIM_ID, REQUESTDATE, REASON, REASON_DETAIL, STATUS, PROCESSINGDATE, od.ORDER_DETAILS_ID, OPTION_NAME
-//	    from claim c
-//	    join ORDER_DETAILS od on c.ORDER_DETAILS_ID = od.ORDER_DETAILS_ID
-//	    join PRODUCT_OPTION po on od.OPTION_ID = po.OPTION_ID
-//	    join SHOPPING_CART sc on po.OPTION_ID = sc.OPTION_ID
-//	    join client c on sc.client_no = c.client_no
-//	    where c.client_no = 'C000001'
+
 		
 		try {
 		    con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 		    
-		    pstmt = con.prepareStatement(query.toString());
-		    //pstmt.setString(1,inqudityID);
+		    pstmt = con.prepareStatement(query);
+		    pstmt.setString(1,userID);
+		    pstmt.setString(1,rDTO.getStatus());
 
 		
 		    rs = pstmt.executeQuery();
 		    while (rs.next()) {
-		    	//iDTO.setClientNo(rs.getString("client_no"));
+		    	cDTO = new ClaimDTO();
+		    	cDTO.setClaimID(rs.getString("claim_id"));
+		    	cDTO.setRequestDate(rs.getString("requestdate"));
+		    	cDTO.setReason(rs.getString("reason"));
+		    	cDTO.setReasonDetail(rs.getString("reason_detail"));
+		    	cDTO.setClaimStatus(rs.getString("status"));
+		    	cDTO.setProcessingDate(rs.getString("processingdate"));
+		    	
+		    	cList.add(cDTO);
 		    }
 		} finally {
 		    // 5. 자원 해제
 		    dbcon.dbClose(rs, pstmt, con);
 		}
-
-		
-		
-		
 		return cList;
 	}
 	
-	public ClaimDTO selectClaimDetail(String claimID) throws SQLException {
-		ClaimDTO cDTO = new ClaimDTO();
+	public ClaimDTO selectClaimDetail(String claimId) throws SQLException {
+		ClaimDTO cDTO = null;
 		DbConnection dbcon = DbConnection.getInstance();
-	    Connection con = null;
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
-	    
-	    StringBuilder query = new StringBuilder();
-	    
-	    try {
-	    	con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
-		    
-		    pstmt = con.prepareStatement(query.toString());
-		    pstmt.setString(1,claimID);
-
-		
-		    rs = pstmt.executeQuery();
-		    while (rs.next()) {
-		    	//cDTO.setClientNo(rs.getString("client_no"));
-		    }
-		} finally {
-		    // 5. 자원 해제
-		    dbcon.dbClose(rs, pstmt, con);
-		}
-
-	    
-	    
-	    
-	    return cDTO;
-	    
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String query = "	select claim_type, requestdate, reason, reason_detail, status, processingdate from claim clm join order_details od on clm.ORDER_DETAILS_ID=od.ORDER_DETAILS_ID join orders o on od.ORDER_ID = o.ORDER_ID where claim_id=?	";
+		try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+			
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1,claimId);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				cDTO = new ClaimDTO();
+				cDTO.setClaimType(rs.getString("claim_type"));
+				cDTO.setRequestDate(rs.getString("requestdate"));
+				cDTO.setReason(rs.getString("reason"));
+				cDTO.setReasonDetail(rs.getString("reason_detail"));
+				cDTO.setClaimStatus(rs.getString("status"));
+				cDTO.setProcessingDate(rs.getString("processingdate"));
+			}
+		} finally { 
+			// 6.연결 끊기
+			dbcon.dbClose(null, pstmt, con);
+		} // end finally
+		return cDTO;
 	}
+
 }

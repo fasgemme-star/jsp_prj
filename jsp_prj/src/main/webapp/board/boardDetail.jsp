@@ -1,10 +1,11 @@
-<%@page import="kr.co.sist.board.BoardDTO"%>
-<%@page import="java.util.List"%>
 <%@page import="kr.co.sist.board.BoardService"%>
+<%@page import="javax.print.attribute.standard.PrinterMakeAndModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="../include/siteProperty.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -20,7 +21,7 @@
 
 <meta name="theme-color" content="#712cf9">
 <!-- 변수와 메소드 공유 불가능 -->
-<jsp:include page="../fragments/external_file.jsp"/>
+<c:import url="${CommonUrl}/fragments/external_file.jsp"/>
 <!-- 변수와 메소드 공유 가능 -->
 <%-- <%@include file="../include/external_file.jsp" %> --%>
 <style>
@@ -107,8 +108,82 @@
 
 .blue { color: #0000FF; }
 .red { color: #FF0000; }
-a { color: #858585; text-decoration: none; }
+
 </style>
+
+
+<!-- include summernote css/js-->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+<style type="text/css">
+#wrap { width: 1000px; height: 900px; margin: 0 auto; }
+#header { height: 200px; }
+#container { height: 600px; }
+#footer { height: 100px; }
+
+</style>
+<script type="text/javascript">
+$(function(){
+	$("#content").summernote({
+        placeholder: '내용작성',
+        tabsize: 2,
+        height: 400,
+        width: 600,
+        toolbar: [
+            // [groupName, [list of button]]
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['insert', ['picture']],
+            ['view', [ 'codeview']],
+          ]
+      });
+	
+	$("#btnWrite").click(chkNull);
+	
+	$("#btnUpdate").click(function(){
+		boardModify('u');
+	});
+	
+	$("#btnDelete").click(function(){
+		boardModify('d');
+	});
+});//ready
+
+function boardModify(jobFlag){
+	var action = "deleteBoard"
+	var msg = "삭제"
+	if (jobFlag == "u"){
+		action = "updateBoard";
+		msg = "변경";
+	}
+	
+	if (confirm("글을 " + msg + "하시겠습니까?")){
+		//폼 태그를 얻어서, action 속성을 변경, submit 실행
+		$("#readForm")[0].action = action+".jsp";
+		if(msg == "변경"){
+			if($("#title").val().trim()==""){
+				alert("제목은 필수 입력 입니다.");
+				return;
+			}
+		}
+		$("#readForm").submit();
+		
+	}
+}// boardModify
+
+function chkNull(){
+	
+	if($("#title").val().trim() == ""){
+		alert("제목은 필수 입력입니다.");
+		return;
+	}
+	$("#writeForm").submit();
+}
+</script>
+
+
+
+
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -170,122 +245,74 @@ a { color: #858585; text-decoration: none; }
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<jsp:include page="/fragments/navigationBar.jsp"/>		
+			<c:import url="/fragments/navigationBar.jsp"/>		
 		</nav>
 	</header>
 	<main>
-		<div id="board" style="margin-top: 20px">
-		<jsp:useBean id="rDTO" class="kr.co.sist.board.RangeDTO" scope="page"/>
-		<jsp:setProperty property="*" name="rDTO"/>
-			<%
-			// 1.전체 레코드 수 구하기
-			BoardService bs = new BoardService();
-			int totalCount = bs.totalCount();
-			
-			// 2.한 화면에 보여질 게시글의 수
-			int pageScale = 10;
-			
-			// 3.총페이지수
-			int totalPage = (int)Math.ceil((double)totalCount/pageScale);
-			
-			// 4.선택한 페이지의 시작 번호 구하기
-			String tempPage = request.getParameter("currentPage");
-			int currentPage = 1;
-			if ( tempPage != null) {
-				currentPage = Integer.parseInt(tempPage);
+		<div id="divWriteForm" style="margin-top: 20px; ">
+		<%
+		String paramNum = request.getParameter("num");
+		int num = 0;
+		if (paramNum != null){
+			try{
+				num = Integer.parseInt(paramNum);
+			} catch(NumberFormatException nfe){
+				response.sendRedirect("../error/err_500.jsp");
+				return;
 			}
-			int startNum = 1;
-			startNum = currentPage * pageScale - pageScale + 1;
-			
-			// 5.선택한 페이지의 끝 번호 구하기
-			int endNum = startNum + pageScale -1;
-			
-			rDTO.setStartNum(startNum);
-			rDTO.setEndNum(endNum);
-			
-			List<BoardDTO> bList =  bs.searchBoard(rDTO);
-			
-			
-			
-			
-			pageContext.setAttribute("totalCount", totalCount);
-			pageContext.setAttribute("pageScale", pageScale);
-			pageContext.setAttribute("totalPage", totalPage);
-			pageContext.setAttribute("startNum", startNum);
-			pageContext.setAttribute("endNum", endNum);
-			pageContext.setAttribute("currentPage", currentPage);
-			pageContext.setAttribute("bList", bList);
-			%>
-			<%-- 총 레코드: ${ totalCount }<br>
-			한 화면에 보여질 게시글의 수: ${ pageScale }<br>
-			페이지 수: ${ totalPage }<br>
-			현재 페이지: ${ currentPage }<br>
-			시작번호: ${ startNum }<br>
-			끝번호: ${ endNum }<br> --%>
-			<div id="divBoardHeader">
-			<c:if test="${ not empty userInfo }" >
-				<a href="boardWriteForm.jsp" class="btn btn-sm btn-outline-success">글작성</a> 
-			</c:if>
-			</div>
-			<div id="divBoardContent" style="height: 500px;">
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<td style="width: 10%">번호</td>
-							<td style="width: 40%">제목</td>
-							<td style="width: 15%">작성자</td>
-							<td style="width: 25%">작성일</td>
-							<td style="width: 10%">조회수</td>
-						</tr>
-					</thead>
-					<tbody>
-						<c:if test="${ empty bList }">
-						<tr>
-							<td colspan="5" style="text-align: center;">
-								게시글이 없습니다.
-							</td>
-						</tr>
-						</c:if>
-					<c:forEach var="bDTO" items="${ bList }" varStatus="i">
-						<tr>
-							<td><c:out value="${ totalCount - (i.index + startNum) + 1 }"/></td>
-							<td><a href="boardDetail.jsp?num=${ bDTO.num }&currentPage=${ currentPage }"><c:out value="${ bDTO.title }"/></a></td>
-							<td><c:out value="${ bDTO.id }"/></td>
-							<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd kk:mm:ss"/></td>
-							<td><c:out value="${ bDTO.cnt }"/></td>
-						</tr>		
-					</c:forEach>
-					
-					</tbody>
-				</table>
-			</div>
-			<div id="divSearchForm" style="height: 80px;"></div>
-			
-			<div id="dibPagination" style="text-align: center;">
-				<c:forEach var="i" begin="1" end="${ totalPage }" step="1">
-				[<a href="${ CommonUrl }/board/boardList.jsp?currentPage=${i}">${ i }</a>]
-				</c:forEach>
-			</div>
-
-		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-				<%--<jsp:include page="../fragments/row.jsp"/>--%>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-				<%--<jsp:include page="../fragments/detail.jsp"/>--%>
-			<!-- /END THE FEATURETTES -->
+		}// end if
+		
+		BoardService bs = new BoardService();
+		pageContext.setAttribute("bDTO", bs.searchBoardDetail(num));
+		
+		bs.modifyCount(num);
+		%>
+		<form method="post" name="readForm" id="readForm">
+		<input type="hidden" name="currentPage" value="${ param.currentPage }"/>
+		<table>
+			<tr>
+				<th colspan="2" style="text-align: center; "><h3>글읽기</h3></th>
+			</tr>		
+			<tr>
+				<td width="120px">제목</td>
+				<td><input type="text" name="title" style="width: 600px" id="title" value="${ bDTO.title }"></td>
+			</tr>
+			<tr>
+				<td>내용</td>
+				<td><textarea name="content" id="content"><c:out value="${ bDTO.content }" escapeXml="true"/></textarea></td>
+			</tr>
+			<tr>
+				<td>작성자</td>
+				<td><c:out value="${ bDTO.id }"/></td>
+			</tr>
+			<tr>
+				<td>IP</td>
+				<td><c:out value="${ bDTO.ip }"/></td>
+			</tr>
+			<tr>
+				<td>작성일</td>
+				<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd EEEE kk:mm:ss"/></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+				<c:if test="${ userInfo.id == bDTO.id }">
+				<input type="button" value="글수정" class="btn btn-sm btn-outline-primary" id="btnUpdate"/>
+				<input type="button" value="글삭제" class="btn btn-sm btn-outline-warning" id="btnDelete"/>
+				</c:if>
+				
+				<a href="javascript:history.back()" class="btn btn-sm btn-outline-info">리스트</a>
+				</td>
+			</tr>
+		</table>
+		</form>	
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<jsp:include page="../fragments/footer.jsp"/>			
+			<c:import url="${ CommonUrl }/fragments/footer.jsp"/>			
 		</footer>
 	</main>
-	<script src="http://localhost/jsp_prj/common/JS/bootstrap.bundle.min.js"
+	<script src="${CommonUrl}/common/JS/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>
