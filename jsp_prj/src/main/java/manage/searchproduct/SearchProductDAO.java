@@ -131,8 +131,8 @@ public class SearchProductDAO {
         PreparedStatement pstmt2 = null;
         int totalAffectedRows = 0;
         
-        String query = "UPDATE product SET category_id = ?, product_name = ?, price = ? WHERE  product_id = ?";
-        String query2 = "UPDATE product_option SET STOCKQUANTITY = ? WHERE product_id =	 ?";
+        String query = "UPDATE product SET category_id = ?, price = ? WHERE  product_id = ?";
+        String query2 = "UPDATE option_name = ?, product_option SET STOCKQUANTITY = ? WHERE product_id =	 ?";
 		
 		     
         try {
