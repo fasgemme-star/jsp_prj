@@ -1416,20 +1416,20 @@ INSERT INTO inquiry_type (inquiry_name, inquiry_type) VALUES ('상품상세문의', '�
    14. 문의 (inquiry_ID 자동생성)
 =========================== */
 --상품
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, answer, answer_date, inquiry_code, order_details_ID, CLIENT_NO)
-VALUES (SYSDATE, '배송이 안 와요', 'T', '언제 오나요?', '답변완료', '조금만 기다려주세요.', SYSDATE, 'TYP000002', 'OD000001', 'C000001');
+INSERT INTO inquiry (  inquiry_title,INQUIRY_DATE, inquiry_secret, inquiry_content, answer_status, answer, answer_date, inquiry_code, order_details_ID, CLIENT_NO)
+VALUES ( '배송이 안 와요', '2026-06-02', 'T', '언제 오나요?', '답변완료', '조금만 기다려주세요.', SYSDATE, 'TYP000002', 'OD000001', 'C000001');
 
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID, CLIENT_NO)
-VALUES (SYSDATE, '유통기한 문의', 'F', '언제까지인가요?', '대기중', 'TYP000002', 'OD000004', 'C000002');
+INSERT INTO inquiry ( inquiry_title,INQUIRY_DATE, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID, CLIENT_NO)
+VALUES ( '유통기한 문의',date '2026-07-02', 'F', '언제까지인가요?', '대기중', 'TYP000002', 'OD000004', 'C000002');
 
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID, CLIENT_NO)
-VALUES (SYSDATE, '재입고 일정', 'T', '재입고 언제 되죠?', '대기중', 'TYP000002', 'OD000008', 'C000003');
+INSERT INTO inquiry (  inquiry_title,INQUIRY_DATE, inquiry_secret, inquiry_content, answer_status, inquiry_code, order_details_ID, CLIENT_NO)
+VALUES ( '재입고 일정',date '2026-05-02', 'T', '재입고 언제 되죠?', '대기중', 'TYP000002', 'OD000008', 'C000003');
 --1대1
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code,  CLIENT_NO)
-VALUES (SYSDATE, '환불 문의', 'T', '환불 문의', '답변완료', 'TYP000001', 'C000004');
+INSERT INTO inquiry (  inquiry_title,INQUIRY_DATE, inquiry_secret, inquiry_content, answer_status, inquiry_code,  CLIENT_NO)
+VALUES ( '환불 문의',date '2026-04-02', 'T', '환불 문의', '답변완료', 'TYP000001', 'C000004');
 
-INSERT INTO inquiry (inquiry_date, inquiry_title, inquiry_secret, inquiry_content, answer_status, inquiry_code,  CLIENT_NO)
-VALUES (SYSDATE, '결제 오류', 'T', '카드 결제는 완료되었는데 주문이 생성되지 않았습니다', '대기중', 'TYP000001', 'C000005');
+INSERT INTO inquiry (  inquiry_title,INQUIRY_DATE, inquiry_secret, inquiry_content, answer_status, inquiry_code,  CLIENT_NO)
+VALUES ( '결제 오류',date '2026-06-05', 'T', '카드 결제는 완료되었는데 주문이 생성되지 않았습니다', '대기중', 'TYP000001', 'C000005');
 
 
 /* ===========================
