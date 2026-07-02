@@ -52,11 +52,7 @@ public class InquiryDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	/**
-	 * @param rDTO status 전체: 0, 미처리: 1, 완료: 2
-	 * @return
-	 * @throws SQLException
-	 */
+	
 	public List<InquiryDTO> selectInquiryList(RangeDTO rDTO) throws SQLException{
 		List<InquiryDTO> iList = new ArrayList<InquiryDTO>();
 		InquiryDTO iDTO = null;
@@ -99,22 +95,23 @@ public class InquiryDAO {
             if (rDTO.getStatus() != 0) {
             	sb.append(" AND	ANSWER_STATUS = ?	");
             }
-            pstmt = con.prepareStatement(sb.toString());
             int index = 0;
-            if(rDTO.getStatus() == 1) {
-            	pstmt.setString(++index,"대기중");
-            } else if (rDTO.getStatus() == 2) {
-            	pstmt.setString(++index,"답변완료");
-			}
    
             
             sb.append("        ORDER BY i.inquiry_date DESC ");
             sb.append("    ) t ");
             sb.append(") ");
             sb.append("WHERE n BETWEEN ? AND ?");
+            pstmt = con.prepareStatement(sb.toString());
             
+            if(rDTO.getStatus() == 1) {
+            	pstmt.setString(++index,"대기중");
+            } else if (rDTO.getStatus() == 2) {
+            	pstmt.setString(++index,"답변완료");
+            }
     		pstmt.setInt(++index, rDTO.getStartNum());
 			pstmt.setInt(++index, rDTO.getEndNum());
+			
             rs = pstmt.executeQuery();
             while (rs.next()) {
             	iDTO = new InquiryDTO();

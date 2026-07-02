@@ -131,19 +131,18 @@ public class SearchProductDAO {
         PreparedStatement pstmt2 = null;
         int totalAffectedRows = 0;
         
-        String query = "UPDATE product SET category_id = ?, price = ? WHERE  product_id = ?";
-        String query2 = "UPDATE option_name = ?, product_option SET STOCKQUANTITY = ? WHERE product_id =	 ?";
+        String query = "UPDATE product SET category_id = ? WHERE  product_id = (select product_id from product_option where option_id=? )";
+        String query2 = "UPDATE  product_option SET STOCKQUANTITY = ?,option_name = ?, price = ?  WHERE option_id =	 ?";
 		
 		     
         try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
             con.setAutoCommit(false);
+            
             pstmt = con.prepareStatement(query);
             
             pstmt.setString(1, pDTO.getCategory());
-            pstmt.setString(2, pDTO.getPrdName());
-            pstmt.setInt(3, pDTO.getPrice());
-            pstmt.setString(4, pDTO.getPrdID());
+            pstmt.setString(2, pDTO.getPrdID());
             
             int productCnt = pstmt.executeUpdate();
             
@@ -153,7 +152,9 @@ public class SearchProductDAO {
             pstmt2 = con.prepareStatement(query2);
             
             pstmt2.setInt(1, pDTO.getQuantity());
-            pstmt2.setString(2, pDTO.getPrdID());
+            pstmt2.setString(2, pDTO.getPrdName());
+            pstmt2.setInt(3, pDTO.getPrice());
+            pstmt2.setString(4, pDTO.getPrdID());
             
             int optionCnt = pstmt.executeUpdate();
             if (optionCnt == 0) {
@@ -179,8 +180,8 @@ public class SearchProductDAO {
                     e.printStackTrace();
                 }
             }
-            dbcon.dbClose(null, pstmt, con);
             dbcon.dbClose(null, pstmt2, null);
+            dbcon.dbClose(null, pstmt, con);
         }
     
 		return totalAffectedRows;

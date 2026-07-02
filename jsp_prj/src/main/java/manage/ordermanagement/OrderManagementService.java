@@ -1,5 +1,6 @@
 package manage.ordermanagement;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,14 @@ public class OrderManagementService {
 		return 0;
 	}// endNum
 	
-	public List<OrderDTO> getOrderList(){
+	public List<OrderDTO> getOrderList(RangeDTO rDTO){
 		List<OrderDTO> oList = new ArrayList<OrderDTO>();
+		try {
+			oList = oDAO.selectOrderList(rDTO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return oList;
 	}// getOrderList
 	
@@ -36,52 +43,45 @@ public class OrderManagementService {
 		return oDTO;
 	}// getOrderDetail
 	
-	public List<OrderDTO> searchOrderByClient(String clientID){
-		List<OrderDTO> oList = new ArrayList<OrderDTO>();
-		return oList;
-	}// searchOrderByClient
 	
-	public List<OrderDTO> searchOrderByStatus(String status){
-		List<OrderDTO> oList = new ArrayList<OrderDTO>();
-		return oList;
-	}// searchOrderByStatus
-	
-	public List<OrderDTO> searchOrderByDate(String startDate, String endDate){
-		List<OrderDTO> oList = new ArrayList<OrderDTO>();
-		return oList;
-	}// searchOrderByDate
-	
-	public boolean processDelivery(int orderID) {
+	public boolean processDelivery(String orderID) {
+		try {
+			oDAO.updateDeliveryStatus(orderID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}// processDelivery
 	
-	public ClaimDTO getClaimDetail(String claimID) {
+	/**
+	 * @param claimID
+	 * @param i 0: 반품, 1: 취소
+	 * @return
+	 */
+	public ClaimDTO getClaimDetail(String claimID, int i) {
 		ClaimDTO cDTO = new ClaimDTO();
+		try {
+			cDTO = oDAO.selectClaimDetail(claimID, i);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return cDTO;
 	}// getClaimDetail
 	
-	public boolean approveCancle(String claimID) {
-		return true;
+	public boolean processClaimStatus(String claimID, String result) {
+		boolean flag = false;
+		try {
+			oDAO.updateClaimStatus(claimID,result);
+			flag=true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return flag;
 	}// approveCancle
 	
-	public boolean rejectCancel(String claimID) {
-		return true;
-	}// rejectCancel
 	
-	public boolean approveExchange(String claimID) {
-		return true;
-	}// approveExchange
-	
-	public boolean rejectExchange(String claimID) {
-		return true;
-	}// rejectExchange
-	
-	public boolean approveReturn(String claimID) {
-		return true;
-	}// approveReturn
-	
-	public boolean rejectReturn(String claimID) {
-		return true;
-	}// rejectReturn
 
 }

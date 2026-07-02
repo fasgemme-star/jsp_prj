@@ -10,8 +10,6 @@ import java.util.List;
 
 import dbcon.DbConnection;
 import dbcon.Path;
-import manage.client.ClientDTO;
-import manage.searchproduct.ProductDTO;
 
 public class OrderManagementDAO {
 	private static OrderManagementDAO oDAO;
@@ -32,24 +30,60 @@ public class OrderManagementDAO {
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
 	    StringBuilder query = new StringBuilder();
-	    		query.append("	select od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount, od.claim_id	");
-	    		query.append( "	from orders o	");
-	    		query.append( "	join order_details od on o.order_id = od.order_id	");
-	    		query.append("	join product_option po on po.option_id = od.option_id	");
-	    		query.append( "	join product p on p.product_id = po.product_id	");
-	    		query.append( "	WHERE 1=1	");
-		
+		/*
+		 * query.
+		 * append("	select od.order_details_id, o.order_id, o.delivery_status, o.order_date, po.option_id, po.option_name, po.price, po.price*(1 - po.discount * 0.01) discount_price, od.quantity, o.total_amount, od.claim_id	"
+		 * ); query.append( "	from orders o	"); query.append(
+		 * "	join order_details od on o.order_id = od.order_id	");
+		 * query.append("	join product_option po on po.option_id = od.option_id	");
+		 * query.append( "	join product p on p.product_id = po.product_id	");
+		 * query.append( "	WHERE 1=1	");
+		 * 
+		 * if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+		 * query.append("AND PRODUCT_NAME LIKE ? "); } if (rDTO.getDelivery_status() !=
+		 * null && !rDTO.getDelivery_status().equals("전체") &&
+		 * !rDTO.getDelivery_status().isEmpty()) { query.append("AND STATUS = ? "); } if
+		 * (rDTO.getStartDate() != null && !rDTO.getStartDate().isEmpty() &&
+		 * rDTO.getEndDate() != null && !rDTO.getEndDate().isEmpty()) { query.
+		 * append("AND REG_DATE BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD') + 1 "
+		 * ); } query.append("ORDER BY PRODUCT_ID DESC");
+		 */
+	    query.append("SELECT order_details_id, order_id, delivery_status, order_date, ");
+	    query.append("       option_id, option_name, price, discount_price, quantity, total_amount, claim_id ");
+	    query.append("FROM ( ");
+	    query.append("    SELECT ROWNUM n, t.* ");
+	    query.append("    FROM ( ");
+	    
+	    // 2. 메인 데이터 조회 쿼리 (기존 코드)
+	    query.append("        SELECT od.order_details_id, o.order_id, o.delivery_status, o.order_date, ");
+	    query.append("               po.option_id, po.option_name, po.price, ");
+	    query.append("               po.price*(1 - po.discount * 0.01) discount_price, ");
+	    query.append("               od.quantity, o.total_amount, od.claim_id ");
+	    query.append("        FROM orders o ");
+	    query.append("        JOIN order_details od ON o.order_id = od.order_id ");
+	    query.append("        JOIN product_option po ON po.option_id = od.option_id ");
+	    query.append("        JOIN product p ON p.product_id = po.product_id ");
+	    query.append("        WHERE 1=1 ");
+	    
+	    // 동적 쿼리 조건
 	    if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
-	        query.append("AND PRODUCT_NAME LIKE ? ");
+	        query.append("        AND p.PRODUCT_NAME LIKE ? "); // 식별자를 위해 p. 추가 권장
 	    }
 	    if (rDTO.getDelivery_status() != null && !rDTO.getDelivery_status().equals("전체") && !rDTO.getDelivery_status().isEmpty()) {
-            query.append("AND STATUS = ? ");
-        }
+	        query.append("        AND STATUS = ? "); // 필요시 o.delivery_status 등으로 테이블 명시 권장
+	    }
 	    if (rDTO.getStartDate() != null && !rDTO.getStartDate().isEmpty() && 
-	    		rDTO.getEndDate() != null && !rDTO.getEndDate().isEmpty()) {
-	            query.append("AND REG_DATE BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD') + 1 ");
-	        }
-	    query.append("ORDER BY PRODUCT_ID DESC");
+	            rDTO.getEndDate() != null && !rDTO.getEndDate().isEmpty()) {
+	        query.append("        AND REG_DATE BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD') + 1 ");
+	    }
+	    
+	    // 정렬
+	    query.append("        ORDER BY p.PRODUCT_ID DESC ");
+	    
+	    // 3. 페이징 래핑 종료 및 조건 추가
+	    query.append("    ) t ");
+	    query.append(") ");
+	    query.append("WHERE n BETWEEN ? AND ? ");
 	    
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -69,7 +103,8 @@ public class OrderManagementDAO {
             	pstmt.setString(paramIndex++, rDTO.getStartDate());
             	pstmt.setString(paramIndex++, rDTO.getEndDate());
             }
-
+            pstmt.setInt(paramIndex++, rDTO.getStartNum());
+            pstmt.setInt(paramIndex++, rDTO.getEndNum());
             // 4. 쿼리 실행 및 결과 담기
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -247,19 +282,21 @@ public class OrderManagementDAO {
 
     	    	if (rs2.next()) {
     	    		cDTO =  new ClaimDTO();
-    	    		cDTO.setClaimID(rs.getString("CLAIM_ID"));
-    	    		cDTO.setRequestDate(rs.getString("REQUESTDATE"));
-    	    		cDTO.setClaimType(rs.getString("CLAIM_TYPE"));
-    	    		cDTO.setClientName(rs.getString("CLIENT_NAME"));
-    	    		cDTO.setClientTel(rs.getString("CLIENT_TEL"));
-    	    		cDTO.setOptionID(rs.getString("OPTION_ID"));
-    	    		cDTO.setOptionID(rs.getString("OPTION_NAME"));
-    	    		cDTO.setPrice(rs.getInt("price"));
-    	    		cDTO.setQuantity(rs.getInt("quantity"));
-    	    		cDTO.setReason(rs.getString("reason"));
-    	    		cDTO.setReasonDetail(rs.getString("reason_detail"));
+    	    		cDTO.setClaimID(rs2.getString("CLAIM_ID"));
+    	    		cDTO.setRequestDate(rs2.getString("REQUESTDATE"));
+    	    		cDTO.setClaimType(rs2.getString("CLAIM_TYPE"));
+    	    		cDTO.setClientName(rs2.getString("CLIENT_NAME"));
+    	    		cDTO.setClientTel(rs2.getString("CLIENT_TEL"));
+    	    		cDTO.setOptionID(rs2.getString("OPTION_ID"));
+    	    		cDTO.setPrdName(rs2.getString("OPTION_NAME"));
+    	    		cDTO.setPrice(rs2.getInt("price"));
+    	    		cDTO.setQuantity(rs2.getInt("quantity"));
+    	    		cDTO.setReason(rs2.getString("reason"));
+    	    		cDTO.setReasonDetail(rs2.getString("reason_detail"));
     	    	}
-    	    	cDTO.setImg(iList);
+    	    	if (cDTO != null) {
+                    cDTO.setImg(iList);
+                }
     	    	
     		}// end else if
 

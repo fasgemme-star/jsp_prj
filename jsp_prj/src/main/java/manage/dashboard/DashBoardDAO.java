@@ -126,7 +126,6 @@ public class DashBoardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int[] newClientArr = new int[12];
-		int i=0;
 		String query = "SELECT cnt, year FROM( "
 				 + "SELECT count(1) cnt, to_char(CLIENT_START_DATE,'YYYY-MM') as year FROM client WHERE client_delete_account = 'N' "
 				 + "GROUP BY to_char(CLIENT_START_DATE,'YYYY-MM') ORDER BY year) "
