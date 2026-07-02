@@ -55,11 +55,5 @@ public class AdminService {
 		}
 		return aDTO;
 	}// AdminDTO
-	
-//	public static void main(String[] args) {
-//		AdminService a = new AdminService();
-//		System.out.println(a.login("admin01", "1234"));
-//		a.changePW("admin01", "23245", "123245");
-//		a.getAdminInfo("admin01");
-//	} 
+
 }

@@ -1,5 +1,6 @@
 package manage.client;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,29 +28,59 @@ public class ClientService {
 	}// endNum
 	
 	public int getTotalCount() {
-		return 0;
+		int result = 0;
+		try {
+			result = cDAO.selectTotalClient();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}// getTotalCount
 
 	public int getNewCount() {
-		return 0;
+		int result = 0;
+		try {
+			result = cDAO.selectNewClient();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}// getNewCount
 	
-	public List<ClientDTO> getClientList(){
+	public List<ClientDTO> getClientList(RangeDTO rDTO){
 		List<ClientDTO> cList = new ArrayList<ClientDTO>();
+		try {
+			cList = cDAO.selectClientList(rDTO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return cList;
 	}// getClientList
 	
 	public ClientDTO getClientDEtail(String ClientID) {
 		ClientDTO cDTO = new ClientDTO();
+		try {
+			cDTO = cDAO.selectClientDetail(ClientID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return cDTO;
 	}// getClientDEtail
 	
 	public String changeClientPW(String ClientID) {
-		return "";
+		String randomPW = PasswordGenerator.generatePassword(10);	
+		try {
+			cDAO.updateClientPW(ClientID, randomPW);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return randomPW;
 	}// changeClientPW
 	
-	public void sendEmailNewPW(String msg) {
-		
-	}// sendEmailNewPW
 		
 }

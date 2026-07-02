@@ -1,11 +1,8 @@
 package manage.category;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import dbcon.Path;
 
 public class CategoryService {
 	private CategoryDAO cDAO = CategoryDAO.getInstance();
@@ -36,36 +33,25 @@ public class CategoryService {
 	}// addCategory
 
 	public int modifyCategory(String categoryID, String newName) {
+		int result = 0;
 		try {
-			if (cDAO.updateCategory(categoryID, newName) == 1 ){
-				//성공
-			} else {
-				//실패
-			}
+			result = cDAO.updateCategory(categoryID, newName);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return 0;
+		return result;
 	}// modifyCategory
 	
 	public int removeCategory(String categoryID) {
+		int result = 0;
 		try {
-			if (cDAO.deleteCategory(categoryID) == 1 ){
-				//성공
-			} else {
-				//실패
-			}
+			result = cDAO.deleteCategory(categoryID);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return 0;
+		return result;
 	}// removeCategory
 	
-	public static void main(String[] args) {
-		CategoryService c = new CategoryService();
-		List<String> a = c.showCategroy();
-		System.out.println(a);
-	}
 }

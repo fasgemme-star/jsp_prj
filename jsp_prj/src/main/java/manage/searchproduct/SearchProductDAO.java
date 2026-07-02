@@ -64,7 +64,11 @@ public class SearchProductDAO {
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    StringBuilder query = new StringBuilder("SELECT COUNT(1) CNT, PRODUCT_ID, PRODUCT_NAME, PRICE FROM PRODUCT WHERE 1=1 ");
+	    StringBuilder query = new StringBuilder();
+	    query.append("	    select p.* from( ")
+		.append("	select rownum n , t.*	")
+		.append("	from ( 	SELECT OPTION_ID, OPTION_NAME, PRICE, STOCKQUANTITY FROM PRODUCT_OPTION po join product p on po.PRODUCT_ID = p.PRODUCT_ID	")
+		.append("	WHERE 1=1	");
 		
 	    if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
 	        query.append("AND PRODUCT_NAME LIKE ? ");
@@ -76,7 +80,8 @@ public class SearchProductDAO {
 	    		rDTO.getEndDate() != null && !rDTO.getEndDate().isEmpty()) {
 	            query.append("AND REG_DATE BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD') + 1 ");
 	        }
-	    query.append("ORDER BY PRODUCT_ID DESC");
+	    query.append("	order by PRODUCT_INPUT_DATE desc) t ) p	")
+	    .append("	where n between ? and ?	");
 	    
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -96,14 +101,17 @@ public class SearchProductDAO {
             	pstmt.setString(paramIndex++, rDTO.getStartDate());
             	pstmt.setString(paramIndex++, rDTO.getEndDate());
             }
+            pstmt.setInt(paramIndex++, rDTO.getStartNum());
+            pstmt.setInt(paramIndex++, rDTO.getEndNum());
 
             // 4. 쿼리 실행 및 결과 담기
             rs = pstmt.executeQuery();
+
             while (rs.next()) {
                 ProductDTO pDTO = new ProductDTO();
-                pDTO.setPrdID(rs.getString("PRODUCT_ID"));
-                pDTO.setPrdName(rs.getString("PRODUCT_NAME"));
-                pDTO.setStatus(rs.getString("STATUS"));
+                pDTO.setPrdID(rs.getString("OPTION_ID"));
+                pDTO.setPrdName(rs.getString("OPTION_NAME"));
+                pDTO.setQuantity(rs.getInt("STOCKQUANTITY"));
                 pDTO.setPrice(rs.getInt("PRICE")); // 가격 데이터 담기
                 
                 pList.add(pDTO);

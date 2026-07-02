@@ -1,5 +1,6 @@
 package manage.inquiry;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,29 +29,58 @@ public class InquiryService {
 
 	public List<InquiryDTO> getInquiryList(RangeDTO rDTO){
 		List<InquiryDTO> iList = new ArrayList<InquiryDTO>();
+		try {
+			iList = iDAO.selectInquiryList(rDTO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return iList;
 	}// getInquiryList
 	
 	public InquiryDTO getInquiryDetail(String inquiryID) {
 		InquiryDTO iDTO = new InquiryDTO();
+		try {
+			iDTO = iDAO.selectInquiryDetail(inquiryID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return iDTO;
 	}// getInquiryDetail
 	
-	public List<InquiryDTO> getInquiryListByType(String categoryID){
-		List<InquiryDTO> iList = new ArrayList<InquiryDTO>();
-		return iList;
-	}// getInquiryListByType
 	
-	public int answerInquiry(int inquiryID, String answer) {
-		return 0;
+	public int answerInquiry(String inquiryID, String answer) {
+		int result = 0;
+		try {
+			result = iDAO.updateInquiryAnswer(inquiryID, answer);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}// answerInquiry
 	
-	public int deleteInquiry(int inquiryID) {
-		return 0;
+	public int deleteInquiry(String inquiryID) {
+		int result = 0;
+
+		try {
+			result = iDAO.deleteInquiry(inquiryID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}// deleteInquiry
 	
 	public OrderDTO getOrderDetail(String orderID) {
 		OrderDTO oDTO = new OrderDTO();
+		try {
+			oDTO = iDAO.selectOrderDetail(orderID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return oDTO;
 	}// getOrderDetail
 	

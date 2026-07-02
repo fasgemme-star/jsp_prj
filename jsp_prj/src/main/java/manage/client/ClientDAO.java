@@ -78,13 +78,18 @@ public class ClientDAO {
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    StringBuilder query = new StringBuilder( "	select CLIENT_NO, CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE from client where CLIENT_DELETE_ACCOUNT = 'N' and 1=1	");
+	    StringBuilder query = new StringBuilder();
+	    
+	    query.append(" select CLIENT_NO, CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE from( ")
+	    .append("		select rownum n, CLIENT_NO, CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE from(  ")
+	    .append("		select CLIENT_NO, CLIENT_NAME, CLIENT_EMAIL, CLIENT_TEL, CLIENT_START_DATE from client where CLIENT_DELETE_ACCOUNT = 'N' and 1=1 ");
 	    
 	    if (rDTO.getKeyword() != null && !rDTO.getKeyword().trim().isEmpty()) {
 	        query.append("AND (CLIENT_NAME LIKE ? OR CLIENT_EMAIL LIKE ? OR CLIENT_TEL LIKE ?) ");
 	    }
 	    
-	    query.append("ORDER BY CLIENT_START_DATE DESC");
+	    query.append("		order by client_start_date desc ))  ")
+	    .append("		where n between ? and ?  ");
 	    
 	    try {
             con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
@@ -98,6 +103,9 @@ public class ClientDAO {
                 pstmt.setString(paramIndex++, searchPattern); // CLIENT_EMAIL 매핑
                 pstmt.setString(paramIndex++, searchPattern); // CLIENT_PHONE 매핑
             }
+            pstmt.setInt(paramIndex++, rDTO.getStartNum()); 
+            pstmt.setInt(paramIndex++, rDTO.getEndNum()); 
+            
             // 4. 쿼리 실행 및 결과 담기
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -180,6 +188,30 @@ public class ClientDAO {
 		
 		return cnt;
 	}// updateClientPW
+	
+	public String selectEmail(String id) throws SQLException {
+		DbConnection dbcon = DbConnection.getInstance();
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String query = " select CLIENT_EMAIL from client where client_id = ?";
+	    String email = null;
+	    try {
+            con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, id);
+
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+            	email = rs.getString("CLIENT_EMAIL");
+            }
+        } finally {
+            // 5. 자원 해제
+            dbcon.dbClose(rs, pstmt, con);
+        }
+
+		return email;
+	}
 	
 	//파일출력 메소드 추가
 }

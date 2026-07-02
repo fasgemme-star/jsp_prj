@@ -2,6 +2,7 @@ package manage.dashboard;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class DashBoardService {
 	private DashBoardDAO dDAO = DashBoardDAO.getInstance();
 	
 	public int getTotalSales() {
-		int total = -1;
+		int total = 0;
 		try {
 			total = dDAO.selectTotalSales();
 		} catch (SQLException e) {
@@ -21,7 +22,7 @@ public class DashBoardService {
 	}// getTotalSales
 
 	public int getNewClientCount() {
-		int total = -1;
+		int total = 0;
 		try {
 			total = dDAO.selectTotalSales();
 		} catch (SQLException e) {
@@ -32,11 +33,18 @@ public class DashBoardService {
 	}// getNewClientCount
 	
 	public int getNowItemCount() {
-		return 0;
+		int cnt = 0;
+		try {
+			cnt = dDAO.selectProductOnNow();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return cnt;
 	}// getNowItemCount
 	
 	public int getNonResponseInquiryCount() {
-		int total = -1;
+		int total = 0;
 		try {
 			total = dDAO.selectNonInquiryCount();
 		} catch (SQLException e) {
@@ -59,16 +67,24 @@ public class DashBoardService {
 	
 	public int[] getDropOutClientStatistics() {
 		int[] a = null;
+		try {
+			a = dDAO.selectclientDropOut();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return a;
 	}// getDropOutClientStatistics
 	
-	public List<Map<String, Integer>> getBestProductList(){
-		List<Map<String, Integer>> bList = new ArrayList<Map<String,Integer>>();
-		return bList;
+	public Map<String, Integer> getBestProductList(){
+		Map<String, Integer> bMap = new LinkedHashMap<String,Integer>();
+		try {
+			bMap = dDAO.selectBestProduct();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return bMap;
 	}// getBestProductList
 	
-	public static void main(String[] args) {
-		
-		
-	}
 }
