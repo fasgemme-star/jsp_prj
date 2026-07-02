@@ -1,3 +1,4 @@
+<%@page import="kr.co.sist.util.BoardUtil"%>
 <%@page import="kr.co.sist.board.BoardDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.sist.board.BoardService"%>
@@ -108,7 +109,34 @@
 .blue { color: #0000FF; }
 .red { color: #FF0000; }
 a { color: #858585; text-decoration: none; }
+#currentPage { color: #ff0000;}
 </style>
+
+<script type="text/javascript">
+$(function(){
+	$("#keyword").keyup(function( evt ){
+		if (evt.which == 13) {
+			chkNull();
+		}
+	});
+	
+	$("#btnSearch").click(chkNull);
+	//fieldNum 선택 상태로 만든다.
+	
+	$("#fieldNum").val("${ empty param.fieldNum?'0':param.fieldNum }")
+});
+
+function chkNull(){
+	var keyword = $("#keyword").val();
+	if(keyword.trim()==""){
+		alert("검색어를 입력해 주세요.");
+		return;
+	}
+	$("#searchForm").submit();
+}
+
+
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -180,33 +208,26 @@ a { color: #858585; text-decoration: none; }
 			<%
 			// 1.전체 레코드 수 구하기
 			BoardService bs = new BoardService();
-			int totalCount = bs.totalCount();
+			int totalCount = bs.totalCount(rDTO);
 			
 			// 2.한 화면에 보여질 게시글의 수
-			int pageScale = 10;
+			int pageScale = bs.pageScale();
 			
 			// 3.총페이지수
-			int totalPage = (int)Math.ceil((double)totalCount/pageScale);
+			int totalPage = bs.totalPage();
 			
 			// 4.선택한 페이지의 시작 번호 구하기
 			String tempPage = request.getParameter("currentPage");
-			int currentPage = 1;
-			if ( tempPage != null) {
-				currentPage = Integer.parseInt(tempPage);
-			}
-			int startNum = 1;
-			startNum = currentPage * pageScale - pageScale + 1;
+			int currentPage = bs.currentPage(tempPage);
+			int startNum = bs.startNum();
 			
 			// 5.선택한 페이지의 끝 번호 구하기
-			int endNum = startNum + pageScale -1;
+			int endNum = bs.endNum();
 			
 			rDTO.setStartNum(startNum);
 			rDTO.setEndNum(endNum);
 			
 			List<BoardDTO> bList =  bs.searchBoard(rDTO);
-			
-			
-			
 			
 			pageContext.setAttribute("totalCount", totalCount);
 			pageContext.setAttribute("pageScale", pageScale);
@@ -249,7 +270,12 @@ a { color: #858585; text-decoration: none; }
 					<c:forEach var="bDTO" items="${ bList }" varStatus="i">
 						<tr>
 							<td><c:out value="${ totalCount - (i.index + startNum) + 1 }"/></td>
-							<td><a href="boardDetail.jsp?num=${ bDTO.num }&currentPage=${ currentPage }"><c:out value="${ bDTO.title }"/></a></td>
+							<td>
+							<c:set var="detailQueryString" value="num=${ bDTO.num }&currentPage=${ currentPage }"/>
+							<c:if test="${not empty param.keyword}">
+								<c:set var="detailQueryString" value="${detailQueryString}&fieldNum=${param.fieldNum}&keyword=${param.keyword}"/>
+							</c:if>
+							<a href="boardDetail.jsp?${detailQueryString}"><c:out value="${ bDTO.title }"/></a></td>
 							<td><c:out value="${ bDTO.id }"/></td>
 							<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd kk:mm:ss"/></td>
 							<td><c:out value="${ bDTO.cnt }"/></td>
@@ -259,12 +285,23 @@ a { color: #858585; text-decoration: none; }
 					</tbody>
 				</table>
 			</div>
-			<div id="divSearchForm" style="height: 80px;"></div>
+			<div id="divSearchForm" style="height: 80px;">
+			<form id="searchForm" name="searchForm" action="boardList.jsp" style="text-align: center;">
+				<select name="fieldNum" style="height: 30px;" id="fieldNum">
+					<option value="0">제목</option>
+					<option value="1">내용</option>
+					<option value="2">작성자</option>
+				</select>
+				<input type="text" name="keyword" id="keyword" value="${ param.keyword }"/>
+				<input type="button" value="검색" class="btn btn-sm btn-success" id="btnSearch"/>
+				<input type="text" style="display: none;"/>
+			</form>
+			</div>
 			
 			<div id="dibPagination" style="text-align: center;">
-				<c:forEach var="i" begin="1" end="${ totalPage }" step="1">
-				[<a href="${ CommonUrl }/board/boardList.jsp?currentPage=${i}">${ i }</a>]
-				</c:forEach>
+			<%=
+			BoardUtil.pagination(currentPage, totalPage, "boardList.jsp", rDTO.getFieldNum(), rDTO.getKeyword()) %>
+				
 			</div>
 
 		</div>

@@ -7,9 +7,9 @@
 <%
 
 String sessionID = "test";
-String SessionName = "테스트";
+String sessionName = "테스트";
 pageContext.setAttribute("userID", sessionID);
-pageContext.setAttribute("userName", SessionName);
+pageContext.setAttribute("userName", sessionName);
 %>
 <% request.setCharacterEncoding("UTF-8"); %>
 <jsp:useBean id="bDTO" class="kr.co.sist.board.BoardDTO" scope="page"/>

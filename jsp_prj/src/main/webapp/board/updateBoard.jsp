@@ -16,7 +16,7 @@ pageContext.setAttribute("result", bs.modifyBoard(bDTO));
 <script type="text/javascript">
 <c:choose>
 <c:when test="${ result }">
-	alert("글을 변경했습니다.${bDTO.id } / ${ bDTO.num}");
+	alert("글을 변경했습니다.");
 	location.href="boardList.jsp?currentPage=${param.currentPage}";
 </c:when>
 <c:otherwise>

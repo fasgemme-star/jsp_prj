@@ -6,9 +6,9 @@
 <%
 
 String sessionID = "test";
-String SessionName = "테스트";
+String sessionName = "테스트";
 pageContext.setAttribute("userID", sessionID);
-pageContext.setAttribute("userName", SessionName);
+pageContext.setAttribute("userName", sessionName);
 %>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">

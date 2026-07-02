@@ -268,6 +268,7 @@ function chkNull(){
 		bs.modifyCount(num);
 		%>
 		<form method="post" name="readForm" id="readForm">
+		<input type="hidden" name="num" value="${ bDTO.num }"/>
 		<input type="hidden" name="currentPage" value="${ param.currentPage }"/>
 		<table>
 			<tr>
@@ -300,7 +301,12 @@ function chkNull(){
 				<input type="button" value="글삭제" class="btn btn-sm btn-outline-warning" id="btnDelete"/>
 				</c:if>
 				
-				<a href="javascript:history.back()" class="btn btn-sm btn-outline-info">리스트</a>
+				<c:set var="queryString" value="currentPage=${param.currentPage}"/>
+				<c:if test="${not empty param.keyword }">
+				<c:set var="queryString" value="${queryString}&fieldNum=${param.fieldNum}&keyword=${param.keyword}"/>
+				
+				</c:if>
+				<a href="javascript:location.href='boardList.jsp?${queryString}'" class="btn btn-sm btn-outline-info">리스트</a>
 				</td>
 			</tr>
 		</table>

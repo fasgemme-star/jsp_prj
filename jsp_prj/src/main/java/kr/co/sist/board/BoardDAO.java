@@ -26,7 +26,7 @@ public class BoardDAO {
 		return mpDAO;
 	}// getInstance
 	
-	public int selectTotalCount() throws SQLException {
+	public int selectTotalCount(RangeDTO rDTO) throws SQLException {
 		int totalCount = 0;
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -35,9 +35,19 @@ public class BoardDAO {
 		
 		try {
 			con = gc.getConn();
-			String query = "	select count(*) cnt from board	";
+			StringBuilder query = new StringBuilder();
+			query.append("select count(*) cnt from board	");
 			
-			pstmt = con.prepareStatement(query);
+			if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+				query.append("where instr(").append(rDTO.getField())
+				.append(",?) !=0");
+			}
+			
+			pstmt = con.prepareStatement(query.toString());
+			
+			if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+				pstmt.setString(1, rDTO.getKeyword());
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -59,14 +69,27 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		GetConnection gc = GetConnection.getInstance();
+		StringBuilder query = new StringBuilder();
 		
 		try {
 			con = gc.getConn();
-			String query = "	select num, id, title, input_date, cnt from( select num, id, title, input_date, cnt, row_number() over( order by input_date desc) rnum from board) where rnum between ? and ?	";
+			query.append( "	select num, id, title, input_date, cnt from( select num, id, title, input_date, cnt, row_number() over( order by input_date desc) rnum from board ");
 			
-			pstmt = con.prepareStatement(query);
-			pstmt.setInt(1, rDTO.getStartNum());
-			pstmt.setInt(2, rDTO.getEndNum());
+			if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+				query.append(" where instr("	).append(rDTO.getField()).append(", ?) != 0");
+			}
+			
+			query.append(") where rnum between ? and ?	");
+			
+			pstmt = con.prepareStatement(query.toString());
+			int index = 0;
+			if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+				pstmt.setString(++index, rDTO.getKeyword());
+				
+			}
+			pstmt.setInt(++index, rDTO.getStartNum());
+			pstmt.setInt(++index, rDTO.getEndNum());
+			
 			
 			rs = pstmt.executeQuery();
 			
