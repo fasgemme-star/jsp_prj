@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import client.order.DeliveryDTO;
 import dbcon.DbConnection;
 import dbcon.Path;
 
@@ -34,7 +33,7 @@ public class CartDAO {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			pstmt = con.prepareStatement(query);
 			
-			pstmt.setString(1, cDTO.getClientID());
+			pstmt.setString(1, cDTO.getClientNo());
 			pstmt.setString(2, cDTO.getPrdID());
 			pstmt.setInt(3, cDTO.getQuantity());
 			cnt = pstmt.executeUpdate();
@@ -60,7 +59,7 @@ public class CartDAO {
 			pstmt = con.prepareStatement(query);
 			
 			pstmt.setInt(1, cDTO.getQuantity());
-			pstmt.setString(2, cDTO.getClientID());
+			pstmt.setString(2, cDTO.getClientNo());
 			pstmt.setString(3, cDTO.getPrdID());
 			cnt = pstmt.executeUpdate();
 			
@@ -81,7 +80,7 @@ public class CartDAO {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			pstmt = con.prepareStatement(query);
 			
-			pstmt.setString(1, cDTO.getClientID());
+			pstmt.setString(1, cDTO.getClientNo());
 			pstmt.setString(2, cDTO.getPrdID());
 			cnt = pstmt.executeUpdate();
 			
@@ -102,7 +101,7 @@ public class CartDAO {
 			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
 			pstmt = con.prepareStatement(query);
 			
-			pstmt.setString(1, cDTO.getClientID());
+			pstmt.setString(1, cDTO.getClientNo());
 			pstmt.setString(2, cDTO.getPrdID());
 			cnt = pstmt.executeUpdate();
 			
@@ -181,8 +180,55 @@ public class CartDAO {
 		return oList;
 	}
 	
-public String updateDeliveryRequest(DeliveryDTO deliveryDTO) {
-    	
-        return null;
-    }// insertDeliveryAddr
+	public List<DeliveryDTO> selectDelivery(String clientNo) throws SQLException{
+		List<DeliveryDTO> dList = new ArrayList<DeliveryDTO>();
+		DbConnection dbcon = DbConnection.getInstance();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String query = "	select DELIVERY_ADDR, RECIPIENT, RECIPIENT_PHONE, FIRST_DESTINATION from DELIVERY_DESTINATION where client_no=?	";
+	
+		try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, clientNo);
+			
+			
+			rs = pstmt.executeQuery();
+	        
+	        // 4. 결과 매핑
+	        while (rs.next()) {
+	            DeliveryDTO dDTO = new DeliveryDTO();
+	            dDTO.setDeliveryAddr(rs.getString("DELIVERY_ADDR"));
+	            dDTO.setClientName(rs.getString("RECIPIENT"));
+	            dDTO.setClientTel(rs.getString("RECIPIENT_PHONE"));
+	            dDTO.setFirstDestination(rs.getString("FIRST_DESTINATION"));
+	            
+	            dList.add(dDTO);
+	        }
+		} finally {
+			dbcon.dbClose(rs, pstmt, con);
+		} 
+		return dList;
+	}
+	
+	public void updateDeliveryRequest(DeliveryDTO dDTO) throws SQLException {
+		DbConnection dbcon = DbConnection.getInstance();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = dbcon.getConn(new File(Path.DATABASE_PROPERTIES));
+			String query = "	update orders set DELIVERY_REQUEST=? where client_no =? 	";
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, dDTO.getRequest());
+			pstmt.setString(1, dDTO.getClientNo());
+			
+			pstmt.executeUpdate();
+			
+			
+		} finally {
+			dbcon.dbClose(null, pstmt, con);
+		} 
+		
+    }// updateDeliveryRequest
 }

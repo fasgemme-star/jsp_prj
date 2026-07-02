@@ -13,9 +13,10 @@ import lombok.ToString;
 @ToString
 public class CartDTO {
     private String cartID;
-    private String clientID;
+    private String clientNo;
     private String prdID;
     private int quantity;
     private int price;
     private String cartInputDate;
+
 }

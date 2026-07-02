@@ -55,7 +55,14 @@ public class OrderDAO {
 		return oDTO;
 	}
 	
-	public List<OrderDTO> getSelectedProducts(String clientNo, String[] selectedOptionIds) throws SQLException {
+	/**
+	 * 장바구니에서 선택된 물건 조회
+	 * @param clientNo
+	 * @param selectedOptionIds
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<OrderDTO> selectChoicedProduct(String clientNo, String[] selectedOptionIds) throws SQLException {
 	    List<OrderDTO> oList = new ArrayList<OrderDTO>();
 	    DbConnection dbcon = DbConnection.getInstance();
 	    Connection con = null;
