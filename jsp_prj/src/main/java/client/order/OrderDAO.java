@@ -22,7 +22,7 @@ public class OrderDAO {
 		return oDAO;
 	} // getInstance()
 	
-	public OrderDTO selectOrder(String clientNo) throws SQLException {
+	public OrderDTO selectRecipeInfo(String clientNo) throws SQLException {
 		OrderDTO oDTO = null;
 		DbConnection dbcon = DbConnection.getInstance();
 		Connection con = null;
@@ -115,14 +115,19 @@ public class OrderDAO {
 	    return oList;
 	}
 	
+	// 주문서 페이지
+	//-----------
+	// 결제 버튼
+	
+	public int insertPayment(OrderDTO orderDTO) {
+		return 0;
+	}// insertPayment
+	
 	public String insertOrder(OrderDTO orderDTO) {
         return null;
     }// insertOrder
 	
        
 
-    public int insertPayment(OrderDTO orderDTO) {
-        return 0;
-    }// insertPayment
 	
 }

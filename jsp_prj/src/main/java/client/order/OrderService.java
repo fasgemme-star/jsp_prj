@@ -1,7 +1,35 @@
 package client.order;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class OrderService {
 	OrderDAO oDAO = OrderDAO.getInstance();
+	
+	public OrderDTO getRecipeInfo(String clientNo) {
+		OrderDTO oDTO = new OrderDTO();
+		try {
+			oDTO = oDAO.selectRecipeInfo(clientNo);
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return oDTO;
+	}
+	
+	public List<OrderDTO> getOrderList(String clientNo, String[] selectedOptionIds){
+		List<OrderDTO> oList = new ArrayList<OrderDTO>();
+		try {
+			oDAO.selectChoicedProduct(clientNo, selectedOptionIds);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return oList;
+	}
 	public String getOrder(String orderId) {
 	    return "";
 	}// getOrder
