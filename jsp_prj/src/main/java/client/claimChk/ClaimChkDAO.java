@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import client.claim.ClaimDTO;
-import client.claim.RangeDTO;
 import dbcon.DbConnection;
 import dbcon.Path;
 

@@ -1,24 +1,35 @@
 package client.claim;
 
+import java.sql.SQLException;
+
 public class ClaimService {
 	ClaimDAO cDAO = ClaimDAO.getInstance();
-	public String requestCancel(String clientID, ClaimDTO claimDTO) {
-	    return "";
+	
+	public boolean requestCancel(ClaimDTO cDTO) {
+		boolean flag= false;
+		try {
+			if(cDAO.selectClaimCancel(cDTO) == 1) {
+				flag = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+		
+	    return flag;
 	}// requestCancel
 
-	public String requestReturn(String clientID, ClaimDTO claimDTO) {
-	    return "";
+	public boolean requestClaim(ClaimDTO cDTO) {
+		boolean flag= false;
+		try {
+			if(cDAO.insertClaim(cDTO) == 1) {
+				flag = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return flag;
 	}// requestReturn
 
-	public String requestExchange(String clientID, ClaimDTO claimDTO) {
-	    return "";
-	}// requestExchange
-
-	public String updateClaimStatus(String claimID, String claimStatus) {
-	    return "";
-	}// updateClaimStatus
-
-	public String getClaimDetail(String claimID) {
-	    return "";
-	}// getClaimDetail
 }
