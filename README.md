@@ -1,5 +1,2 @@
-db쿼리문 추가내용<br>
-status: 판매중, 품절   -> 상품옵션의 재고 값을 사용
-<br>
-문의 테이블 - 문의유형<br>
-문의 유형 종류 보완
+magager: jsp_prj/src/main/java/manage
+client: jsp_prj/src/main/java/client
