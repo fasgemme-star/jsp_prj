@@ -58,5 +58,27 @@ public class MyPageDAO {
 		return mDTO;
 	}
 	
+	public int updateUserProfile(String id, String profile) throws SQLException {
+		int cnt = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		GetConnection gc = GetConnection.getInstance();
+		
+		try {
+			con = gc.getConn();
+			String query = "	update web_member set profile = ? where id = ?	";
+			
+			pstmt = con.prepareStatement(query);
+			
+			pstmt.setString(1, profile);
+			pstmt.setString(2, id);
+			cnt = pstmt.executeUpdate();
+		} finally {
+			gc.dbClose(null, pstmt, con);
+		} 
+		return cnt;
+	}// updateUserProfile
+	
+	
 	
 }

@@ -1,5 +1,5 @@
 package kr.co.sist.upload;
 
-public class UploadSerivice {
+public class UploadService {
 	
 }

@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/siteProperty.jsp" %>
-<%@ include file="../include/loginCheck.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author"
 	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 <meta name="generator" content="Astro v5.13.2">
-<title>마이페이지</title>
+<title>Carousel Template · Bootstrap v5.3</title>
 <link rel="canonical"
 	href="https://getbootstrap.com/docs/5.3/examples/carousel/">
 
@@ -103,92 +103,10 @@
 	display: block !important
 }
 
-/* 프로필디자인 */
-#profileWrap { width: 100%; min-height: 600px; margin-top: 20px; }
-#profileImg { width: 30%; vertical-align: top; float: left; text-align: right; padding-right: 20px; }
-#userInfo { width: 70%; vertical-align: top; float: right; padding-left: 20px; border-left: 1px solid #333; }
+.blue { color: #0000FF; }
+.red { color: #FF0000; }
 
 </style>
-
-<script type="text/javascript">
-$(function() {
-	$("#btnProfile").click(function() {
-		//버튼을 클릭했을 때 input type="file"을 클릭한 이벤트 발생
-		$("#upProfile").click();
-	});// click
-	
-	//File을 선택하면 $("#upProfile")의 값이 변경된다. -> change event 발생
-	$("#upProfile").change(uploadProfile);
-	
-	$("#btnSearch").click(function(){
-		var param={id:"${userInfo.id}"}
-		$.ajax({
-			url: "searchMyPage.jsp",
-			type: "post",
-			data: param,
-			dataType: "json",
-			error:function(xhr){
-				console.log(xhr.status + " / " + xhr.statusText);
-			},
-			success: function(jsonObj){
-				$("#profile")[0].src="${ CommonUrl }${ UploadDir }/profile/" + jsonObj.profile;
-				$("#profile").val(jsonObj.profile);
-				$("#name").val(jsonObj.name);
-				$("#email").val(jsonObj.email);
-				$("#phone").val(jsonObj.phone);
-				$("#zipcode").val(jsonObj.zipcode);
-				$("#address").val(jsonObj.address);
-				$("#address2").val(jsonObj.address2);
-				$("#ip").html(jsonObj.ip);
-				$("#input_date").html(jsonObj.inputdate);
-			}
-		});
-	});// click
-});// ready
-
-function uploadProfile(){
-	var fileName = $("#upProfile").val();
-	var ext = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
-	
-	//선택한 파일의 확장자를 체크(이미지만 선택: jpg, jpeg, gif, png, bmp)
-	var allowedExt = "jpg.jpeg.gif.png.bmp".split(".");
-	var allowedFlag;
-	for (var i = 0; i < allowedExt.length; i++) {
-		if (allowedFlag = (ext == allowedExt[i])) {
-			break;
-		}
-	}
-	if (!allowedFlag) {
-		alert("프로필은 이미지만 선택해 주세요");
-		return;
-	}
-	
-	// 1.form을 얻어서 FormData 객체에 할당(parameter전송방식 -> binary전송 방식)
-	var formData = new FormData($("#mypageform")[0]);
-	$.ajax({
-		url:"${CommonUrl}/mypage/imgUpload.jsp",
-		type:"post",
-		contentType:false,//parameter전송방식 -> binary전송 방식
-		processData:false,//queryString을 붙이지 않도록 설정
-		data: formData,
-		dataType:"JSON",
-		error: function (xhr) {
-			alert(xhr.status)
-		},
-			
-		success: function (jsonObj) {
-			if(jsonObj.result){
-				$("#profile")[0].src="${ CommonUrl }${ UploadDir }/profile/" + jsonObj.imgName;
-			}else{
-				alert("프로필 이미지가 정상적으로 업로드 되지 않았습니다.");
-			}
-		}
-			
-	});
-
-	
-}// uploadProfile
-</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -250,73 +168,26 @@ function uploadProfile(){
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="/fragments/navigationBar.jsp"/>		
+			<c:import url="${ CommonUrl }/fragments/navigationBar.jsp"/>		
 		</nav>
 	</header>
 	<main>
-		<div id="profileWrap">
-			<form action="mypageProcess.jsp" method="post" id="mypageform" name="mypageform">
-			<div id="profileImg">
-			<img src="${ CommonUrl }${ UploadDir }/profile/default_profile.png" style="border-radius: 150px; width: 150px; height: 150px;" id="profile"/><br>
-			<input type="file" name="upProfile" id="upProfile" style="display: none;"/>
-			<input type="button" value="이미지 업로드" class="btn btn-sm btn-success" id="btnProfile">
-			</div>
-			<div id="userInfo">
-				<h3>마이페이지 - 정보수정</h3>
-				<table>
-					<tr>
-						<td>아이디</td>
-						<td><strong><c:out value="${ userInfo.id }"/></strong>
-						<input type="button" class="btn btn-sm btn-outline-primary" value="조회" id="btnSearch"/></td>
-					</tr>
-					<tr>
-						<td>이름</td>
-						<td><input type="text" name="name" value="" readonly="readonly" id="name"></td>
-					</tr>
-					<tr>
-						<td>이메일</td>
-						<td><input type="text" name="email" value="" id="email"></td>
-					</tr>
-					<tr>
-						<td>전화번호</td>
-						<td><input type="text" name="phone" value="" id="phone"></td>
-					</tr>
-					<tr>
-						<td>우편번호</td>
-						<td><input type="text" name="zipcode" value="" style="width: 70px;" readonly="readonly" id="zipcode"/>
-						<input type="button" value="검색" class="btn btn-sm btn-success"/>
-						</td>
-					</tr>
-					<tr>
-						<td>주소</td>
-						<td><input type="text" name="address" value="" style="widows: 300px" readonly="readonly" id="address"/></td>
-					</tr>
-					<tr>
-						<td>상세주소</td>
-						<td><input type="text" name="address2" value="" style="widows: 300px" id="address2"/></td>
-					</tr>
-					<tr>
-						<td>가입 IP</td>
-						<td><span id="ip"></span></td>
-					</tr>
-					<tr>
-						<td>가입일</td>
-						<td><span id="input_date"></span></td>
-					</tr>
-					<tr>
-						<td colspan="2" align="center">
-							<input type="button" value="변경" class="btn btn-sm btn-warning" id="btnUpdate"/>
-						</td>
-					</tr>
-				</table>
-			</div>
-			</form>
+		<div id="myCarousel" class="carousel slide mb-6"
+			data-bs-ride="carousel">
+			<c:import url="${CommonUrl}/fragments/carousel.jsp"/>
 		</div>
-
-	</main>
+		<!-- Marketing messaging and featurettes
+  ================================================== -->
+		<!-- Wrap the rest of the page in another container to center all the content. -->
+		<div class="container marketing">
+			
+		</div>
+		<!-- /.container -->
+		<!-- FOOTER -->
 		<footer class="container">
 			<c:import url="${ CommonUrl }/fragments/footer.jsp"/>			
 		</footer>
+	</main>
 	<script src="${CommonUrl}/common/JS/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
