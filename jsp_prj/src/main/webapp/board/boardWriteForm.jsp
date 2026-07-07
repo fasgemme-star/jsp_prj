@@ -225,7 +225,7 @@ function chkNull(){
 	</header>
 	<main>
 		<div id="divWriteForm" style="margin-top: 20px; ">
-		<form action="boardWriteProcess.jsp" method="post" name="writeForm" id="writeForm">
+		<form action="boardWriteProcess.jsp" method="post" name="writeForm" id="writeForm" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th colspan="2" style="text-align: center; "><h3>글쓰기</h3></th>
@@ -237,6 +237,10 @@ function chkNull(){
 			<tr>
 				<td>내용</td>
 				<td><textarea name="content" id="content"></textarea></td>
+			</tr>
+			<tr>
+				<td>첨부파일</td>
+				<td><input type="file" name="upfile" id="upfile"/></td>
 			</tr>
 			<tr>
 				<td>작성자</td>

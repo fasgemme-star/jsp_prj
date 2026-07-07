@@ -1,5 +1,8 @@
 package kr.co.sist.util;
 
+import java.io.File;
+import java.util.UUID;
+
 public class BoardUtil {
 
 	private BoardUtil() {
@@ -93,5 +96,13 @@ public class BoardUtil {
 
 		pagination.append(nextMark.toString());
 		return pagination.toString();
+	}
+	
+	public static String uuidFile(File file) {
+		//파일명을 UUID를 적용하여 변경 후 반환
+		String fileName = file.getName();
+		String ext = fileName.substring(fileName.lastIndexOf("."));
+		String uuidName = UUID.randomUUID().toString().replaceAll("-", "") + ext;
+		return uuidName;		
 	}
 }

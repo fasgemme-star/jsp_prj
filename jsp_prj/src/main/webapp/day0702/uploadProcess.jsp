@@ -1,3 +1,5 @@
+<%@page import="java.util.UUID"%>
+<%@page import="java.io.IOException"%>
 <%@page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
 <%@page import="java.io.File"%>
 <%@page import="com.oreilly.servlet.MultipartRequest"%>
@@ -5,6 +7,12 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/siteProperty.jsp" %>
+<%
+if (!"POST".equals(request.getMethod())){
+	response.sendRedirect("uploadForm.jsp");
+	return;
+}
+%>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -182,16 +190,53 @@
 		File saveDir = new File("C:/Users/user/git/jsp_prj/jsp_prj/src/main/webapp/upload");
 		
 		//파일 최대 크기 설정
+		int uploadMaxSize = 1024 * 1024 * 100;
 		int maxSize = 1024 * 1024 * 10;
 		
 		//
-		MultipartRequest mr = new MultipartRequest(request, saveDir.getAbsolutePath(), maxSize, "UTF-8", new DefaultFileRenamePolicy());
+		MultipartRequest mr = new MultipartRequest(request, saveDir.getAbsolutePath(), uploadMaxSize, "UTF-8", new DefaultFileRenamePolicy());
 		
+		//업로드 파일이 이미지 파일일 때만 업로드
+	/* 	if(!mr.getContentType("upfile").contains("image/")){
+			out.println("이미지만 업로드 가능합니다.");
+		} */
+		
+		try{
+		
+		
+		//10Mbyte를 초과하는 파일이 업로드 된다.
+		String fileName = mr.getFilesystemName("upfile");
+		File uploadFile = new File(saveDir.getAbsolutePath()+ File.separator + fileName);
+		boolean uploadFlag = false;
+		//업로드된 파일의 크기가 제한파일의 크기보다 크다면 제거한다.
+		if (uploadFlag=(uploadFile.length() > maxSize)) {
+			uploadFile.delete();
+		}
+		
+		if (uploadFlag || !mr.getContentType("upfile").contains("image/")){
+			out.println("파일이 이미지가 아니거나 크기가 10Mbyte를 초과합니다.");			
+		}else{
+			//이미지가 업로드 되었을 때 알아볼 수 없는 이름으로 변경
+			String fileName2 = uploadFile.getName();
+			String ext = fileName2.substring(fileName2.lastIndexOf("."));
+			
+			File renameFile = new File(uploadFile.getParent() + File.separator + UUID.randomUUID().toString().replaceAll("-", "") + ext);
+			uploadFile.renameTo(renameFile);
+			
 		%>
-		업로더: <%=request.getParameter("uploader") %><br>
-		파일명: <%=request.getParameter("upfile") %>
-		</div>
 		
+		<hr>MultipartRequest 사용<br>
+		mr 업로더: <%=mr.getParameter("uploader") %><br>
+		mr 파일명: <%=mr.getParameter("upfile") %><br>
+		원본파일명: <%=mr.getOriginalFileName("upfile") %><br>
+		같은 이름이 있을 때 파일명: <%=mr.getFilesystemName("upfile") %><br>
+		<%
+		}// else
+		}catch(IOException ie){
+			ie.printStackTrace();
+		}
+		%>
+		</div>
 		
 		<!-- /.container -->
 		<!-- FOOTER -->

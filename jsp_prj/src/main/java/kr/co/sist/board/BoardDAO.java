@@ -73,7 +73,7 @@ public class BoardDAO {
 		
 		try {
 			con = gc.getConn();
-			query.append( "	select num, id, title, input_date, cnt from( select num, id, title, input_date, cnt, row_number() over( order by input_date desc) rnum from board ");
+			query.append( "	select num, id, title, input_date, cnt, upfile from( select num, id, title, input_date, cnt, upfile, row_number() over( order by input_date desc) rnum from board ");
 			
 			if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
 				query.append(" where instr("	).append(rDTO.getField()).append(", ?) != 0");
@@ -100,6 +100,7 @@ public class BoardDAO {
 				bDTO.setTitle(rs.getString("title"));
 				bDTO.setInputDate(rs.getDate("input_date"));
 				bDTO.setCnt(rs.getInt("cnt"));
+				bDTO.setUpfile(rs.getString("upfile"));
 				
 				bList.add(bDTO);
 			}
@@ -115,16 +116,28 @@ public class BoardDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		GetConnection gc = GetConnection.getInstance();
-		
+		boolean flag = bDTO.getUpfile() != null;
 		try {
 			con = gc.getConn();
-			String query = "	insert into board(num, id, title, content, ip) values(seq_board.nextval, ?, ?, ?, ?)	";
+			StringBuilder query = new StringBuilder();
+			query.append("	insert into board(num, id, title, content, ip ");
+			if(flag) {
+				query.append(",upfile");
+			}
+			query.append(" ) values(seq_board.nextval, ?, ?, ?, ?");
+			if(flag) {
+				query.append(", ? ");
+			}
+			query.append(" )	");
 			
-			pstmt = con.prepareStatement(query);
+			pstmt = con.prepareStatement(query.toString());
 			pstmt.setString(1, bDTO.getId());
 			pstmt.setString(2, bDTO.getTitle());
 			pstmt.setString(3, bDTO.getContent());
 			pstmt.setString(4, bDTO.getIp());
+			if(flag) {
+				pstmt.setString(5, bDTO.getUpfile());
+			}
 			
 			pstmt.executeUpdate();
 			

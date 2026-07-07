@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class BoardDTO {
 	private int num, cnt;
-	private String id, title, content,  ip; 
+	private String id, title, content,  ip, upfile; 
 	private Date inputDate;
 }

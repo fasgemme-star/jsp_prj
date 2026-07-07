@@ -253,16 +253,17 @@ function chkNull(){
 					<thead>
 						<tr>
 							<td style="width: 10%">번호</td>
-							<td style="width: 40%">제목</td>
-							<td style="width: 15%">작성자</td>
+							<td style="width: 35%">제목</td>
+							<td style="width: 10%">작성자</td>
 							<td style="width: 25%">작성일</td>
+							<td style="width: 10%">첨부파일</td>
 							<td style="width: 10%">조회수</td>
 						</tr>
 					</thead>
 					<tbody>
 						<c:if test="${ empty bList }">
 						<tr>
-							<td colspan="5" style="text-align: center;">
+							<td colspan="6" style="text-align: center;">
 								게시글이 없습니다.
 							</td>
 						</tr>
@@ -278,6 +279,9 @@ function chkNull(){
 							<a href="boardDetail.jsp?${detailQueryString}"><c:out value="${ bDTO.title }"/></a></td>
 							<td><c:out value="${ bDTO.id }"/></td>
 							<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd kk:mm:ss"/></td>
+							<td><c:if test="${ not empty bDTO.upfile }">
+							<a href="${ CommonUrl }${UploadDir}/${bDTO.upfile}"><img src="images/img.png" style="width: 25px; "/></a>
+							</c:if></td>
 							<td><c:out value="${ bDTO.cnt }"/></td>
 						</tr>		
 					</c:forEach>
