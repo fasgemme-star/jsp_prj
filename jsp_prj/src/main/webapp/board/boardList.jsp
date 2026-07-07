@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="kr.co.sist.util.BoardUtil"%>
 <%@page import="kr.co.sist.board.BoardDTO"%>
 <%@page import="java.util.List"%>
@@ -280,7 +281,7 @@ function chkNull(){
 							<td><c:out value="${ bDTO.id }"/></td>
 							<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd kk:mm:ss"/></td>
 							<td><c:if test="${ not empty bDTO.upfile }">
-							<a href="${ CommonUrl }${UploadDir}/${bDTO.upfile}"><img src="images/img.png" style="width: 25px; "/></a>
+							<a href="${ CommonUrl }/board/download.jsp?file=${bDTO.upfile}"><img src="images/img.png" style="width: 25px; "/></a>
 							</c:if></td>
 							<td><c:out value="${ bDTO.cnt }"/></td>
 						</tr>		
@@ -306,6 +307,17 @@ function chkNull(){
 			<%=
 			BoardUtil.pagination(currentPage, totalPage, "boardList.jsp", rDTO.getFieldNum(), rDTO.getKeyword()) %>
 				
+			</div>
+			
+			<div>
+			<a href="${ CommonUrl }/board/download.jsp?file=34824632.txt">txt</a><br>
+			<a href="${ CommonUrl }/board/download.jsp?file=exam0520.html">html</a><br>
+			<a href="${ CommonUrl }/board/download.jsp?file=20260707_JSP.pptx">ppt</a><br>
+			<%
+			String fileName="토끼.png";
+			String encode = URLEncoder.encode(fileName,"UTF-8");
+			%>
+			<a href="${ CommonUrl }/board/download.jsp?file=<%=encode %>">이미지</a><br>
 			</div>
 
 		</div>

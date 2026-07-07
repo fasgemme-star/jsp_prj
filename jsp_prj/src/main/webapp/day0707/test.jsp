@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/siteProperty.jsp" %>
-
+<!-- contentType 속성을 잘못 기술하면 해당 파일은 다운로드 된다. -->
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -107,30 +106,6 @@
 .red { color: #FF0000; }
 
 </style>
-
-<script type="text/javascript">
-$(function(){
-	$("#btnImg").click(function(){
-		$("#file").click();
-	})
-	$("#file").change(function(evt){
-		var file =  evt.target.files[0];//FileDialog에서 선택한 파일의 정보를 저장
-		//스트림 생성
-		var reader = new FileReader();
-		//onload 이벤트 설정
-		reader.onload=function(evt){
-			$("#img").prop("src",evt.target.result);//Base64로 인코딩된 이미지가 설정
-		}//onload
-		//파일을 읽어들여 img 태그에 미리보기 설정
-		reader.readAsDataURL(file);
-	});
-	
-	$("#btnImg2").click(function(){
-		alert($("#file").val());
-		
-	});
-});//ready
-</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -196,15 +171,15 @@ $(function(){
 		</nav>
 	</header>
 	<main>
-		<div style="padding-top: 30px">
-		<img src="../upload/profile/default_img2.png" style="width: 80px" id="img"/>
-		<input type="file" name="file" id="file" style="display: none;"/>
-		<input type="button" value="이미지선택" id="btnImg" class="btn btn-sm btn-success"/> 
-		<input type="button" value="이미지사용" id="btnImg2" class="btn btn-sm btn-success"/> 
-	
-	
-	
-	
+		<div id="myCarousel" class="carousel slide mb-6"
+			data-bs-ride="carousel">
+			<c:import url="${CommonUrl}/fragments/carousel.jsp"/>
+		</div>
+		<!-- Marketing messaging and featurettes
+  ================================================== -->
+		<!-- Wrap the rest of the page in another container to center all the content. -->
+		<div class="container marketing">
+			
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->

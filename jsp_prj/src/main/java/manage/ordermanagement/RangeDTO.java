@@ -35,6 +35,8 @@ public class RangeDTO {
 		case "cancel":
 			delivery_status = "취소요청";
 			break;
+		default:
+			delivery_status = null;
 		}
 	}
 		
