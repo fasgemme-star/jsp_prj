@@ -171,15 +171,8 @@
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<c:import url="${CommonUrl}/fragments/carousel.jsp"/>
-		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			
+		<div>
+		<img src="http://localhost/jsp_prj/common/images/best.png"/>
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->
