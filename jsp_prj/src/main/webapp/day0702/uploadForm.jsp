@@ -176,7 +176,7 @@
 		<div style="margin-top: 50px;">
 		<form action="uploadProcess.jsp" method="post" enctype="multipart/form-data" name="frm" id="frm">
 			<label>업로더</label><input type="text" name="uploader"/>
-			<input type="file" name="upfile" id="upfile"/>
+			<input type="file" name="upfile" id="upfile" multiple/>
 			<input type="submit" value="파일업로드"/>
 			 
 			</form>

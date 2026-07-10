@@ -224,7 +224,7 @@ if (!"POST".equals(request.getMethod())){
 			uploadFile.renameTo(renameFile);
 			
 		%>
-		
+		확장자 <%=ext %>
 		<hr>MultipartRequest 사용<br>
 		mr 업로더: <%=mr.getParameter("uploader") %><br>
 		mr 파일명: <%=mr.getParameter("upfile") %><br>
